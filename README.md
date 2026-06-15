@@ -49,6 +49,21 @@ cover: { type: "image", src: "assets/images/my-project.jpg" }
 Projects also show extra images in the detail view — point those at real files the
 same way when you have them.
 
+## In-site editor (Supabase)
+
+The site can be edited live from `/admin.html` once connected to Supabase.
+
+**One-time setup**
+1. Create a project at **supabase.com** (free tier is fine).
+2. Open **SQL Editor** → paste **`db/schema.sql`** → Run (creates tables, RLS, and the `media` storage bucket).
+3. In **Project Settings → API**, copy the **Project URL** and **anon/publishable key** into **`js/supabase-config.js`**.
+4. In Supabase **Authentication → Providers → Email**, magic links are on by default. Make sure your owner email matches `ownerEmail` in the config and in `db/schema.sql`.
+5. Visit **`/admin.html`**, sign in with the email link, and click **“Seed from built-in”** to import everything currently in `content.js`.
+
+**What you can edit live:** projects (add/edit/reorder, toggle the Featured 6), hero carousel slides, statement, about, contact — plus per-project **case modules** (image · video · two-up · text · quote), drag-drop **image/video uploads**, and a **focal-point** click on any media to control the mobile crop.
+
+The public site reads from Supabase when configured and **falls back to `content.js`** if it's empty or unreachable, so it never breaks.
+
 ## Deploy
 It's static, so any host works: **GitHub Pages**, **Netlify**, or **Vercel** —
 just point them at this folder. No configuration needed.

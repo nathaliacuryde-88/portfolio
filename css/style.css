@@ -308,6 +308,11 @@ em { font-style: normal; color: var(--ink-2); }
 .case__row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
 .case__row .case__shot { aspect-ratio: 4/5; }
 .case__shot--wide { aspect-ratio: 16/9; }
+.case__block-text { max-width: 900px; padding: clamp(10px,2vh,30px) 0; }
+.case__block-text p { font-size: clamp(1.1rem, 1.6vw, 1.6rem); line-height: 1.5; }
+.case__block-quote { max-width: 1100px; padding: clamp(20px,4vh,60px) 0; }
+.case__block-quote blockquote { font-weight: 600; font-size: clamp(1.6rem, 3.4vw, 3rem); line-height: 1.15; letter-spacing: -0.03em; }
+.case__block-quote cite { display: block; margin-top: 16px; font-style: normal; color: var(--ink-2); font-size: 0.95rem; }
 @media (max-width: 720px) { .case__intro { grid-template-columns: 1fr; } .case__row { grid-template-columns: 1fr; } .case__row .case__shot { aspect-ratio: 4/3; } }
 .case__credits { padding: clamp(40px,6vh,80px) var(--pad); border-top: 1px solid var(--line); display: grid; grid-template-columns: auto 1fr; gap: clamp(24px,4vw,80px); }
 .case__credits h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-2); }

@@ -22,16 +22,17 @@
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
   function attr(s) { return String(s).replace(/'/g, "&#39;").replace(/"/g, "&quot;"); }
 
-  /* media: image / GIF / video by extension (or object {src,poster}) */
+  /* media: image / GIF / video by extension (or object {src,poster,focalX,focalY}) */
   function media(item, opts = {}) {
     if (!item) return "";
-    let src = item, poster = "";
-    if (typeof item === "object") { src = item.src; poster = item.poster || ""; }
+    let src = item, poster = "", fx = null, fy = null;
+    if (typeof item === "object") { src = item.src; poster = item.poster || ""; fx = item.focalX; fy = item.focalY; }
     if (!src) return "";
-    if (/\.(mp4|webm|mov|m4v)$/i.test(src)) return `<video src="${esc(src)}" autoplay muted loop playsinline ${poster ? `poster="${esc(poster)}"` : ""}></video>`;
-    return `<img src="${esc(src)}" alt="${esc(opts.alt || "")}" loading="${opts.eager ? "eager" : "lazy"}" />`;
+    const pos = (fx != null && fy != null) ? ` style="object-position:${+fx}% ${+fy}%"` : "";
+    if (/\.(mp4|webm|mov|m4v)$/i.test(src)) return `<video src="${esc(src)}" autoplay muted loop playsinline ${poster ? `poster="${esc(poster)}"` : ""}${pos}></video>`;
+    return `<img src="${esc(src)}" alt="${esc(opts.alt || "")}" loading="${opts.eager ? "eager" : "lazy"}"${pos} />`;
   }
-  const firstMedia = (pr) => (pr.images && pr.images.length ? pr.images[0] : null);
+  const firstMedia = (pr) => pr.hero || (pr.images && pr.images.length ? pr.images[0] : null);
 
   /* theme */
   function setTheme(t) { document.documentElement.setAttribute("data-theme", t); localStorage.setItem(THEME, t); const m = $('meta[name=theme-color]'); if (m) m.content = t === "dark" ? "#0c0b0a" : "#ffffff"; }
@@ -138,12 +139,17 @@
     const metaRows = [["Client", pr.client], ["Year", pr.year], ["Discipline", pr.category], ["Role", pr.role]].map(([k, v]) => `<div class="m"><span>${esc(k)}</span><span>${esc(v)}</span></div>`).join("");
     const stats = (pr.stats || []).map((s) => `<div class="case__stat" data-fx><div class="v">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join("");
 
-    const rest = (pr.images || []).slice(1);
-    let gal = "", i = 0;
-    while (i < rest.length) {
-      gal += `<div class="case__shot case__shot--wide" data-fx>${media(rest[i], { alt: "" })}</div>`; i++;
-      if (i + 1 < rest.length) { gal += `<div class="case__row"><div class="case__shot" data-fx>${media(rest[i], { alt: "" })}</div><div class="case__shot" data-fx>${media(rest[i + 1], { alt: "" })}</div></div>`; i += 2; }
-      else if (i < rest.length) { gal += `<div class="case__shot case__shot--wide" data-fx>${media(rest[i], { alt: "" })}</div>`; i++; }
+    let gal = "";
+    if (pr.blocks && pr.blocks.length) {
+      gal = pr.blocks.map((b) => blockHTML(b)).join("");
+    } else {
+      const rest = (pr.images || []).slice(1);
+      let i = 0;
+      while (i < rest.length) {
+        gal += `<div class="case__shot case__shot--wide" data-fx>${media(rest[i], { alt: "" })}</div>`; i++;
+        if (i + 1 < rest.length) { gal += `<div class="case__row"><div class="case__shot" data-fx>${media(rest[i], { alt: "" })}</div><div class="case__shot" data-fx>${media(rest[i + 1], { alt: "" })}</div></div>`; i += 2; }
+        else if (i < rest.length) { gal += `<div class="case__shot case__shot--wide" data-fx>${media(rest[i], { alt: "" })}</div>`; i++; }
+      }
     }
     const credits = (pr.team || []).map((t) => `<li>${esc(t)}</li>`).join("");
     const next = list[(idx + 1) % list.length], nextM = firstMedia(next);
@@ -165,6 +171,19 @@
     bindCursor($("#caseScroll")); observe($("#caseScroll"));
     if (!fromNav) history.pushState({ case: id }, "", "#" + id); else history.replaceState({ case: id }, "", "#" + id);
   }
+  /* render one case module/block */
+  function blockHTML(b) {
+    if (!b || !b.type) return "";
+    switch (b.type) {
+      case "image": return `<div class="case__shot case__shot--wide" data-fx>${media(b, { alt: b.caption || "" })}</div>`;
+      case "video": return `<div class="case__shot case__shot--wide" data-fx>${media({ src: b.src, poster: b.poster, focalX: b.focalX, focalY: b.focalY })}</div>`;
+      case "two-up": return `<div class="case__row"><div class="case__shot" data-fx>${media(b.a, { alt: "" })}</div><div class="case__shot" data-fx>${media(b.b, { alt: "" })}</div></div>`;
+      case "text": return `<div class="case__block-text" data-fx><p>${esc(b.text)}</p></div>`;
+      case "quote": return `<div class="case__block-quote" data-fx><blockquote>${esc(b.text)}</blockquote>${b.cite ? `<cite>${esc(b.cite)}</cite>` : ""}</div>`;
+      default: return "";
+    }
+  }
+
   function closeCase() {
     $("#case").classList.remove("open"); $("#case").setAttribute("aria-hidden", "true");
     document.body.classList.remove("lock"); document.documentElement.style.removeProperty("--accent");
@@ -305,5 +324,15 @@
     onScroll(); loader(); startCarousel();
     const h = location.hash.slice(1); if (h && data.projects.some((p) => p.id === h)) setTimeout(() => openCase(h, true), 400);
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+
+  async function boot() {
+    if (window.NCStore && window.NCStore.enabled) {
+      try {
+        const remote = await window.NCStore.load();
+        if (remote && Object.keys(remote).length) data = merge(clone(BASE), remote);
+      } catch (e) { console.warn("Supabase load failed — using built-in content.", e); }
+    }
+    init();
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
 })();
