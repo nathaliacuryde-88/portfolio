@@ -14,6 +14,8 @@ window.PORTFOLIO = {
     email: "nathaliacuryde@gmail.com",
     phone: "+49 176 7015644",
     linkedin: "https://www.linkedin.com/in/nathalia-cury-3a4605143/",
+    instagram: "https://instagram.com/nathcury",
+    instagramHandle: "@nathcury",
     available: "Open to selected freelance & collaborations",
     // Editorial statement headline. Words wrapped in *asterisks* render as serif italic accent.
     statement: "Nathalia Cury is a senior art director shaping *brands,* *editorial* & *AI-driven* design — from concept to launch.",

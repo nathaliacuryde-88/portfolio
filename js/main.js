@@ -50,8 +50,7 @@
       $("#heroIntro").textContent = p.heroIntro;
       $("#heroLoc").textContent = p.available || "";
 
-      const c = data.clients.map((x) => `<span>${esc(x)}<b> · </b></span>`).join("");
-      $("#clients").innerHTML = c + c + c + c;
+      if ($("#clients")) { const c = data.clients.map((x) => `<span>${esc(x)}<b> · </b></span>`).join(""); $("#clients").innerHTML = c + c + c + c; }
 
       const feat = (p.featured || []).map((id) => data.projects.find((x) => x.id === id)).filter(Boolean);
       $("#featured").innerHTML = feat.map((pr) => {
@@ -70,7 +69,7 @@
       renderCV();
 
       $("#contactHello").href = "mailto:" + p.email;
-      $("#contactRow").innerHTML = `<a href="mailto:${esc(p.email)}" data-cursor="">${esc(p.email)}</a><a href="${esc(p.linkedin)}" target="_blank" rel="noopener" data-cursor="">LinkedIn ↗</a><a href="tel:${esc(p.phone.replace(/\s/g, ""))}">${esc(p.phone)}</a><span>${esc(p.location)}</span>`;
+      $("#contactRow").innerHTML = `<a href="${esc(p.instagram)}" target="_blank" rel="noopener" data-cursor="">Instagram ${esc(p.instagramHandle)}</a><a href="${esc(p.linkedin)}" target="_blank" rel="noopener" data-cursor="">LinkedIn ↗</a><a href="tel:${esc(p.phone.replace(/\s/g, ""))}">${esc(p.phone)}</a><span>${esc(p.location)}</span>`;
     }
 
     if ($("#grid")) {  /* ---- WORK ---- */
@@ -81,17 +80,19 @@
     /* footer (both) */
     if ($("#footerName")) $("#footerName").textContent = "© " + p.name + " — Stuttgart";
     if ($("#year")) $("#year").textContent = new Date().getFullYear();
-    if ($("#menuFoot")) $("#menuFoot").innerHTML = `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a><span>${esc(p.location)}</span><a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn ↗</a>`;
+    if ($("#menuFoot")) $("#menuFoot").innerHTML = `<a href="${esc(p.instagram)}" target="_blank" rel="noopener">Instagram ${esc(p.instagramHandle)}</a><a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn ↗</a><span>${esc(p.location)}</span>`;
 
     bindAll();
   }
 
   function statementHTML(str) {
+    let i = 0;
     return str.split(/(\s+)/).map((tk) => {
       if (/^\s+$/.test(tk)) return " ";
       const m = tk.match(/^\*(.+?)\*([.,&]?)$/);
       const content = m ? `<em>${esc(m[1] + (m[2] || ""))}</em>` : esc(tk);
-      return `<span class="word"><span>${content}</span></span> `;
+      const delay = (i++ * 0.05).toFixed(2);
+      return `<span class="word"><span style="transition-delay:${delay}s">${content}</span></span> `;
     }).join("");
   }
 
