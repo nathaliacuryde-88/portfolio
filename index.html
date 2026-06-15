@@ -3,53 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0e0e0e" />
+  <meta name="theme-color" content="#f4f2ec" />
   <title>Nathalia Cury — Art Director & Designer</title>
   <meta name="description" content="Nathalia Cury — Senior Art Director & Designer. Branding, editorial and AI-driven design. Based in Stuttgart." />
-
   <meta property="og:title" content="Nathalia Cury — Art Director & Designer" />
-  <meta property="og:description" content="Branding, editorial and AI-driven design." />
+  <meta property="og:description" content="Branding, editorial and AI-driven design. Based in Stuttgart." />
   <meta property="og:type" content="website" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Hanken+Grotesk:wght@300..800&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <!-- Page-load intro -->
   <div class="loader" id="loader" aria-hidden="true">
-    <div class="loader__inner">
-      <span class="loader__count" id="loaderCount">0</span>
-      <span class="loader__name">Nathalia Cury</span>
-    </div>
+    <div class="loader__inner"><span class="loader__count" id="loaderCount">0</span><span class="loader__name">Nathalia Cury — Portfolio ’26</span></div>
   </div>
 
-  <!-- Custom cursor (desktop) -->
   <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
-
-  <!-- Scroll progress -->
   <div class="progress" id="progress" aria-hidden="true"></div>
 
-  <!-- Navigation -->
   <header class="nav" id="nav">
-    <a href="#top" class="nav__brand" data-cursor="" aria-label="Home">
-      <span class="nav__mark">NC</span>
-    </a>
-    <nav class="nav__links" aria-label="Primary">
-      <a href="#work" data-link>Work</a>
-      <a href="#about" data-link>About</a>
-      <a href="#cv" data-link>CV</a>
-      <a href="#contact" data-link>Contact</a>
-    </nav>
-    <button class="nav__menu" id="navMenu" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span>
-    </button>
+    <a href="#top" class="nav__brand" data-cursor="" aria-label="Home">Nathalia Cury</a>
+    <div class="nav__right">
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#work" data-link>Work</a>
+        <a href="#about" data-link>About</a>
+        <a href="#cv" data-link>CV</a>
+        <a href="#contact" data-link>Contact</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" data-cursor="" aria-label="Toggle light / dark"></button>
+      <button class="nav__menu" id="navMenu" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+    </div>
   </header>
 
-  <!-- Mobile menu overlay -->
   <div class="menu" id="menu" aria-hidden="true">
     <nav class="menu__links">
       <a href="#work" data-link>Work</a>
@@ -61,89 +49,64 @@
   </div>
 
   <main id="top">
-    <!-- HERO -->
     <section class="hero" id="hero">
-      <div class="hero__top">
-        <span class="hero__role" data-fx="up"></span>
-        <span class="hero__loc" data-fx="up"></span>
-      </div>
-      <h1 class="hero__title" id="heroTitle" aria-label=""></h1>
+      <div class="hero__top"><span data-fx>Senior Art Director &amp; Designer</span><span data-fx id="heroLoc"></span></div>
+      <h1 class="hero__statement" id="heroStatement"></h1>
       <div class="hero__bottom">
-        <p class="hero__intro" data-fx="up"></p>
-        <a href="#work" class="hero__scroll" data-cursor="scroll" aria-label="Scroll to work">
-          <span class="hero__scroll-line"></span>
-          <span>Selected work</span>
-        </a>
+        <p class="hero__intro" data-fx id="heroIntro"></p>
+        <a href="#work" class="hero__scroll" data-cursor="scroll"><i></i><span>Selected work</span></a>
       </div>
     </section>
 
-    <!-- MARQUEE -->
-    <section class="marquee" aria-hidden="true">
-      <div class="marquee__track" id="marquee"></div>
-    </section>
+    <section class="clients" aria-hidden="true"><div class="clients__track" id="clients"></div></section>
 
-    <!-- WORK -->
     <section class="work" id="work">
       <div class="section-head">
-        <span class="section-head__index">01</span>
-        <h2 class="section-head__title" data-fx="up">Selected Work</h2>
+        <span class="section-head__i">01 — Work</span>
+        <h2 class="section-head__t" data-fx>Selected projects</h2>
         <div class="filters" id="filters" role="tablist" aria-label="Filter work"></div>
       </div>
       <div class="grid" id="grid"></div>
     </section>
 
-    <!-- ABOUT -->
     <section class="about" id="about">
-      <div class="section-head">
-        <span class="section-head__index">02</span>
-        <h2 class="section-head__title" data-fx="up">About</h2>
-      </div>
+      <div class="section-head"><span class="section-head__i">02 — About</span><h2 class="section-head__t" data-fx>About</h2></div>
       <div class="about__grid">
-        <div class="about__lead">
-          <p class="about__headline" data-fx="up" id="aboutHeadline"></p>
-        </div>
+        <p class="about__headline" data-fx id="aboutHeadline"></p>
         <div class="about__body" id="aboutBody"></div>
-        <ul class="about__facts" id="aboutFacts"></ul>
       </div>
+      <div class="stats" id="aboutStats"></div>
+      <div class="caps" id="aboutCaps"></div>
     </section>
 
-    <!-- CV -->
     <section class="cv" id="cv">
-      <div class="section-head">
-        <span class="section-head__index">03</span>
-        <h2 class="section-head__title" data-fx="up">Curriculum Vitae</h2>
-        <button class="btn-print" id="btnPrint" data-cursor="">Download / Print</button>
-      </div>
+      <div class="section-head"><span class="section-head__i">03 — CV</span><h2 class="section-head__t" data-fx>Curriculum Vitae</h2><button class="btn" id="btnPrint" data-cursor="">Download / Print</button></div>
       <div class="cv__grid" id="cvGrid"></div>
     </section>
 
-    <!-- CONTACT -->
     <section class="contact" id="contact">
-      <div class="contact__inner">
-        <span class="contact__kicker" data-fx="up">Let's make something</span>
-        <a class="contact__mail" id="contactMail" data-cursor="email" href="#"></a>
-        <div class="contact__row" id="contactRow"></div>
-      </div>
+      <span class="contact__kicker" data-fx>Let’s make something</span>
+      <a class="contact__mail" id="contactMail" data-cursor="email" href="#"></a>
+      <div class="contact__row" id="contactRow"></div>
     </section>
   </main>
 
   <footer class="footer">
     <span id="footerName"></span>
-    <span class="footer__credit">Designed &amp; coded with care · <span id="year"></span></span>
-    <button class="footer__edit" id="editToggle" title="Toggle edit mode">Edit</button>
+    <span>Designed &amp; coded with care · <span id="year"></span></span>
+    <button class="footer__edit" id="editToggle" title="Edit mode">Edit</button>
   </footer>
 
-  <!-- Project lightbox -->
-  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true">
-    <button class="lightbox__close" id="lightboxClose" aria-label="Close">Close</button>
-    <div class="lightbox__scroll" id="lightboxScroll"></div>
+  <!-- Case study overlay -->
+  <div class="case" id="case" aria-hidden="true" role="dialog" aria-modal="true">
+    <button class="case__close" id="caseClose" aria-label="Close">Close ✕</button>
+    <div class="case__scroll" id="caseScroll"></div>
   </div>
 
-  <!-- Edit-mode toolbar -->
   <div class="editbar" id="editbar" aria-hidden="true">
     <span class="editbar__dot"></span>
-    <span class="editbar__msg">Edit mode — click text to change it. Changes save in this browser.</span>
-    <button id="editExport">Export JSON</button>
+    <span class="editbar__msg">Edit mode — click text to change it. Saved in this browser.</span>
+    <button id="editExport">Export</button>
     <button id="editReset">Reset</button>
     <button id="editExit">Done</button>
   </div>
