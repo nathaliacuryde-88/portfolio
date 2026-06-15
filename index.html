@@ -19,6 +19,7 @@
 </head>
 <body data-page="home">
   <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__msg"><span class="loader__emoji" id="loaderEmoji">✺</span><span class="loader__phrase" id="loaderPhrase">Booting up the studio…</span></div>
     <div class="loader__inner">
       <span class="loader__name">Nathalia Cury — Portfolio ’26</span>
       <span class="loader__count" id="loaderCount">0</span>
@@ -37,7 +38,10 @@
         <a href="#cv" data-link>CV</a>
         <a href="#contact" data-link>Contact</a>
       </nav>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light / dark theme"></button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light / dark theme" title="Toggle theme">
+        <svg class="ic-sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+        <svg class="ic-moon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 14.5A8 8 0 0 1 9.5 4 7 7 0 1 0 20 14.5z"/></svg>
+      </button>
       <button class="nav__menu" id="navMenu" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
     </div>
   </header>
@@ -58,6 +62,7 @@
       <div class="hero__media" id="heroMedia"></div>
       <div class="hero__overlay">
         <span class="hero__eyebrow" id="heroEyebrow"></span>
+        <div class="hero__dots" id="heroDots" aria-hidden="true"></div>
         <a href="#statement" class="hero__scroll" data-cursor=""><span>Scroll</span><i></i></a>
       </div>
     </section>

@@ -22,6 +22,15 @@ window.PORTFOLIO = {
     // BIG landing hero. Use any image, GIF or video. To use a video/GIF just point
     // at the file — .mp4/.webm/.mov auto-render as looping video, everything else as image.
     // Example video:  heroMedia: { src: "assets/work/showreel.mp4", poster: "assets/work/amg-2.jpg" }
+    // BIG landing hero — a CAROUSEL. Mix images, GIFs or videos freely.
+    // .mp4/.webm/.mov auto-play as looping video; everything else is an image.
+    heroSlides: [
+      "assets/work/yaga-1.jpg",
+      "assets/work/amg-2.jpg",
+      "assets/work/x1f-1.jpg",
+      "assets/work/volocopter-1.jpg",
+      "assets/work/ortlieb-1.jpg",
+    ],
     heroMedia: { src: "assets/work/yaga-1.jpg" },
     // Six projects featured as big tiles on the landing (3 across, 2 rows). By id.
     featured: ["x1f", "amg", "diva-e", "ortlieb", "volocopter", "ifood"],

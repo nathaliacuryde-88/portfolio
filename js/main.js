@@ -42,7 +42,9 @@
     const p = data.profile;
 
     if ($("#heroMedia")) {  /* ---- HOME ---- */
-      $("#heroMedia").innerHTML = media(p.heroMedia, { eager: true, alt: p.name });
+      const slides = (p.heroSlides && p.heroSlides.length) ? p.heroSlides : [p.heroMedia];
+      $("#heroMedia").innerHTML = slides.map((s, i) => `<div class="hero__slide${i === 0 ? " active" : ""}">${media(s, { eager: i === 0, alt: p.name })}</div>`).join("");
+      if ($("#heroDots")) $("#heroDots").innerHTML = slides.length > 1 ? slides.map((_, i) => `<button class="${i === 0 ? "active" : ""}" data-i="${i}" aria-label="Slide ${i + 1}"></button>`).join("") : "";
       $("#heroEyebrow").textContent = p.role + " — " + p.location;
       $("#heroStatement").innerHTML = statementHTML(p.statement);
       $("#heroIntro").textContent = p.heroIntro;
@@ -225,11 +227,43 @@
   }
   window.addEventListener("scroll", onScroll, { passive: true });
 
+  /* hero carousel */
+  function startCarousel() {
+    const wrap = $("#heroMedia"); if (!wrap) return;
+    const slides = $$(".hero__slide", wrap); if (slides.length < 2) return;
+    const dots = $$("#heroDots button");
+    let idx = 0, timer;
+    const go = (n) => {
+      slides[idx].classList.remove("active"); if (dots[idx]) dots[idx].classList.remove("active");
+      idx = (n + slides.length) % slides.length;
+      slides[idx].classList.add("active"); if (dots[idx]) dots[idx].classList.add("active");
+    };
+    const reset = () => { clearInterval(timer); if (!reduce) timer = setInterval(() => go(idx + 1), 4600); };
+    dots.forEach((d) => d.addEventListener("click", () => { go(+d.dataset.i); reset(); }));
+    reset();
+  }
+
+  const LOAD_PHRASES = [
+    ["✺", "Booting up the studio…"],
+    ["🎨", "Mixing the palette…"],
+    ["✏️", "Kerning the universe…"],
+    ["📐", "Aligning the grid…"],
+    ["🅰️", "Setting the type…"],
+    ["✨", "Polishing the pixels…"],
+    ["🚀", "Almost there — say hello soon!"],
+  ];
   function loader() {
     const l = $("#loader"); if (!l) { if ($("#hero")) $("#hero").classList.add("ready"); return; }
-    const cnt = $("#loaderCount");
+    const cnt = $("#loaderCount"), ph = $("#loaderPhrase"), em = $("#loaderEmoji");
+    const setPhrase = (i) => { i = Math.max(0, Math.min(LOAD_PHRASES.length - 1, i)); if (ph) ph.textContent = LOAD_PHRASES[i][1]; if (em) em.textContent = LOAD_PHRASES[i][0]; };
     if (reduce) { l.classList.add("done"); if ($("#hero")) $("#hero").classList.add("ready"); return; }
-    let n = 0; const t = setInterval(() => { n += (Math.random() * 16 + 6) | 0; if (n >= 100) { n = 100; clearInterval(t); setTimeout(() => { l.classList.add("done"); if ($("#hero")) $("#hero").classList.add("ready"); }, 320); } cnt.textContent = n; }, 110);
+    let n = 0;
+    const t = setInterval(() => {
+      n += (Math.random() * 15 + 5) | 0;
+      if (n >= 100) { n = 100; clearInterval(t); setPhrase(LOAD_PHRASES.length - 1); setTimeout(() => { l.classList.add("done"); if ($("#hero")) $("#hero").classList.add("ready"); }, 360); }
+      else setPhrase(Math.floor(n / (100 / LOAD_PHRASES.length)));
+      cnt.textContent = n;
+    }, 130);
   }
 
   function bindMenu() {
@@ -267,7 +301,7 @@
 
   function init() {
     render(); bindFilters(); bindMenu(); bindAnchors(); bindTheme(); bindCase(); bindPrint(); bindEditUI();
-    onScroll(); loader();
+    onScroll(); loader(); startCarousel();
     const h = location.hash.slice(1); if (h && data.projects.some((p) => p.id === h)) setTimeout(() => openCase(h, true), 400);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
