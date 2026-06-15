@@ -19,6 +19,12 @@ window.PORTFOLIO = {
     statement: "Nathalia Cury is a senior art director shaping *brands,* *editorial* & *AI-driven* design — from concept to launch.",
     heroIntro:
       "Award-winning art director based in Stuttgart. Currently leading branding at Strichpunkt Design.",
+    // BIG landing hero. Use any image, GIF or video. To use a video/GIF just point
+    // at the file — .mp4/.webm/.mov auto-render as looping video, everything else as image.
+    // Example video:  heroMedia: { src: "assets/work/showreel.mp4", poster: "assets/work/amg-2.jpg" }
+    heroMedia: { src: "assets/work/yaga-1.jpg" },
+    // A few projects featured as big tiles directly under the hero (by id).
+    featured: ["x1f", "amg", "ortlieb", "volocopter"],
   },
 
   // Logos shown in the trust row (text-set client names)
