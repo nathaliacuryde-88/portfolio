@@ -201,7 +201,7 @@
         <div style="margin-top:14px"><label>Description (full case intro paragraph)</label><textarea data-bind="data.description">${esc(d.description)}</textarea></div>
       </div>
 
-      <div class="section"><h2>Hero / cover media</h2>${mediaSlot("data.hero", d.hero)}</div>
+      <div class="section"><h2>Hero / cover media</h2>${mediaSlot("data.hero", d.hero, "16/9")}</div>
 
       <div class="section"><h2>Product intel — the stats (e.g. “16→1”, “1,200 employees”)</h2>
         <div class="stack" id="stats">${statRows}</div>
@@ -234,9 +234,9 @@
 
   function blockEditor(b, i) {
     let inner = "";
-    if (b.type === "image") inner = mediaSlot(`data.blocks.${i}`, b) + `<div style="margin-top:8px"><label>Caption (optional)</label><input data-bind="data.blocks.${i}.caption" value="${esc(b.caption || "")}"/></div>`;
-    else if (b.type === "video") inner = mediaSlot(`data.blocks.${i}`, b);
-    else if (b.type === "two-up") inner = `<div class="row cols-2"><div><label>Left</label>${mediaSlot(`data.blocks.${i}.a`, b.a)}</div><div><label>Right</label>${mediaSlot(`data.blocks.${i}.b`, b.b)}</div></div>`;
+    if (b.type === "image") inner = mediaSlot(`data.blocks.${i}`, b, "16/9") + `<div style="margin-top:8px"><label>Caption (optional)</label><input data-bind="data.blocks.${i}.caption" value="${esc(b.caption || "")}"/></div>`;
+    else if (b.type === "video") inner = mediaSlot(`data.blocks.${i}`, b, "16/9");
+    else if (b.type === "two-up") inner = `<div class="row cols-2"><div><label>Left</label>${mediaSlot(`data.blocks.${i}.a`, b.a, "4/5")}</div><div><label>Right</label>${mediaSlot(`data.blocks.${i}.b`, b.b, "4/5")}</div></div>`;
     else if (b.type === "text") inner = `<textarea data-bind="data.blocks.${i}.text" placeholder="Paragraph…">${esc(b.text || "")}</textarea>`;
     else if (b.type === "quote") inner = `<textarea data-bind="data.blocks.${i}.text" placeholder="Quote…">${esc(b.text || "")}</textarea><div style="margin-top:8px"><label>Cite (optional)</label><input data-bind="data.blocks.${i}.cite" value="${esc(b.cite || "")}"/></div>`;
     return `<div class="item" data-block="${i}">
@@ -279,27 +279,36 @@
   }
 
   /* ===================== MEDIA + FOCAL ===================== */
-  function mediaSlot(path, m) {
+  function mediaSlot(path, m, aspect) {
+    aspect = aspect || "16/9";
     const src = m && (typeof m === "object" ? m.src : m);
     const fx = m && typeof m === "object" ? m.focalX : null;
     const fy = m && typeof m === "object" ? m.focalY : null;
-    const preview = src ? (isVid(src) ? `<video src="${esc(src)}" muted></video>` : `<img src="${esc(src)}" />`) : "No media";
+    const vid = src && isVid(src);
+    const preview = src ? (vid ? `<video src="${esc(src)}" muted></video>` : `<img src="${esc(src)}" />`) : "No media";
     const marker = src && fx != null ? `<span class="focal" style="left:${fx}%;top:${fy}%"></span>` : "";
     return `<div class="media ${src ? "pickable" : "empty"}" data-focal="${path}">${preview}${marker}</div>
-      <div class="kv" style="margin-top:8px"><input type="file" accept="image/*,video/*" data-upload="${path}"/>${src ? `<button class="btn ghost sm" data-clear="${path}">Remove</button>` : ""}</div>
-      <div class="hint">${src ? "Click the preview to set the focal point (mobile crop)." : "Upload an image, GIF or video."}</div>`;
+      <div class="kv" style="margin-top:8px"><input type="file" accept="image/*,video/*" data-upload="${path}" data-aspect="${aspect}"/>${src && !vid ? `<button class="btn ghost sm" data-crop="${path}" data-aspect="${aspect}">Adjust crop</button>` : ""}${src ? `<button class="btn ghost sm" data-clear="${path}">Remove</button>` : ""}</div>
+      <div class="hint">${src ? (vid ? "Video — click preview to set focal point." : "Click preview to set the focal point, or “Adjust crop” to re-frame.") : "Upload an image, GIF or video — you’ll crop &amp; it auto-compresses."}</div>`;
   }
   function wireMedia() {
     app.querySelectorAll("[data-upload]").forEach((inp) => inp.onchange = async (e) => {
       const file = e.target.files[0]; if (!file) return;
-      harvest(); toast("Uploading…");
+      harvest();
       try {
-        const url = await uploadFile(file);
+        const url = await processUpload(file, inp.dataset.aspect);
+        if (!url) return;
         const path = inp.dataset.upload;
         const cur = getPath(editing, path) || {};
-        setPath(editing, path, { src: url, focalX: (cur.focalX != null ? cur.focalX : 50), focalY: (cur.focalY != null ? cur.focalY : 50), poster: cur.poster });
+        setPath(editing, path, { src: url, focalX: 50, focalY: 50, poster: cur.poster });
         renderProjectEditor(); toast("Uploaded ✓");
       } catch (err) { toast(err.message || "Upload failed", true); }
+    });
+    app.querySelectorAll("[data-crop]").forEach((b) => b.onclick = async () => {
+      harvest(); const path = b.dataset.crop; const cur = getPath(editing, path); const src = typeof cur === "object" ? cur.src : cur;
+      if (!src) return;
+      try { const blob = await openCropper(src, b.dataset.aspect); if (!blob) return; toast("Uploading…"); const url = await uploadBlob(blob); setPath(editing, path, { src: url, focalX: 50, focalY: 50 }); renderProjectEditor(); toast("Re-cropped ✓"); }
+      catch (err) { toast(err.message || "Crop failed", true); }
     });
     app.querySelectorAll("[data-clear]").forEach((b) => b.onclick = () => { harvest(); setPath(editing, b.dataset.clear, null); renderProjectEditor(); });
     app.querySelectorAll(".media.pickable[data-focal]").forEach((el) => el.onclick = (e) => {
@@ -325,11 +334,12 @@
     const p = site.profile || (site.profile = {});
     const slides = (p.heroSlides || []).map((s, i) => {
       const src = typeof s === "object" ? s.src : s, fx = typeof s === "object" ? s.focalX : null, fy = typeof s === "object" ? s.focalY : null;
-      const prev = src ? (isVid(src) ? `<video src="${esc(src)}" muted></video>` : `<img src="${esc(src)}"/>`) : "No media";
+      const vid = src && isVid(src);
+      const prev = src ? (vid ? `<video src="${esc(src)}" muted></video>` : `<img src="${esc(src)}"/>`) : "No media";
       const marker = src && fx != null ? `<span class="focal" style="left:${fx}%;top:${fy}%"></span>` : "";
       return `<div class="item"><div class="head"><span class="t">Slide ${i + 1}</span><div class="actions"><button class="btn ghost sm" data-smove="${i}:-1">↑</button><button class="btn ghost sm" data-smove="${i}:1">↓</button><button class="btn ghost sm danger" data-sdel="${i}">✕</button></div></div>
         <div class="media ${src ? "pickable" : "empty"}" data-sfocal="${i}">${prev}${marker}</div>
-        <div class="kv" style="margin-top:8px"><input type="file" accept="image/*,video/*" data-supload="${i}"/></div>
+        <div class="kv" style="margin-top:8px"><input type="file" accept="image/*,video/*" data-supload="${i}"/>${src && !vid ? `<button class="btn ghost sm" data-scrop="${i}">Adjust crop</button>` : ""}</div>
         <div class="hint">Click preview to set the focal point.</div></div>`;
     }).join("");
 
@@ -369,14 +379,19 @@
     document.getElementById("savesite").onclick = saveSite;
     document.getElementById("addslide").onclick = () => document.getElementById("slidefile").click();
     document.getElementById("slidefile").onchange = async (e) => {
-      const f = e.target.files[0]; if (!f) return; harvestSite(); toast("Uploading…");
-      try { const url = await uploadFile(f); p.heroSlides = p.heroSlides || []; p.heroSlides.push({ src: url, focalX: 50, focalY: 50 }); renderSite(); toast("Added ✓"); }
+      const f = e.target.files[0]; if (!f) return; harvestSite();
+      try { const url = await processUpload(f, "16/9"); if (!url) return; p.heroSlides = p.heroSlides || []; p.heroSlides.push({ src: url, focalX: 50, focalY: 50 }); renderSite(); toast("Added ✓"); }
       catch (err) { toast(err.message, true); }
     };
     app.querySelectorAll("[data-supload]").forEach((inp) => inp.onchange = async (e) => {
-      const f = e.target.files[0]; if (!f) return; harvestSite(); toast("Uploading…");
-      try { const url = await uploadFile(f); const i = +inp.dataset.supload; const cur = p.heroSlides[i]; const fo = typeof cur === "object" ? cur : {}; p.heroSlides[i] = { src: url, focalX: fo.focalX != null ? fo.focalX : 50, focalY: fo.focalY != null ? fo.focalY : 50 }; renderSite(); toast("Replaced ✓"); }
+      const f = e.target.files[0]; if (!f) return; harvestSite();
+      try { const url = await processUpload(f, "16/9"); if (!url) return; const i = +inp.dataset.supload; p.heroSlides[i] = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Replaced ✓"); }
       catch (err) { toast(err.message, true); }
+    });
+    app.querySelectorAll("[data-scrop]").forEach((b) => b.onclick = async () => {
+      harvestSite(); const i = +b.dataset.scrop; const cur = p.heroSlides[i]; const src = typeof cur === "object" ? cur.src : cur; if (!src) return;
+      try { const blob = await openCropper(src, "16/9"); if (!blob) return; toast("Uploading…"); const url = await uploadBlob(blob); p.heroSlides[i] = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Re-cropped ✓"); }
+      catch (err) { toast(err.message || "Crop failed", true); }
     });
     app.querySelectorAll("[data-sdel]").forEach((b) => b.onclick = () => { harvestSite(); p.heroSlides.splice(+b.dataset.sdel, 1); renderSite(); });
     app.querySelectorAll("[data-smove]").forEach((b) => b.onclick = () => { harvestSite(); const [i, dir] = b.dataset.smove.split(":").map(Number); const j = i + dir; if (j < 0 || j >= p.heroSlides.length) return; [p.heroSlides[i], p.heroSlides[j]] = [p.heroSlides[j], p.heroSlides[i]]; renderSite(); });
@@ -394,6 +409,99 @@
     harvestSite();
     const { error } = await sb.from("site").upsert({ id: 1, data: site }, { onConflict: "id" });
     toast(error ? error.message : "Site saved ✓", !!error);
+  }
+
+  /* ===================== IMAGE PROCESSING + CROPPER ===================== */
+  const MAXDIM = 2200, QUALITY = 0.82;
+  function loadImage(src, cors) { return new Promise((res, rej) => { const i = new Image(); if (cors) i.crossOrigin = "anonymous"; i.onload = () => res(i); i.onerror = () => rej(new Error("load failed")); i.src = src; }); }
+  const ASPECTS = [["Original", null], ["16:9", 16 / 9], ["3:2", 3 / 2], ["4:3", 4 / 3], ["1:1", 1], ["4:5", 4 / 5], ["9:16", 9 / 16]];
+  function aspNum(a) { if (a == null || a === "original") return null; if (typeof a === "number") return a; const m = String(a).split(/[/:]/).map(Number); return m.length === 2 && m[1] ? m[0] / m[1] : null; }
+
+  // Upload a Blob/File; images are re-encoded to compact WebP, videos pass through.
+  async function uploadBlob(blob, ext) {
+    ext = ext || "webp";
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await sb.storage.from(cfg.bucket || "media").upload(path, blob, { contentType: blob.type || "image/webp", upsert: false });
+    if (error) throw error;
+    return sb.storage.from(cfg.bucket || "media").getPublicUrl(path).data.publicUrl;
+  }
+
+  // Open the pan/zoom cropper. Returns a compressed WebP Blob, or null if cancelled.
+  function openCropper(srcOrFile, defAspect) {
+    return new Promise(async (resolve) => {
+      let img, objURL = null;
+      try {
+        if (typeof srcOrFile === "string") img = await loadImage(srcOrFile, true);
+        else { objURL = URL.createObjectURL(srcOrFile); img = await loadImage(objURL, false); }
+      } catch (e) { toast("Couldn’t load that image", true); return resolve(null); }
+      const natW = img.naturalWidth, natH = img.naturalHeight;
+
+      let aspect = aspNum(defAspect);
+      let z = 1, ox = 0, oy = 0, stageW = 0, stageH = 0, cover = 1;
+      const ov = document.createElement("div"); ov.className = "crop-ov";
+      ov.innerHTML = `<div class="crop-box">
+        <h3>Adjust crop — drag to move, zoom with the slider</h3>
+        <div class="crop-stage" id="cstage"><img id="cimg" src="${img.src}"/></div>
+        <div class="crop-controls">
+          <label style="margin:0">Ratio</label>
+          <select id="casp">${ASPECTS.map(([l, v]) => `<option value="${v == null ? "" : v}" ${v === aspect ? "selected" : ""}>${l}</option>`).join("")}</select>
+          <div class="grow"><input id="czoom" type="range" min="1" max="4" step="0.01" value="1"/></div>
+        </div>
+        <div class="crop-actions">
+          <button class="btn ghost" id="ccancel">Cancel</button>
+          <button class="btn" id="capply">Apply</button>
+        </div></div>`;
+      document.body.appendChild(ov);
+      const stage = ov.querySelector("#cstage"), im = ov.querySelector("#cimg");
+      const zoom = ov.querySelector("#czoom"), aspSel = ov.querySelector("#casp");
+
+      function layout() {
+        const maxW = Math.min(680, window.innerWidth - 80);
+        const a = aspect || (natW / natH);
+        stageW = maxW; stageH = Math.round(maxW / a);
+        const maxH = window.innerHeight - 230;
+        if (stageH > maxH) { stageH = maxH; stageW = Math.round(stageH * a); }
+        stage.style.width = stageW + "px"; stage.style.height = stageH + "px";
+        cover = Math.max(stageW / natW, stageH / natH);
+        clamp(); paint();
+      }
+      function clamp() {
+        const dW = natW * cover * z, dH = natH * cover * z;
+        ox = Math.min(0, Math.max(stageW - dW, ox)); oy = Math.min(0, Math.max(stageH - dH, oy));
+        if (dW <= stageW) ox = (stageW - dW) / 2; if (dH <= stageH) oy = (stageH - dH) / 2;
+      }
+      function paint() { const dW = natW * cover * z, dH = natH * cover * z; im.style.width = dW + "px"; im.style.height = dH + "px"; im.style.left = ox + "px"; im.style.top = oy + "px"; }
+
+      let drag = false, px = 0, py = 0;
+      stage.addEventListener("pointerdown", (e) => { drag = true; px = e.clientX; py = e.clientY; stage.classList.add("drag"); stage.setPointerCapture(e.pointerId); });
+      stage.addEventListener("pointermove", (e) => { if (!drag) return; ox += e.clientX - px; oy += e.clientY - py; px = e.clientX; py = e.clientY; clamp(); paint(); });
+      stage.addEventListener("pointerup", () => { drag = false; stage.classList.remove("drag"); });
+      zoom.addEventListener("input", () => { const cx = stageW / 2, cy = stageH / 2, oldz = z; z = +zoom.value; ox = cx - (cx - ox) * (z / oldz); oy = cy - (cy - oy) * (z / oldz); clamp(); paint(); });
+      aspSel.addEventListener("change", () => { aspect = aspSel.value === "" ? null : +aspSel.value; z = 1; zoom.value = 1; ox = oy = 0; layout(); });
+      window.addEventListener("resize", layout);
+
+      ov.querySelector("#ccancel").onclick = () => { cleanup(); resolve(null); };
+      ov.querySelector("#capply").onclick = () => {
+        const sx = (-ox) / (cover * z), sy = (-oy) / (cover * z), sw = stageW / (cover * z), sh = stageH / (cover * z);
+        const ratio = stageW / stageH; let outW, outH;
+        if (stageW >= stageH) { outW = Math.min(MAXDIM, Math.round(sw)); outH = Math.round(outW / ratio); }
+        else { outH = Math.min(MAXDIM, Math.round(sh)); outW = Math.round(outH * ratio); }
+        const c = document.createElement("canvas"); c.width = outW; c.height = outH;
+        const ctx = c.getContext("2d"); ctx.imageSmoothingQuality = "high";
+        try { ctx.drawImage(img, sx, sy, sw, sh, 0, 0, outW, outH); }
+        catch (e) { cleanup(); toast("This image blocks cropping — re-upload it instead.", true); return resolve(null); }
+        c.toBlob((blob) => { cleanup(); resolve(blob); }, "image/webp", QUALITY);
+      };
+      function cleanup() { window.removeEventListener("resize", layout); if (objURL) URL.revokeObjectURL(objURL); ov.remove(); }
+      layout();
+    });
+  }
+
+  // Route a chosen file through crop+compress (images) or straight upload (video). Returns url|null.
+  async function processUpload(file, aspect) {
+    if (file.type.startsWith("video") || isVid(file.name)) { toast("Uploading video…"); return await uploadFile(file); }
+    const blob = await openCropper(file, aspect); if (!blob) return null;
+    toast("Uploading…"); return await uploadBlob(blob);
   }
 
   /* ===================== SEED ===================== */
