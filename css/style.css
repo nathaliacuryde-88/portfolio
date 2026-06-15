@@ -157,7 +157,7 @@ em { font-style: normal; color: var(--ink-2); }
 .statement__text { font-weight: 600; font-size: clamp(1.9rem, 5.6vw, 5.4rem); line-height: 1.03; letter-spacing: -0.035em; max-width: 22ch; }
 .statement__text .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.16em; margin-bottom: -0.16em; }
 .statement__text .word > span { display: inline-block; transform: translateY(110%); transition: transform 0.9s var(--ease-io); }
-.statement.in .statement__text .word > span { transform: translateY(0); }
+.statement__text.in .word > span { transform: translateY(0); }
 .statement__foot { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-top: clamp(36px, 6vh, 72px); border-top: 1px solid var(--line); padding-top: 20px; }
 .statement__intro { max-width: 46ch; font-size: clamp(1rem, 1.15vw, 1.18rem); color: var(--ink-2); }
 .statement__loc { font-size: 0.85rem; color: var(--ink-2); text-align: right; }

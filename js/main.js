@@ -194,9 +194,9 @@
   function bindAll() { observe(document); bindTiles(); bindCursor(document); bindEdit(); }
   let io;
   function observe(scope) {
-    if (reduce) { $$("[data-fx], .card, .ftile, .statement", scope).forEach((e) => e.classList.add("in")); return; }
+    if (reduce) { $$("[data-fx], .card, .ftile, .statement__text", scope).forEach((e) => e.classList.add("in")); return; }
     if (!io) io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
-    $$("[data-fx], .card, .ftile, .statement", scope).forEach((e) => io.observe(e));
+    $$("[data-fx], .card, .ftile, .statement__text", scope).forEach((e) => io.observe(e));
   }
   function bindTiles() {
     $$(".card", document).forEach((el) => { if (el.__t) return; el.__t = 1; el.addEventListener("click", () => openCase(el.dataset.id)); });
@@ -222,7 +222,7 @@
     const st = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight, nav = $("#nav");
     if ($("#progress")) $("#progress").style.width = (h > 0 ? (st / h) * 100 : 0) + "%";
     if (!nav) return;
-    if (st > lastY && st > 500) nav.classList.add("hidden"); else nav.classList.remove("hidden");
+    /* nav stays visible at all times (persistent) — only swap to solid past the hero */
     if (PAGE === "home") nav.classList.toggle("solid", st > window.innerHeight * 0.78);
     lastY = st;
   }
