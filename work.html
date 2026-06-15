@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>Work — Nathalia Cury</title>
+  <meta name="description" content="Selected work by Nathalia Cury — branding, editorial and AI-driven design." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="work">
+  <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="nav nav--solid" id="nav">
+    <a href="index.html" class="nav__brand" data-cursor="" aria-label="Home">Nathalia Cury</a>
+    <div class="nav__group">
+      <nav class="nav__links" aria-label="Primary">
+        <a href="work.html" class="active" data-cursor="">Work</a>
+        <a href="index.html#about" data-cursor="">About</a>
+        <a href="index.html#cv" data-cursor="">CV</a>
+        <a href="index.html#contact" data-cursor="">Contact</a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light / dark theme"></button>
+      <button class="nav__menu" id="navMenu" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <div class="menu" id="menu" aria-hidden="true">
+    <nav class="menu__links">
+      <a href="work.html">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#cv">CV</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="menu__foot" id="menuFoot"></div>
+  </div>
+
+  <main id="top">
+    <!-- WORK PAGE HEADER + FILTER (Koto-style) -->
+    <header class="workhead">
+      <h1 class="workhead__title">Selected<br/>Work</h1>
+      <div class="workhead__bar">
+        <div class="filters" id="filters" role="tablist" aria-label="Filter work"></div>
+        <span class="workhead__count" id="workCount"></span>
+      </div>
+    </header>
+
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <footer class="footer">
+    <span id="footerName"></span>
+    <span class="footer__credit">Built with care · <span id="year"></span></span>
+    <button class="footer__edit" id="editToggle" title="Toggle edit mode">Edit</button>
+  </footer>
+
+  <div class="case" id="case" aria-hidden="true" role="dialog" aria-modal="true">
+    <button class="case__close" id="caseClose" aria-label="Close">Close ✕</button>
+    <div class="case__scroll" id="caseScroll"></div>
+  </div>
+
+  <div class="editbar" id="editbar" aria-hidden="true">
+    <span class="editbar__dot"></span>
+    <span class="editbar__msg">Edit mode — click text to change it. Saves in this browser.</span>
+    <button id="editExport">Export</button>
+    <button id="editReset">Reset</button>
+    <button id="editExit">Done</button>
+  </div>
+
+  <script src="js/content.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#f4f2ec" />
+  <meta name="theme-color" content="#ffffff" />
   <title>Nathalia Cury — Art Director & Designer</title>
   <meta name="description" content="Nathalia Cury — Senior Art Director & Designer. Branding, editorial and AI-driven design. Based in Stuttgart." />
   <meta property="og:title" content="Nathalia Cury — Art Director & Designer" />
@@ -14,11 +14,10 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Hanken+Grotesk:ital,wght@0,300..800;1,400..600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-  <!-- Page-load intro -->
+<body data-page="home">
   <div class="loader" id="loader" aria-hidden="true">
     <div class="loader__inner">
       <span class="loader__name">Nathalia Cury — Portfolio ’26</span>
@@ -29,12 +28,11 @@
   <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
   <div class="progress" id="progress" aria-hidden="true"></div>
 
-  <!-- Navigation -->
   <header class="nav" id="nav">
     <a href="#top" class="nav__brand" data-cursor="" aria-label="Home">Nathalia Cury</a>
-    <div class="nav__right">
+    <div class="nav__group">
       <nav class="nav__links" aria-label="Primary">
-        <a href="#work" data-link>Work</a>
+        <a href="work.html" data-cursor="">Work</a>
         <a href="#about" data-link>About</a>
         <a href="#cv" data-link>CV</a>
         <a href="#contact" data-link>Contact</a>
@@ -44,10 +42,9 @@
     </div>
   </header>
 
-  <!-- Mobile menu -->
   <div class="menu" id="menu" aria-hidden="true">
     <nav class="menu__links">
-      <a href="#work" data-link>Work</a>
+      <a href="work.html">Work</a>
       <a href="#about" data-link>About</a>
       <a href="#cv" data-link>CV</a>
       <a href="#contact" data-link>Contact</a>
@@ -56,37 +53,38 @@
   </div>
 
   <main id="top">
-    <!-- ===================== LANDING ===================== -->
+    <!-- TRUE FULL-BLEED HERO -->
     <section class="hero" id="hero">
-      <div class="hero__media" id="heroMedia" data-cursor="scroll"></div>
-      <div class="hero__head">
+      <div class="hero__media" id="heroMedia"></div>
+      <div class="hero__overlay">
         <span class="hero__eyebrow" id="heroEyebrow"></span>
-        <span class="hero__loc" id="heroLoc"></span>
-      </div>
-      <h1 class="hero__statement" id="heroStatement"></h1>
-      <div class="hero__bottom">
-        <p class="hero__intro" id="heroIntro"></p>
-        <a href="#work" class="hero__scroll" data-cursor=""><i></i><span>Selected work</span></a>
+        <a href="#statement" class="hero__scroll" data-cursor=""><span>Scroll</span><i></i></a>
       </div>
     </section>
 
-    <!-- Featured big tiles -->
-    <section class="featured" id="featured" aria-label="Featured work"></section>
+    <!-- STATEMENT -->
+    <section class="statement" id="statement">
+      <h1 class="statement__text" id="heroStatement"></h1>
+      <div class="statement__foot">
+        <p class="statement__intro" id="heroIntro"></p>
+        <span class="statement__loc" id="heroLoc"></span>
+      </div>
+    </section>
 
-    <!-- Clients -->
+    <!-- CLIENTS -->
     <section class="clients" aria-hidden="true"><div class="clients__track" id="clients"></div></section>
 
-    <!-- ===================== WORK ===================== -->
-    <section class="work" id="work">
+    <!-- FEATURED 3×2 -->
+    <section class="featured" id="featuredSec">
       <div class="sec-head">
         <span class="sec-head__idx">①</span>
-        <h2 class="sec-head__title" data-fx>Selected Work</h2>
-        <div class="filters" id="filters" role="tablist" aria-label="Filter work"></div>
+        <h2 class="sec-head__title" data-fx>Featured</h2>
+        <a href="work.html" class="pill" data-cursor="">All work →</a>
       </div>
-      <div class="grid" id="grid"></div>
+      <div class="featured__grid" id="featured"></div>
     </section>
 
-    <!-- ===================== ABOUT ===================== -->
+    <!-- ABOUT -->
     <section class="about" id="about">
       <div class="sec-head">
         <span class="sec-head__idx">②</span>
@@ -100,7 +98,7 @@
       <div class="about__caps" id="aboutCaps"></div>
     </section>
 
-    <!-- ===================== CV ===================== -->
+    <!-- CV -->
     <section class="cv" id="cv">
       <div class="sec-head">
         <span class="sec-head__idx">③</span>
@@ -110,10 +108,10 @@
       <div class="cv__grid" id="cvGrid"></div>
     </section>
 
-    <!-- ===================== CONTACT ===================== -->
+    <!-- CONTACT -->
     <section class="contact" id="contact">
-      <span class="contact__kicker" data-fx>Let’s make something</span>
-      <a class="contact__mail" id="contactMail" data-cursor="email" href="#"></a>
+      <span class="contact__kicker" data-fx>Have a project, a question, or just want to connect?</span>
+      <a class="contact__hello" data-cursor="email" id="contactHello" href="#">Say Hello</a>
       <div class="contact__row" id="contactRow"></div>
     </section>
   </main>
@@ -124,13 +122,11 @@
     <button class="footer__edit" id="editToggle" title="Toggle edit mode">Edit</button>
   </footer>
 
-  <!-- ===================== CASE STUDY OVERLAY ===================== -->
   <div class="case" id="case" aria-hidden="true" role="dialog" aria-modal="true">
     <button class="case__close" id="caseClose" aria-label="Close">Close ✕</button>
     <div class="case__scroll" id="caseScroll"></div>
   </div>
 
-  <!-- Edit-mode toolbar -->
   <div class="editbar" id="editbar" aria-hidden="true">
     <span class="editbar__dot"></span>
     <span class="editbar__msg">Edit mode — click text to change it. Saves in this browser.</span>
