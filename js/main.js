@@ -310,6 +310,8 @@
   function toggleEdit(on) { editing = on; document.body.classList.toggle("editing", on); const bar = $("#editbar"); if (bar) { bar.classList.toggle("open", on); bar.setAttribute("aria-hidden", !on); } if (on) bindEdit(); else $$("[data-edit]").forEach((el) => el.removeAttribute("contenteditable")); }
   function bindEditUI() {
     const t = $("#editToggle"); if (!t) return;
+    // When the Supabase editor is configured, the footer Edit button opens it.
+    if (window.NCStore && window.NCStore.enabled) { t.addEventListener("click", () => { window.location.href = "admin.html"; }); return; }
     t.addEventListener("click", () => toggleEdit(!editing));
     $("#editExit").addEventListener("click", () => toggleEdit(false));
     $("#editReset").addEventListener("click", () => { if (confirm("Reset all edits made in this browser?")) { localStorage.removeItem(STORE); location.reload(); } });

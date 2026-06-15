@@ -9,8 +9,8 @@
    content.js (no backend).
    ===================================================================== */
 window.SUPABASE_CONFIG = {
-  url: "",            // e.g. "https://abcdxyz.supabase.co"
-  anonKey: "",        // the "anon" / "publishable" public key
+  url: "https://jcbjnvrucrwvcoagufpx.supabase.co",
+  anonKey: "sb_publishable_2TZsDW1c8HDjIpgTMxj2Pg_Dyou2MGx",
   bucket: "media",    // storage bucket name (created by db/schema.sql)
   ownerEmail: "nathaliacuryde@gmail.com", // only this email may edit
 };
