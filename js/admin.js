@@ -105,12 +105,17 @@
     return renderSite();
   }
 
+  function srcOf(m) { return m ? (typeof m === "string" ? m : m.src) : null; }
+  function projThumb(d) {
+    return srcOf(d.cover) || srcOf(d.hero) || srcOf(d.images && d.images[0]) ||
+      (d.blocks && (d.blocks.map((b) => srcOf(b.media) || srcOf(b.a)).find(Boolean))) || null;
+  }
+
   /* ===================== PROJECT LIST ===================== */
   function renderProjectList() {
     const rows = projects.map((r) => {
       const d = r.data || {};
-      const m = d.hero || (d.images && d.images[0]) || (d.blocks && (d.blocks.find((b) => b.type === "image" || b.type === "video") || {}).src);
-      const src = typeof m === "object" ? (m && m.src) : m;
+      const src = projThumb(d);
       const thumb = src ? (isVid(src) ? `<video src="${esc(src)}" muted></video>` : `<img src="${esc(src)}" />`) : "";
       return `<div class="proj" data-id="${esc(r.id)}">
         <div class="thumb">${thumb}</div>
@@ -168,7 +173,7 @@
     const slug = id.toLowerCase().replace(/[^a-z0-9-]+/g, "-");
     if (projects.some((p) => p.id === slug)) return toast("That id already exists", true);
     editing = { id: slug, _new: true, position: projects.length, featured_position: null, category: CATS[0], published: true,
-      data: { title: id, client: "", year: new Date().getFullYear() + "", accent: "#8d8a84", bg: "#111111", summary: "", description: "", role: "", team: [], stats: [], hero: null, blocks: [] } };
+      data: { title: id, year: new Date().getFullYear() + "", accent: "#8d8a84", bg: "#111111", summary: "", description: "", role: "", team: [], stats: [], cover: null, hero: null, blocks: [] } };
     renderProjectEditor();
   }
   function openEditor(id) { editing = JSON.parse(JSON.stringify(projects.find((p) => p.id === id))); editing.data = editing.data || {}; editing.data.blocks = editing.data.blocks || []; editing.data.stats = editing.data.stats || []; editing.data.team = editing.data.team || []; renderProjectEditor(); }
@@ -184,10 +189,7 @@
           <h2 style="border:none;margin:0">${editing._new ? "New project" : "Edit"} — ${esc(editing.id)}</h2>
           <div class="actions"><button class="btn ghost" id="cancel">← Back</button><button class="btn" id="save">Save</button></div>
         </div>
-        <div class="row cols-2" style="margin-top:10px">
-          <div><label>Title</label><input data-bind="data.title" value="${esc(d.title)}"/></div>
-          <div><label>Client</label><input data-bind="data.client" value="${esc(d.client)}"/></div>
-        </div>
+        <div style="margin-top:10px"><label>Title (use the client / project name)</label><input data-bind="data.title" value="${esc(d.title)}"/></div>
         <div class="row cols-3" style="margin-top:14px">
           <div><label>Year</label><input data-bind="data.year" value="${esc(d.year)}"/></div>
           <div><label>Category</label><select data-bind="category">${CATS.map((c) => `<option ${c === editing.category ? "selected" : ""}>${esc(c)}</option>`).join("")}</select></div>
@@ -201,7 +203,8 @@
         <div style="margin-top:14px"><label>Description (full case intro paragraph)</label><textarea data-bind="data.description">${esc(d.description)}</textarea></div>
       </div>
 
-      <div class="section"><h2>Hero / cover media</h2>${mediaSlot("data.hero", d.hero, "16/9")}</div>
+      <div class="section"><h2>Card cover — shown in the grid &amp; featured (4:3)</h2>${mediaSlot("data.cover", d.cover, "4/3")}</div>
+      <div class="section"><h2>Case hero — big image at the top of the project page (16:9)</h2>${mediaSlot("data.hero", d.hero, "16/9")}</div>
 
       <div class="section"><h2>Product intel — the stats (e.g. “16→1”, “1,200 employees”)</h2>
         <div class="stack" id="stats">${statRows}</div>
@@ -234,8 +237,8 @@
 
   function blockEditor(b, i) {
     let inner = "";
-    if (b.type === "image") inner = mediaSlot(`data.blocks.${i}`, b, "16/9") + `<div style="margin-top:8px"><label>Caption (optional)</label><input data-bind="data.blocks.${i}.caption" value="${esc(b.caption || "")}"/></div>`;
-    else if (b.type === "video") inner = mediaSlot(`data.blocks.${i}`, b, "16/9");
+    if (b.type === "image") inner = mediaSlot(`data.blocks.${i}.media`, b.media, "16/9") + `<div style="margin-top:8px"><label>Caption (optional)</label><input data-bind="data.blocks.${i}.caption" value="${esc(b.caption || "")}"/></div>`;
+    else if (b.type === "video") inner = mediaSlot(`data.blocks.${i}.media`, b.media, "16/9");
     else if (b.type === "two-up") inner = `<div class="row cols-2"><div><label>Left</label>${mediaSlot(`data.blocks.${i}.a`, b.a, "4/5")}</div><div><label>Right</label>${mediaSlot(`data.blocks.${i}.b`, b.b, "4/5")}</div></div>`;
     else if (b.type === "text") inner = `<textarea data-bind="data.blocks.${i}.text" placeholder="Paragraph…">${esc(b.text || "")}</textarea>`;
     else if (b.type === "quote") inner = `<textarea data-bind="data.blocks.${i}.text" placeholder="Quote…">${esc(b.text || "")}</textarea><div style="margin-top:8px"><label>Cite (optional)</label><input data-bind="data.blocks.${i}.cite" value="${esc(b.cite || "")}"/></div>`;
@@ -332,6 +335,11 @@
   /* ===================== SITE & HERO ===================== */
   function renderSite() {
     const p = site.profile || (site.profile = {});
+    const ab = site.about || (site.about = {});
+    const por = ab.portrait; const psrc = por && (typeof por === "object" ? por.src : por);
+    const pfx = por && typeof por === "object" ? por.focalX : null, pfy = por && typeof por === "object" ? por.focalY : null;
+    const pprev = psrc ? (isVid(psrc) ? `<video src="${esc(psrc)}" muted></video>` : `<img src="${esc(psrc)}"/>`) : "No media";
+    const pmarker = psrc && pfx != null ? `<span class="focal" style="left:${pfx}%;top:${pfy}%"></span>` : "";
     const slides = (p.heroSlides || []).map((s, i) => {
       const src = typeof s === "object" ? s.src : s, fx = typeof s === "object" ? s.focalX : null, fy = typeof s === "object" ? s.focalY : null;
       const vid = src && isVid(src);
@@ -374,6 +382,20 @@
       <div class="section"><h2>About</h2>
         <div><label>Headline</label><textarea data-sbind="about.headline">${esc((site.about && site.about.headline) || "")}</textarea></div>
         <div style="margin-top:14px"><label>Paragraphs (one per line)</label><textarea data-sbind-lines="about.paragraphs" style="min-height:140px">${esc(((site.about && site.about.paragraphs) || []).join("\n"))}</textarea></div>
+      </div>
+
+      <div class="section"><h2>Portrait + quote (between About and CV)</h2>
+        <div class="row cols-2">
+          <div><label>Portrait (vertical 4:5)</label>
+            <div class="media ${psrc ? "pickable" : "empty"}" data-pfocal>${pprev}${pmarker}</div>
+            <div class="kv" style="margin-top:8px"><input type="file" accept="image/*" id="pupload"/>${psrc ? '<button class="btn ghost sm" id="pcrop">Adjust crop</button>' : ""}${psrc ? '<button class="btn ghost sm" id="pclear">Remove</button>' : ""}</div>
+            <div class="hint">${psrc ? "Click preview to set focal point." : "Upload a vertical portrait."}</div>
+          </div>
+          <div>
+            <label>Quote</label><textarea data-sbind="about.quote.text" style="min-height:120px">${esc((ab.quote && ab.quote.text) || "")}</textarea>
+            <div style="margin-top:10px"><label>Cite (optional)</label><input data-sbind="about.quote.cite" value="${esc((ab.quote && ab.quote.cite) || "")}"/></div>
+          </div>
+        </div>
       </div>`);
 
     document.getElementById("savesite").onclick = saveSite;
@@ -400,6 +422,15 @@
       harvestSite(); const i = +el.dataset.sfocal; const cur = p.heroSlides[i]; const obj = typeof cur === "object" ? cur : { src: cur };
       obj.focalX = Math.max(0, Math.min(100, x)); obj.focalY = Math.max(0, Math.min(100, y)); p.heroSlides[i] = obj; renderSite();
     });
+    // portrait handlers
+    const pin = document.getElementById("pupload");
+    if (pin) pin.onchange = async (e) => { const f = e.target.files[0]; if (!f) return; harvestSite(); try { const url = await processUpload(f, "4/5"); if (!url) return; ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Portrait added ✓"); } catch (err) { toast(err.message, true); } };
+    const pcr = document.getElementById("pcrop");
+    if (pcr) pcr.onclick = async () => { harvestSite(); const src = typeof ab.portrait === "object" ? ab.portrait.src : ab.portrait; if (!src) return; try { const blob = await openCropper(src, "4/5"); if (!blob) return; toast("Uploading…"); const url = await uploadBlob(blob); ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Re-cropped ✓"); } catch (err) { toast(err.message, true); } };
+    const pcl = document.getElementById("pclear");
+    if (pcl) pcl.onclick = () => { harvestSite(); ab.portrait = null; renderSite(); };
+    const pf = app.querySelector(".media.pickable[data-pfocal]");
+    if (pf) pf.onclick = (e) => { const r = pf.getBoundingClientRect(); harvestSite(); const cur = ab.portrait; const obj = typeof cur === "object" ? cur : { src: cur }; obj.focalX = Math.max(0, Math.min(100, Math.round(((e.clientX - r.left) / r.width) * 100))); obj.focalY = Math.max(0, Math.min(100, Math.round(((e.clientY - r.top) / r.height) * 100))); ab.portrait = obj; renderSite(); };
   }
   function harvestSite() {
     app.querySelectorAll("[data-sbind]").forEach((el) => setPath(site, el.dataset.sbind, el.value));
@@ -512,6 +543,7 @@
     const feat = (P.profile.featured || []);
     const rows = P.projects.map((pr, i) => {
       const { id, category } = pr; const d = Object.assign({}, pr); delete d.id; delete d.category;
+      if (!d.hero && d.images && d.images[0]) d.hero = d.images[0];   // show in editor
       return { id, position: i, featured_position: feat.indexOf(id) >= 0 ? feat.indexOf(id) : null, category, published: true, data: d };
     });
     toast("Seeding…");

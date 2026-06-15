@@ -32,7 +32,10 @@
     if (/\.(mp4|webm|mov|m4v)$/i.test(src)) return `<video src="${esc(src)}" autoplay muted loop playsinline ${poster ? `poster="${esc(poster)}"` : ""}${pos}></video>`;
     return `<img src="${esc(src)}" alt="${esc(opts.alt || "")}" loading="${opts.eager ? "eager" : "lazy"}"${pos} />`;
   }
-  const firstMedia = (pr) => pr.hero || (pr.images && pr.images.length ? pr.images[0] : null);
+  const isMedia = (m) => !!(m && (typeof m === "string" || m.src));
+  // card/grid cover vs case-page hero can be different images
+  const coverOf = (pr) => (isMedia(pr.cover) ? pr.cover : (pr.hero || (pr.images && pr.images[0]) || null));
+  const heroOf = (pr) => (pr.hero || (isMedia(pr.cover) ? pr.cover : null) || (pr.images && pr.images[0]) || null);
 
   /* theme */
   function setTheme(t) { document.documentElement.setAttribute("data-theme", t); localStorage.setItem(THEME, t); const m = $('meta[name=theme-color]'); if (m) m.content = t === "dark" ? "#0c0b0a" : "#ffffff"; }
@@ -55,7 +58,7 @@
 
       const feat = (p.featured || []).map((id) => data.projects.find((x) => x.id === id)).filter(Boolean);
       $("#featured").innerHTML = feat.map((pr) => {
-        const m = firstMedia(pr);
+        const m = coverOf(pr);
         const inner = m ? media(m, { alt: pr.title }) : `<canvas data-cover='${attr(JSON.stringify(pr.cover || { colors: [pr.bg, pr.accent] }))}' data-seed="${esc(pr.id)}-f" data-label="${esc(pr.title)}"></canvas>`;
         return `<div class="ftile" data-id="${esc(pr.id)}" data-cursor="view"><div class="ftile__media">${inner}<span class="ftile__bar"></span></div>
           <div class="ftile__meta"><h3>${esc(pr.title)}</h3><span>${esc(pr.category)} · ${esc(pr.year)}</span></div></div>`;
@@ -66,6 +69,19 @@
       $("#aboutBody").innerHTML = data.about.paragraphs.map((t, i) => `<p data-fx data-edit="about.paragraphs.${i}">${esc(t)}</p>`).join("");
       $("#aboutStats").innerHTML = data.about.stats.map((s) => `<div class="stat" data-fx><div class="v">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join("");
       $("#aboutCaps").innerHTML = data.about.capabilities.map((cap) => `<div class="cap" data-fx><h4>${esc(cap.title)}</h4><ul>${cap.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div>`).join("");
+
+      // Portrait + quote module (between About and CV)
+      const pq = data.about || {};
+      const sec = $("#portrait");
+      if (sec) {
+        const hasImg = isMedia(pq.portrait), hasQuote = pq.quote && pq.quote.text;
+        if (hasImg || hasQuote) {
+          sec.hidden = false;
+          $("#portraitImg").innerHTML = hasImg ? media(pq.portrait, { alt: data.profile.name }) : "";
+          $("#portraitQuote").textContent = hasQuote ? pq.quote.text : "";
+          $("#portraitCite").textContent = hasQuote && pq.quote.cite ? pq.quote.cite : "";
+        } else { sec.hidden = true; }
+      }
 
       renderCV();
 
@@ -134,9 +150,9 @@
     const pr = list[idx];
     document.documentElement.style.setProperty("--accent", pr.accent);
 
-    const heroM = firstMedia(pr);
+    const heroM = heroOf(pr);
     const heroInner = heroM ? media(heroM, { eager: true, alt: pr.title }) : `<canvas data-cover='${attr(JSON.stringify(pr.cover || { colors: [pr.bg, pr.accent] }))}' data-seed="${esc(pr.id)}-h" data-label="${esc(pr.title)}"></canvas>`;
-    const metaRows = [["Client", pr.client], ["Year", pr.year], ["Discipline", pr.category], ["Role", pr.role]].map(([k, v]) => `<div class="m"><span>${esc(k)}</span><span>${esc(v)}</span></div>`).join("");
+    const metaRows = [["Year", pr.year], ["Discipline", pr.category], ["Role", pr.role]].filter(([, v]) => v).map(([k, v]) => `<div class="m"><span>${esc(k)}</span><span>${esc(v)}</span></div>`).join("");
     const stats = (pr.stats || []).map((s) => `<div class="case__stat" data-fx><div class="v">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join("");
 
     let gal = "";
@@ -152,7 +168,7 @@
       }
     }
     const credits = (pr.team || []).map((t) => `<li>${esc(t)}</li>`).join("");
-    const next = list[(idx + 1) % list.length], nextM = firstMedia(next);
+    const next = list[(idx + 1) % list.length], nextM = coverOf(next);
     const nextImg = nextM ? media(nextM, { alt: next.title }) : `<canvas data-cover='${attr(JSON.stringify(next.cover || { colors: [next.bg, next.accent] }))}' data-seed="${esc(next.id)}-n" data-label="${esc(next.title)}"></canvas>`;
 
     $("#caseScroll").innerHTML = `
@@ -175,8 +191,8 @@
   function blockHTML(b) {
     if (!b || !b.type) return "";
     switch (b.type) {
-      case "image": return `<div class="case__shot case__shot--wide" data-fx>${media(b, { alt: b.caption || "" })}</div>`;
-      case "video": return `<div class="case__shot case__shot--wide" data-fx>${media({ src: b.src, poster: b.poster, focalX: b.focalX, focalY: b.focalY })}</div>`;
+      case "image": return b.media ? `<div class="case__shot case__shot--wide" data-fx>${media(b.media, { alt: b.caption || "" })}</div>` + (b.caption ? `<div class="case__cap" data-fx>${esc(b.caption)}</div>` : "") : "";
+      case "video": return b.media ? `<div class="case__shot case__shot--wide" data-fx>${media(b.media)}</div>` : "";
       case "two-up": return `<div class="case__row"><div class="case__shot" data-fx>${media(b.a, { alt: "" })}</div><div class="case__shot" data-fx>${media(b.b, { alt: "" })}</div></div>`;
       case "text": return `<div class="case__block-text" data-fx><p>${esc(b.text)}</p></div>`;
       case "quote": return `<div class="case__block-quote" data-fx><blockquote>${esc(b.text)}</blockquote>${b.cite ? `<cite>${esc(b.cite)}</cite>` : ""}</div>`;
@@ -250,7 +266,9 @@
   /* hero carousel */
   function startCarousel() {
     const wrap = $("#heroMedia"); if (!wrap) return;
-    const slides = $$(".hero__slide", wrap); if (slides.length < 2) return;
+    const slides = $$(".hero__slide", wrap);
+    const prev = $("#heroPrev"), next = $("#heroNext");
+    if (slides.length < 2) { if (prev) prev.style.display = "none"; if (next) next.style.display = "none"; return; }
     const dots = $$("#heroDots button");
     let idx = 0, timer;
     const go = (n) => {
@@ -260,6 +278,8 @@
     };
     const reset = () => { clearInterval(timer); if (!reduce) timer = setInterval(() => go(idx + 1), 4600); };
     dots.forEach((d) => d.addEventListener("click", () => { go(+d.dataset.i); reset(); }));
+    if (prev) prev.addEventListener("click", () => { go(idx - 1); reset(); });
+    if (next) next.addEventListener("click", () => { go(idx + 1); reset(); });
     reset();
   }
 

@@ -60,6 +60,12 @@
     <!-- TRUE FULL-BLEED HERO -->
     <section class="hero" id="hero">
       <div class="hero__media" id="heroMedia"></div>
+      <button class="hero__nav hero__nav--prev" id="heroPrev" aria-label="Previous slide">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button class="hero__nav hero__nav--next" id="heroNext" aria-label="Next slide">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
       <div class="hero__overlay">
         <span class="hero__eyebrow" id="heroEyebrow"></span>
         <div class="hero__dots" id="heroDots" aria-hidden="true"></div>
@@ -98,6 +104,15 @@
       </div>
       <div class="about__stats" id="aboutStats"></div>
       <div class="about__caps" id="aboutCaps"></div>
+    </section>
+
+    <!-- PORTRAIT + QUOTE -->
+    <section class="portrait" id="portrait" hidden>
+      <div class="portrait__img" id="portraitImg"></div>
+      <div class="portrait__side">
+        <blockquote class="portrait__quote" id="portraitQuote"></blockquote>
+        <cite class="portrait__cite" id="portraitCite"></cite>
+      </div>
     </section>
 
     <!-- CV -->
