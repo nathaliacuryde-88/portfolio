@@ -67,14 +67,13 @@
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
       </button>
       <div class="hero__overlay">
-        <span class="hero__eyebrow" id="heroEyebrow"></span>
         <div class="hero__dots" id="heroDots" aria-hidden="true"></div>
-        <a href="#statement" class="hero__scroll" data-cursor=""><span>Scroll</span><i></i></a>
       </div>
     </section>
 
     <!-- STATEMENT -->
     <section class="statement" id="statement">
+      <a href="#featuredSec" class="scrollcue" aria-label="Scroll down"><span>Scroll</span><i></i></a>
       <h1 class="statement__text" id="heroStatement"></h1>
       <div class="statement__foot">
         <p class="statement__intro" id="heroIntro"></p>
@@ -87,9 +86,9 @@
       <div class="sec-head">
         <span class="sec-head__idx">①</span>
         <h2 class="sec-head__title" data-fx>Featured</h2>
-        <a href="work.html" class="pill pill--cta" data-cursor="">All work →</a>
       </div>
       <div class="featured__grid" id="featured"></div>
+      <div class="featured__cta"><a href="work.html" class="pill pill--cta" data-cursor="">All work →</a></div>
     </section>
 
     <!-- ABOUT -->
@@ -140,7 +139,7 @@
   </footer>
 
   <div class="case" id="case" aria-hidden="true" role="dialog" aria-modal="true">
-    <button class="case__close" id="caseClose" aria-label="Close">Close ✕</button>
+    <button class="case__close" id="caseClose" aria-label="Close">✕</button>
     <div class="case__scroll" id="caseScroll"></div>
   </div>
 

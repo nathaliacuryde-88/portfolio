@@ -311,7 +311,7 @@ window.PORTFOLIO = {
     languages: [
       { name: "English", level: "Fluent" },
       { name: "Portuguese", level: "Native" },
-      { name: "German", level: "B1.2" },
+      { name: "German", level: "B2.1" },
     ],
     education: [
       { period: "2010 – 2013", title: "BA Graphic & Product Design", place: "University of São Paulo (USP)" },

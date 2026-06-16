@@ -49,7 +49,6 @@
       const slides = (p.heroSlides && p.heroSlides.length) ? p.heroSlides : [p.heroMedia];
       $("#heroMedia").innerHTML = slides.map((s, i) => `<div class="hero__slide${i === 0 ? " active" : ""}">${media(s, { eager: i === 0, alt: p.name })}</div>`).join("");
       if ($("#heroDots")) $("#heroDots").innerHTML = slides.length > 1 ? slides.map((_, i) => `<button class="${i === 0 ? "active" : ""}" data-i="${i}" aria-label="Slide ${i + 1}"></button>`).join("") : "";
-      $("#heroEyebrow").textContent = p.role + " — " + p.location;
       $("#heroStatement").innerHTML = statementHTML(p.statement);
       $("#heroIntro").textContent = p.heroIntro;
       $("#heroLoc").textContent = p.available || "";
@@ -85,7 +84,11 @@
 
       renderCV();
 
-      $("#contactHello").href = "mailto:" + p.email;
+      const hello = $("#contactHello");
+      hello.setAttribute("href", "mailto:" + (p.email || ""));
+      hello.innerHTML = 'Say hello <span class="wave">👋</span>';
+      hello.onclick = (e) => { flyEmojis(e.clientX, e.clientY); window.location.href = "mailto:" + (p.email || ""); };
+      hello.onmouseenter = (e) => flyEmojis(e.clientX, e.clientY);
       $("#contactRow").innerHTML = `<a href="${esc(p.instagram)}" target="_blank" rel="noopener" data-cursor="">Instagram ${esc(p.instagramHandle)}</a><a href="${esc(p.linkedin)}" target="_blank" rel="noopener" data-cursor="">LinkedIn ↗</a><a href="tel:${esc(p.phone.replace(/\s/g, ""))}">${esc(p.phone)}</a><span>${esc(p.location)}</span>`;
     }
 
@@ -132,15 +135,32 @@
   function renderCV() {
     if (!$("#cvGrid")) return;
     const cv = data.cv, rows = (a, f) => a.map(f).join("");
-    const blk = (t, items, f) => `<div class="cv-block"><h3>${t}</h3>${rows(items, f)}</div>`;
+    const expRow = (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.role)}<small>${esc(e.place)}</small></span></div>`;
+    const blk = (t, em, items, f) => `<div class="cv-block"><h3>${t} <span class="cv-emoji">${em}</span></h3>${rows(items, f)}</div>`;
+    const col = (t, em, items, f) => `<details class="cv-block cv-collapse"><summary><h3>${t} <span class="cv-emoji">${em}</span></h3><span class="cv-x">▾</span></summary>${rows(items, f)}</details>`;
     $("#cvGrid").innerHTML = [
-      blk("Professional Experience", cv.experience, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.role)}<small>${esc(e.place)}</small></span></div>`),
-      blk("International", cv.international, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.role)}<small>${esc(e.place)}</small></span></div>`),
-      blk("Awards & Nominations", cv.awards, (a) => `<div class="cv-row"><span class="p">${esc(a.year)}</span><span class="r">${esc(a.title)}</span></div>`),
-      blk("Lectures, Workshops & Exhibitions", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${esc(l.title)}<small>${esc(l.kind)}</small></span></div>`),
-      `<div class="cv-block"><h3>Education</h3>${rows(cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.title)}<small>${esc(e.place)}</small></span></div>`)}<h3 style="margin-top:34px">Languages</h3>${rows(cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${esc(l.name)}</span></div>`)}</div>`,
-      `<div class="cv-block"><h3>Software & Tools</h3><div class="cv-tags">${cv.software.map((s) => `<span>${esc(s)}</span>`).join("")}</div></div>`,
+      blk("Professional Experience", "💼", cv.experience, expRow),
+      col("Awards & Nominations", "🏆", cv.awards, (a) => `<div class="cv-row"><span class="p">${esc(a.year)}</span><span class="r">${esc(a.title)}</span></div>`),
+      col("International Experience", "✈️", cv.international, expRow),
+      blk("Lectures, Workshops & Exhibitions", "🎤", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${esc(l.title)}<small>${esc(l.kind)}</small></span></div>`),
+      `<div class="cv-block"><h3>Education <span class="cv-emoji">🎓</span></h3>${rows(cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.title)}<small>${esc(e.place)}</small></span></div>`)}<h3 style="margin-top:34px">Languages <span class="cv-emoji">🌍</span></h3>${rows(cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${esc(l.name)}</span></div>`)}</div>`,
+      `<div class="cv-block"><h3>Software &amp; Tools <span class="cv-emoji">🎨</span></h3><div class="cv-tags">${cv.software.map((s) => `<span>${esc(s)}</span>`).join("")}</div></div>`,
     ].join("");
+    syncCV();
+    $$(".cv-collapse > summary").forEach((s) => s.addEventListener("click", (e) => { if (window.matchMedia("(min-width:821px)").matches) e.preventDefault(); }));
+  }
+  function syncCV() { const desktop = window.matchMedia("(min-width:821px)").matches; $$(".cv-collapse").forEach((d) => { d.open = desktop; }); }
+
+  /* playful emoji burst for Say Hello */
+  function flyEmojis(x, y) {
+    if (reduce) return;
+    const set = ["👋", "✨", "🎉", "🙌", "💌", "😄", "🤙"];
+    for (let i = 0; i < 6; i++) {
+      const s = document.createElement("span"); s.className = "fly-emoji"; s.textContent = set[(Math.random() * set.length) | 0];
+      s.style.left = (x + (Math.random() * 40 - 20)) + "px"; s.style.top = y + "px";
+      s.style.setProperty("--dx", ((Math.random() * 140 - 70) | 0) + "px"); s.style.setProperty("--r", ((Math.random() * 80 - 40) | 0) + "deg");
+      document.body.appendChild(s); setTimeout(() => s.remove(), 1500);
+    }
   }
 
   /* =================== CASE STUDY =================== */
@@ -280,6 +300,9 @@
     dots.forEach((d) => d.addEventListener("click", () => { go(+d.dataset.i); reset(); }));
     if (prev) prev.addEventListener("click", () => { go(idx - 1); reset(); });
     if (next) next.addEventListener("click", () => { go(idx + 1); reset(); });
+    let sx = 0, sy = 0;
+    wrap.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+    wrap.addEventListener("touchend", (e) => { const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { go(dx < 0 ? idx + 1 : idx - 1); reset(); } }, { passive: true });
     reset();
   }
 
@@ -339,7 +362,7 @@
     document.addEventListener("keydown", (e) => { if (e.key === "e" && !editing && !/input|textarea/i.test(document.activeElement.tagName) && !document.activeElement.isContentEditable && !($("#case") && $("#case").classList.contains("open"))) toggleEdit(true); });
   }
 
-  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => paintCanvases(document), 250); });
+  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { paintCanvases(document); if ($("#cvGrid")) syncCV(); }, 250); });
 
   function init() {
     render(); bindFilters(); bindMenu(); bindAnchors(); bindTheme(); bindCase(); bindPrint(); bindEditUI();
@@ -354,6 +377,8 @@
         if (remote && Object.keys(remote).length) data = merge(clone(BASE), remote);
       } catch (e) { console.warn("Supabase load failed — using built-in content.", e); }
     }
+    // CV isn't edited in the admin — keep it sourced from content.js so updates show immediately.
+    data.cv = clone(BASE).cv;
     init();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
