@@ -264,10 +264,10 @@ window.PORTFOLIO = {
 
   cv: {
     experience: [
-      { period: "2026", role: "Senior Art Director", place: "Strichpunkt Design" },
+      { period: "2026", role: "Senior Art Director", place: "Strichpunkt Design", emoji: "✨" },
       { period: "2022 – Nov 2025", role: "Senior Designer", place: "Strichpunkt Design" },
       { period: "2020 – 2022", role: "Art Director", place: "Strichpunkt Design" },
-      { period: "2015 – 2020", role: "Founder partner", place: "Studio Margem" },
+      { period: "2015 – 2020", role: "Founder partner", place: "Studio Margem", emoji: "🚀" },
       { period: "2012 – 2015", role: "Designer", place: "Cosac Naify publishing house" },
       { period: "2011 – 2012", role: "Designer", place: "CLDT Design" },
       { period: "2010 – 2011", role: "Intern, graphic design", place: "Lumini" },
@@ -275,19 +275,19 @@ window.PORTFOLIO = {
     ],
     international: [
       { period: "2019", role: "Weltformat workshop — Undisciplined Tools w/ Anja Kaiser", place: "Lucerne, CH" },
-      { period: "2019", role: "Dogo Residenz für Neue Kultur — art residency grant", place: "Lichtensteig, CH" },
+      { period: "2019", role: "Dogo Residenz für Neue Kultur — art residency grant", place: "Lichtensteig, CH", emoji: "🎨" },
       { period: "2016", role: "Jury — II Latin American Prize for Editorial Design", place: "Buenos Aires, AR" },
-      { period: "2014", role: "Guest speaker — FIL International Book Fair", place: "Guadalajara, MX" },
+      { period: "2014", role: "Guest speaker — FIL International Book Fair", place: "Guadalajara, MX", emoji: "🎤" },
       { period: "2014", role: "Brazil-Conexion government exchange grant", place: "London, UK" },
       { period: "2012", role: "Onlab summer school", place: "Berlin, DE" },
       { period: "2009", role: "Exchange program", place: "Belgrade, RS" },
       { period: "2005", role: "English language course", place: "San Diego, USA" },
     ],
     awards: [
-      { year: "2018", title: "Ascenders — Type Directors Club NY" },
+      { year: "2018", title: "Ascenders — Type Directors Club NY", emoji: "⭐" },
       { year: "2018", title: "Latin American Award for Editorial Design — Honorable Mention" },
       { year: "2018", title: "Taipei International Design Award — Finalist, Visual Communication" },
-      { year: "2016", title: "Latin American Award for Editorial Design — 1st Place" },
+      { year: "2016", title: "Latin American Award for Editorial Design — 1st Place", emoji: "🥇" },
       { year: "2015", title: "11th Brazilian Biennial of Graphic Design — Featured (2 projects)" },
       { year: "2015", title: "30th Brazilian Design Museum Award — Honorable Mention" },
       { year: "2015", title: "22nd Nascent Prize, PRCEU — Honorable Mention" },

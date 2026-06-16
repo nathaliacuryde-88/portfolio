@@ -386,7 +386,7 @@
 
       <div class="section"><h2>Portrait + quote (between About and CV)</h2>
         <div class="row cols-2">
-          <div><label>Portrait (vertical 4:5)</label>
+          <div><label>Portrait (square 1:1)</label>
             <div class="media ${psrc ? "pickable" : "empty"}" data-pfocal>${pprev}${pmarker}</div>
             <div class="kv" style="margin-top:8px"><input type="file" accept="image/*" id="pupload"/>${psrc ? '<button class="btn ghost sm" id="pcrop">Adjust crop</button>' : ""}${psrc ? '<button class="btn ghost sm" id="pclear">Remove</button>' : ""}</div>
             <div class="hint">${psrc ? "Click preview to set focal point." : "Upload a vertical portrait."}</div>
@@ -424,9 +424,9 @@
     });
     // portrait handlers
     const pin = document.getElementById("pupload");
-    if (pin) pin.onchange = async (e) => { const f = e.target.files[0]; if (!f) return; harvestSite(); try { const url = await processUpload(f, "4/5"); if (!url) return; ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Portrait added ✓"); } catch (err) { toast(err.message, true); } };
+    if (pin) pin.onchange = async (e) => { const f = e.target.files[0]; if (!f) return; harvestSite(); try { const url = await processUpload(f, "1/1"); if (!url) return; ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Portrait added ✓"); } catch (err) { toast(err.message, true); } };
     const pcr = document.getElementById("pcrop");
-    if (pcr) pcr.onclick = async () => { harvestSite(); const src = typeof ab.portrait === "object" ? ab.portrait.src : ab.portrait; if (!src) return; try { const blob = await openCropper(src, "4/5"); if (!blob) return; toast("Uploading…"); const url = await uploadBlob(blob); ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Re-cropped ✓"); } catch (err) { toast(err.message, true); } };
+    if (pcr) pcr.onclick = async () => { harvestSite(); const src = typeof ab.portrait === "object" ? ab.portrait.src : ab.portrait; if (!src) return; try { const blob = await openCropper(src, "1/1"); if (!blob) return; toast("Uploading…"); const url = await uploadBlob(blob); ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Re-cropped ✓"); } catch (err) { toast(err.message, true); } };
     const pcl = document.getElementById("pclear");
     if (pcl) pcl.onclick = () => { harvestSite(); ab.portrait = null; renderSite(); };
     const pf = app.querySelector(".media.pickable[data-pfocal]");

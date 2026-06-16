@@ -86,9 +86,9 @@
 
       const hello = $("#contactHello");
       hello.setAttribute("href", "mailto:" + (p.email || ""));
-      hello.innerHTML = 'Say hello <span class="wave">👋</span>';
-      hello.onclick = (e) => { flyEmojis(e.clientX, e.clientY); window.location.href = "mailto:" + (p.email || ""); };
-      hello.onmouseenter = (e) => flyEmojis(e.clientX, e.clientY);
+      hello.setAttribute("data-cursor", "Click to copy");
+      hello.innerHTML = 'Say hell<span class="o-wrap">o<span class="wave">👋</span></span>';
+      hello.onclick = (e) => { e.preventDefault(); copyEmail(p.email || "", e.clientX || innerWidth / 2, e.clientY || innerHeight / 2); };
       $("#contactRow").innerHTML = `<a href="${esc(p.instagram)}" target="_blank" rel="noopener" data-cursor="">Instagram ${esc(p.instagramHandle)}</a><a href="${esc(p.linkedin)}" target="_blank" rel="noopener" data-cursor="">LinkedIn ↗</a><a href="tel:${esc(p.phone.replace(/\s/g, ""))}">${esc(p.phone)}</a><span>${esc(p.location)}</span>`;
     }
 
@@ -135,16 +135,17 @@
   function renderCV() {
     if (!$("#cvGrid")) return;
     const cv = data.cv, rows = (a, f) => a.map(f).join("");
-    const expRow = (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.role)}<small>${esc(e.place)}</small></span></div>`;
-    const blk = (t, em, items, f) => `<div class="cv-block"><h3>${t} <span class="cv-emoji">${em}</span></h3>${rows(items, f)}</div>`;
-    const col = (t, em, items, f) => `<details class="cv-block cv-collapse"><summary><h3>${t} <span class="cv-emoji">${em}</span></h3><span class="cv-x">▾</span></summary>${rows(items, f)}</details>`;
+    const pop = (em) => (em ? ` <span class="cv-pop" style="animation-delay:${(Math.random() * 7).toFixed(1)}s">${em}</span>` : "");
+    const expRow = (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.role)}${pop(e.emoji)}<small>${esc(e.place)}</small></span></div>`;
+    const blk = (t, items, f) => `<div class="cv-block"><h3>${t}</h3>${rows(items, f)}</div>`;
+    const col = (t, items, f) => `<details class="cv-block cv-collapse"><summary><h3>${t}</h3><span class="cv-x">▾</span></summary>${rows(items, f)}</details>`;
     $("#cvGrid").innerHTML = [
-      blk("Professional Experience", "💼", cv.experience, expRow),
-      col("Awards & Nominations", "🏆", cv.awards, (a) => `<div class="cv-row"><span class="p">${esc(a.year)}</span><span class="r">${esc(a.title)}</span></div>`),
-      col("International Experience", "✈️", cv.international, expRow),
-      blk("Lectures, Workshops & Exhibitions", "🎤", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${esc(l.title)}<small>${esc(l.kind)}</small></span></div>`),
-      `<div class="cv-block"><h3>Education <span class="cv-emoji">🎓</span></h3>${rows(cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.title)}<small>${esc(e.place)}</small></span></div>`)}<h3 style="margin-top:34px">Languages <span class="cv-emoji">🌍</span></h3>${rows(cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${esc(l.name)}</span></div>`)}</div>`,
-      `<div class="cv-block"><h3>Software &amp; Tools <span class="cv-emoji">🎨</span></h3><div class="cv-tags">${cv.software.map((s) => `<span>${esc(s)}</span>`).join("")}</div></div>`,
+      blk("Professional Experience", cv.experience, expRow),
+      col("Awards & Nominations", cv.awards, (a) => `<div class="cv-row"><span class="p">${esc(a.year)}</span><span class="r">${esc(a.title)}${pop(a.emoji)}</span></div>`),
+      col("International Experience", cv.international, expRow),
+      blk("Lectures, Workshops & Exhibitions", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${esc(l.title)}<small>${esc(l.kind)}</small></span></div>`),
+      `<div class="cv-block"><h3>Education</h3>${rows(cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.title)}<small>${esc(e.place)}</small></span></div>`)}<h3 style="margin-top:34px">Languages</h3>${rows(cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${esc(l.name)}</span></div>`)}</div>`,
+      `<div class="cv-block"><h3>Software &amp; Tools</h3><div class="cv-tags">${cv.software.map((s) => `<span>${esc(s)}</span>`).join("")}</div></div>`,
     ].join("");
     syncCV();
     $$(".cv-collapse > summary").forEach((s) => s.addEventListener("click", (e) => { if (window.matchMedia("(min-width:821px)").matches) e.preventDefault(); }));
@@ -162,6 +163,17 @@
       document.body.appendChild(s); setTimeout(() => s.remove(), 1500);
     }
   }
+  function copyEmail(email, x, y) {
+    const done = () => {
+      if (cLabel) cLabel.textContent = "Copied ✓";
+      const t = document.createElement("div"); t.className = "copytip"; t.textContent = "Email copied ✓ — paste anywhere";
+      t.style.left = x + "px"; t.style.top = y + "px"; document.body.appendChild(t); setTimeout(() => t.remove(), 1500);
+      flyEmojis(x, y);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(email).then(done).catch(() => { legacyCopy(email); done(); });
+    else { legacyCopy(email); done(); }
+  }
+  function legacyCopy(t) { const ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand("copy"); } catch (e) {} ta.remove(); }
 
   /* =================== CASE STUDY =================== */
   function openCase(id, fromNav) {

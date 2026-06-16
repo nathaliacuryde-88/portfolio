@@ -140,7 +140,7 @@ em { font-style: normal; color: var(--ink-2); }
 .hero__slide img, .hero__slide video, .hero__slide canvas { width: 100%; height: 100%; object-fit: cover; }
 .hero.ready .hero__slide.active img, .hero.ready .hero__slide.active video { animation: kenburns 7s var(--ease) forwards; }
 @keyframes kenburns { from { transform: scale(1.08); } to { transform: scale(1); } }
-.hero__overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--pad); display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; color: #fff; mix-blend-mode: difference; }
+.hero__overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--pad); display: flex; justify-content: center; align-items: flex-end; gap: 16px; color: #fff; mix-blend-mode: difference; }
 .hero__dots { display: flex; gap: 9px; align-items: center; }
 .hero__dots button { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid #fff; background: transparent; opacity: 0.65; transition: opacity 0.3s, background 0.3s; padding: 0; }
 .hero__dots button.active { background: #fff; opacity: 1; }
@@ -160,7 +160,7 @@ em { font-style: normal; color: var(--ink-2); }
 
 /* Portrait + quote module */
 .portrait { padding: clamp(70px,11vh,150px) var(--pad); display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px,5vw,80px); align-items: stretch; }
-.portrait__img { border-radius: var(--radius); overflow: hidden; background: var(--card); aspect-ratio: 4/5; box-shadow: var(--card-edge); }
+.portrait__img { border-radius: var(--radius); overflow: hidden; background: var(--card); aspect-ratio: 1/1; box-shadow: var(--card-edge); }
 .portrait__img img, .portrait__img video { width: 100%; height: 100%; object-fit: cover; }
 .portrait__side { display: flex; flex-direction: column; justify-content: flex-start; }
 .portrait__quote::before { content: "\201C"; display: block; font-family: var(--font); font-weight: 700; font-size: clamp(3.5rem, 8vw, 7rem); line-height: 0.6; margin: 0 0 8px -0.04em; color: var(--ink); }
@@ -171,7 +171,7 @@ em { font-style: normal; color: var(--ink-2); }
 .case__cap { color: var(--ink-2); font-size: 0.85rem; margin-top: -6px; }
 .hero__eyebrow { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; max-width: 24ch; }
 /* scroll cue — sits under the hero image, vertical line */
-.scrollcue { display: inline-flex; flex-direction: column; align-items: center; gap: 12px; color: var(--ink-2); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: clamp(26px, 5vh, 58px); }
+.scrollcue { display: flex; flex-direction: column; align-items: center; gap: 12px; width: max-content; margin: 50px auto clamp(40px, 8vh, 90px); color: var(--ink-2); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; }
 .scrollcue i { width: 1px; height: 64px; background: var(--line); position: relative; overflow: hidden; }
 .scrollcue i::after { content: ""; position: absolute; inset: 0; background: var(--ink); transform: translateY(-100%); animation: sweepY 2.4s var(--ease) infinite; }
 @keyframes sweepY { 0% { transform: translateY(-100%); } 50% { transform: translateY(0); } 100% { transform: translateY(100%); } }
@@ -179,7 +179,7 @@ em { font-style: normal; color: var(--ink-2); }
 /* =================================================================
    STATEMENT
    ================================================================= */
-.statement { padding: clamp(70px, 13vh, 170px) var(--pad) clamp(40px, 7vh, 90px); }
+.statement { padding: 0 var(--pad) clamp(40px, 7vh, 90px); }
 .statement__text { font-weight: 600; font-size: clamp(1.9rem, 5.6vw, 5.4rem); line-height: 1.03; letter-spacing: -0.035em; max-width: 22ch; }
 .statement__text .word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.16em; margin-bottom: -0.16em; }
 .statement__text .word > span { display: inline-block; transform: translateY(110%); transition: transform 0.9s var(--ease-io); }
@@ -311,11 +311,18 @@ em { font-style: normal; color: var(--ink-2); }
 .contact__kicker { font-size: clamp(1rem, 1.4vw, 1.3rem); color: var(--ink-2); max-width: 30ch; display: block; }
 .contact__hello { display: block; font-weight: 700; font-size: clamp(3rem, 17vw, 15rem); line-height: 0.9; letter-spacing: -0.05em; margin: 18px 0 40px; transition: color 0.4s var(--ease); }
 .contact__hello:hover { color: var(--accent); }
-.contact__hello .wave { display: inline-block; transform-origin: 70% 70%; }
+.contact__hello .o-wrap { position: relative; display: inline-block; }
+.contact__hello .wave { position: absolute; top: -0.16em; left: 50%; margin-left: -0.3em; font-size: 0.5em; transform-origin: 60% 80%; pointer-events: none; }
 .contact__hello:hover .wave { animation: wave 1.6s ease infinite; }
-@keyframes wave { 0%, 60%, 100% { transform: rotate(0); } 10% { transform: rotate(16deg); } 20% { transform: rotate(-8deg); } 30% { transform: rotate(16deg); } 40% { transform: rotate(-4deg); } 50% { transform: rotate(12deg); } }
+@keyframes wave { 0%, 60%, 100% { transform: rotate(0); } 10% { transform: rotate(18deg); } 20% { transform: rotate(-10deg); } 30% { transform: rotate(18deg); } 40% { transform: rotate(-6deg); } 50% { transform: rotate(14deg); } }
 .fly-emoji { position: fixed; pointer-events: none; z-index: 60; font-size: 1.7rem; animation: fly 1.4s ease-out forwards; }
 @keyframes fly { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx, 0), -130px) scale(1.2) rotate(var(--r, 0deg)); } }
+.copytip { position: fixed; z-index: 61; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 0.8rem; font-weight: 600; padding: 7px 13px; border-radius: 100px; white-space: nowrap; animation: tip 1.5s ease forwards; }
+@keyframes tip { 0% { opacity: 0; transform: translate(-50%, -110%) scale(0.85); } 15% { opacity: 1; transform: translate(-50%, -150%) scale(1); } 78% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -185%); } }
+/* CV row emojis — pop in & out next to key facts */
+.cv-pop { display: inline-block; margin-left: 0.35em; animation: cvpopio 8s ease-in-out infinite; will-change: transform, opacity; }
+@keyframes cvpopio { 0%, 80%, 100% { opacity: 0; transform: scale(0.2); } 84% { opacity: 1; transform: scale(1.4) rotate(-10deg); } 89% { transform: scale(1) rotate(5deg); } 96% { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .cv-pop { animation: none; opacity: 1; transform: none; } }
 .contact__row { display: flex; gap: 14px 40px; flex-wrap: wrap; font-size: 0.95rem; }
 .contact__row a, .contact__row span { color: var(--ink-2); transition: color 0.3s; }
 .contact__row a:hover { color: var(--ink); }
