@@ -307,7 +307,12 @@ window.PORTFOLIO = {
       { year: "2014", title: "Editorial Work — Guadalajara Art Book Fair", kind: "Lecture" },
       { year: "2014", title: "AGI Poster Exhibition", kind: "Exhibition" },
     ],
-    software: ["Photoshop", "Illustrator", "InDesign", "Figma", "Midjourney", "Gemini", "GPT", "Keynote"],
+    // clustered (no labels): Adobe · AI · Web
+    software: [
+      ["Photoshop", "Illustrator", "InDesign", "After Effects"],
+      ["Midjourney", "Gemini", "GPT", "Claude Code", "Stitch", "Lovable", "Figma Make"],
+      ["Figma"],
+    ],
     languages: [
       { name: "English", level: "Fluent", emoji: "🇬🇧" },
       { name: "Portuguese", level: "Native", emoji: "🇧🇷" },

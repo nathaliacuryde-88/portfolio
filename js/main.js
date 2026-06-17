@@ -69,30 +69,18 @@
       $("#aboutStats").innerHTML = data.about.stats.map((s) => `<div class="stat" data-fx><div class="v">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join("");
       $("#aboutCaps").innerHTML = data.about.capabilities.map((cap) => `<div class="cap" data-fx><h4>${esc(cap.title)}</h4><ul>${cap.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div>`).join("");
 
-      // Portrait + quote module (between About and CV)
-      const pq = data.about || {};
-      const sec = $("#portrait");
-      if (sec) {
-        const hasImg = isMedia(pq.portrait), hasQuote = pq.quote && pq.quote.text;
-        if (hasImg || hasQuote) {
-          sec.hidden = false;
-          const por = pq.portrait, src = typeof por === "object" ? por.src : por;
-          const fx = por && typeof por === "object" ? por.focalX : null, fy = por && typeof por === "object" ? por.focalY : null;
+      // Portrait inside About (3-column row: portrait · headline · text)
+      const aw = $(".about__wrap"), pimg = $("#portraitImg");
+      if (pimg) {
+        const por = data.about && data.about.portrait;
+        const src = por && (typeof por === "object" ? por.src : por);
+        if (isMedia(por) && !/\.(mp4|webm|mov|m4v)$/i.test(src)) {
+          const fx = typeof por === "object" ? por.focalX : null, fy = typeof por === "object" ? por.focalY : null;
           const posStyle = (fx != null && fy != null) ? ` style="object-position:${+fx}% ${+fy}%"` : "";
-          if (hasImg && !/\.(mp4|webm|mov|m4v)$/i.test(src)) {
-            $("#portraitImg").innerHTML = `<div class="ptx" id="ptx">
-              <img class="ptx__base" src="${esc(src)}" alt=""${posStyle}>
-              <div class="ptx__tint"></div>
-              <img class="ptx__reveal" src="${esc(src)}" alt="${esc(data.profile.name)}"${posStyle}>
-              <div class="ptx__grid"></div><div class="ptx__scan"></div>
-              <span class="ptx__hint">${isTouch ? "scanning" : "hover to reveal"}</span></div>`;
-            bindPortrait();
-          } else {
-            $("#portraitImg").innerHTML = hasImg ? media(pq.portrait, { alt: data.profile.name }) : "";
-          }
-          $("#portraitQuote").textContent = hasQuote ? pq.quote.text : "";
-          $("#portraitCite").textContent = hasQuote && pq.quote.cite ? pq.quote.cite : "";
-        } else { sec.hidden = true; }
+          pimg.innerHTML = `<div class="ptx" id="ptx"><img class="ptx__base" src="${esc(src)}" alt=""${posStyle}><div class="ptx__tint"></div><img class="ptx__reveal" src="${esc(src)}" alt="${esc(data.profile.name)}"${posStyle}><div class="ptx__grid"></div><div class="ptx__scan"></div><span class="ptx__hint">${isTouch ? "scanning" : "hover to reveal"}</span></div>`;
+          if (aw) aw.classList.add("has-portrait"); bindPortrait();
+        } else if (isMedia(por)) { pimg.innerHTML = media(por, { alt: data.profile.name }); if (aw) aw.classList.add("has-portrait"); }
+        else { pimg.innerHTML = ""; if (aw) aw.classList.remove("has-portrait"); }
       }
 
       renderCV();
@@ -160,7 +148,7 @@
       col("Lectures, Workshops & Exhibitions", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${esc(l.title)}${pop(l.emoji)}<small>${esc(l.kind)}</small></span></div>`),
       col("Education", cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.title)}${pop(e.emoji)}<small>${esc(e.place)}</small></span></div>`),
       blk("Languages", cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${esc(l.name)}${pop(l.emoji)}</span></div>`),
-      `<div class="cv-block"><h3>Software &amp; Tools</h3><div class="cv-tags">${cv.software.map((s) => `<span>${esc(s)}</span>`).join("")}</div></div>`,
+      `<div class="cv-block"><h3>Software &amp; Tools</h3>${(Array.isArray(cv.software[0]) ? cv.software : [cv.software]).map((g) => `<div class="cv-tags">${g.map((s) => `<span>${esc(s)}</span>`).join("")}</div>`).join("")}</div>`,
     ].join("");
   }
 

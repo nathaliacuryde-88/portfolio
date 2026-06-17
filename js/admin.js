@@ -384,17 +384,11 @@
         <div style="margin-top:14px"><label>Paragraphs (one per line)</label><textarea data-sbind-lines="about.paragraphs" style="min-height:140px">${esc(((site.about && site.about.paragraphs) || []).join("\n"))}</textarea></div>
       </div>
 
-      <div class="section"><h2>Portrait + quote (between About and CV)</h2>
-        <div class="row cols-2">
-          <div><label>Portrait (square 1:1)</label>
-            <div class="media ${psrc ? "pickable" : "empty"}" data-pfocal>${pprev}${pmarker}</div>
-            <div class="kv" style="margin-top:8px"><input type="file" accept="image/*" id="pupload"/>${psrc ? '<button class="btn ghost sm" id="pcrop">Adjust crop</button>' : ""}${psrc ? '<button class="btn ghost sm" id="pclear">Remove</button>' : ""}</div>
-            <div class="hint">${psrc ? "Click preview to set focal point." : "Upload a vertical portrait."}</div>
-          </div>
-          <div>
-            <label>Quote</label><textarea data-sbind="about.quote.text" style="min-height:120px">${esc((ab.quote && ab.quote.text) || "")}</textarea>
-            <div style="margin-top:10px"><label>Cite (optional)</label><input data-sbind="about.quote.cite" value="${esc((ab.quote && ab.quote.cite) || "")}"/></div>
-          </div>
+      <div class="section"><h2>About portrait (square 1:1)</h2>
+        <div style="max-width:340px">
+          <div class="media ${psrc ? "pickable" : "empty"}" data-pfocal>${pprev}${pmarker}</div>
+          <div class="kv" style="margin-top:8px"><input type="file" accept="image/*" id="pupload"/>${psrc ? '<button class="btn ghost sm" id="pcrop">Adjust crop</button>' : ""}${psrc ? '<button class="btn ghost sm" id="pclear">Remove</button>' : ""}</div>
+          <div class="hint">${psrc ? "Click preview to set focal point." : "Upload a square portrait — it gets a techy reveal effect on the site."}</div>
         </div>
       </div>`);
 
