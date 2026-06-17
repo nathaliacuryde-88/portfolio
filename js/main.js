@@ -76,7 +76,20 @@
         const hasImg = isMedia(pq.portrait), hasQuote = pq.quote && pq.quote.text;
         if (hasImg || hasQuote) {
           sec.hidden = false;
-          $("#portraitImg").innerHTML = hasImg ? media(pq.portrait, { alt: data.profile.name }) : "";
+          const por = pq.portrait, src = typeof por === "object" ? por.src : por;
+          const fx = por && typeof por === "object" ? por.focalX : null, fy = por && typeof por === "object" ? por.focalY : null;
+          const posStyle = (fx != null && fy != null) ? ` style="object-position:${+fx}% ${+fy}%"` : "";
+          if (hasImg && !/\.(mp4|webm|mov|m4v)$/i.test(src)) {
+            $("#portraitImg").innerHTML = `<div class="ptx" id="ptx">
+              <img class="ptx__base" src="${esc(src)}" alt=""${posStyle}>
+              <div class="ptx__tint"></div>
+              <img class="ptx__reveal" src="${esc(src)}" alt="${esc(data.profile.name)}"${posStyle}>
+              <div class="ptx__grid"></div><div class="ptx__scan"></div>
+              <span class="ptx__hint">${isTouch ? "scanning" : "hover to reveal"}</span></div>`;
+            bindPortrait();
+          } else {
+            $("#portraitImg").innerHTML = hasImg ? media(pq.portrait, { alt: data.profile.name }) : "";
+          }
           $("#portraitQuote").textContent = hasQuote ? pq.quote.text : "";
           $("#portraitCite").textContent = hasQuote && pq.quote.cite ? pq.quote.cite : "";
         } else { sec.hidden = true; }
@@ -121,7 +134,7 @@
     const list = data.projects.filter((pr) => filter === "All" || pr.category === filter);
     g.innerHTML = data.projects.map((pr) => {
       const hide = filter !== "All" && pr.category !== filter ? "is-hidden" : "";
-      const m = firstMedia(pr);
+      const m = coverOf(pr);
       const inner = m ? media(m, { alt: pr.title }) : `<canvas data-cover='${attr(JSON.stringify(pr.cover || { colors: [pr.bg, pr.accent], kind: "abstract" }))}' data-seed="${esc(pr.id)}" data-label="${esc(pr.title)}"></canvas>`;
       return `<article class="card ${hide}" data-id="${esc(pr.id)}" data-cat="${esc(pr.category)}" data-cursor="view" style="--accent:${esc(pr.accent)}">
         <div class="card__media" style="background:${esc(pr.bg)}">${inner}<span class="card__bar"></span></div>
@@ -138,19 +151,18 @@
     const pop = (em) => (em ? ` <span class="cv-pop" style="animation-delay:${(Math.random() * 7).toFixed(1)}s">${em}</span>` : "");
     const expRow = (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.role)}${pop(e.emoji)}<small>${esc(e.place)}</small></span></div>`;
     const blk = (t, items, f) => `<div class="cv-block"><h3>${t}</h3>${rows(items, f)}</div>`;
-    const col = (t, items, f) => `<details class="cv-block cv-collapse"><summary><h3>${t}</h3><span class="cv-x">▾</span></summary>${rows(items, f)}</details>`;
+    // collapsible block — closed by default; large + that becomes × when open
+    const col = (t, items, f) => `<details class="cv-block cv-collapse"><summary><h3>${t}</h3><span class="cv-x"></span></summary><div class="cv-body">${rows(items, f)}</div></details>`;
     $("#cvGrid").innerHTML = [
       blk("Professional Experience", cv.experience, expRow),
       col("Awards & Nominations", cv.awards, (a) => `<div class="cv-row"><span class="p">${esc(a.year)}</span><span class="r">${esc(a.title)}${pop(a.emoji)}</span></div>`),
       col("International Experience", cv.international, expRow),
-      blk("Lectures, Workshops & Exhibitions", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${esc(l.title)}<small>${esc(l.kind)}</small></span></div>`),
-      `<div class="cv-block"><h3>Education</h3>${rows(cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.title)}<small>${esc(e.place)}</small></span></div>`)}<h3 style="margin-top:34px">Languages</h3>${rows(cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${esc(l.name)}</span></div>`)}</div>`,
+      col("Lectures, Workshops & Exhibitions", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${esc(l.title)}${pop(l.emoji)}<small>${esc(l.kind)}</small></span></div>`),
+      col("Education", cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.title)}${pop(e.emoji)}<small>${esc(e.place)}</small></span></div>`),
+      blk("Languages", cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${esc(l.name)}${pop(l.emoji)}</span></div>`),
       `<div class="cv-block"><h3>Software &amp; Tools</h3><div class="cv-tags">${cv.software.map((s) => `<span>${esc(s)}</span>`).join("")}</div></div>`,
     ].join("");
-    syncCV();
-    $$(".cv-collapse > summary").forEach((s) => s.addEventListener("click", (e) => { if (window.matchMedia("(min-width:821px)").matches) e.preventDefault(); }));
   }
-  function syncCV() { const desktop = window.matchMedia("(min-width:821px)").matches; $$(".cv-collapse").forEach((d) => { d.open = desktop; }); }
 
   /* playful emoji burst for Say Hello */
   function flyEmojis(x, y) {
@@ -174,6 +186,18 @@
     else { legacyCopy(email); done(); }
   }
   function legacyCopy(t) { const ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand("copy"); } catch (e) {} ta.remove(); }
+
+  /* interactive portrait: cursor-tracked reveal lens (auto-drift on touch) */
+  function bindPortrait() {
+    const el = $("#ptx"); if (!el) return;
+    const set = (x, y) => { const r = el.getBoundingClientRect(); el.style.setProperty("--mx", ((x - r.left) / r.width * 100).toFixed(1) + "%"); el.style.setProperty("--my", ((y - r.top) / r.height * 100).toFixed(1) + "%"); };
+    if (!isTouch) {
+      el.addEventListener("mousemove", (e) => set(e.clientX, e.clientY));
+      el.addEventListener("mouseleave", () => { el.style.setProperty("--mx", "50%"); el.style.setProperty("--my", "50%"); });
+    } else if (!reduce) {
+      let t = 0; (function loop() { t += 0.014; el.style.setProperty("--mx", (50 + Math.cos(t) * 30).toFixed(1) + "%"); el.style.setProperty("--my", (50 + Math.sin(t * 1.3) * 30).toFixed(1) + "%"); el.__raf = requestAnimationFrame(loop); })();
+    }
+  }
 
   /* =================== CASE STUDY =================== */
   function openCase(id, fromNav) {
@@ -374,7 +398,7 @@
     document.addEventListener("keydown", (e) => { if (e.key === "e" && !editing && !/input|textarea/i.test(document.activeElement.tagName) && !document.activeElement.isContentEditable && !($("#case") && $("#case").classList.contains("open"))) toggleEdit(true); });
   }
 
-  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { paintCanvases(document); if ($("#cvGrid")) syncCV(); }, 250); });
+  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => paintCanvases(document), 250); });
 
   function init() {
     render(); bindFilters(); bindMenu(); bindAnchors(); bindTheme(); bindCase(); bindPrint(); bindEditUI();
@@ -391,6 +415,10 @@
     }
     // CV isn't edited in the admin — keep it sourced from content.js so updates show immediately.
     data.cv = clone(BASE).cv;
+    // never let the grid end up empty — fall back to built-in projects
+    if (!data.projects || !data.projects.length) data.projects = clone(BASE).projects;
+    if (!data.categories || !data.categories.length) data.categories = clone(BASE).categories;
+    if (!data.profile.featured || !data.profile.featured.length) data.profile.featured = clone(BASE).profile.featured;
     init();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
