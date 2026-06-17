@@ -232,12 +232,15 @@
 
     const sideCard = (label, content, open = false) => `<details class="case__card"${open ? " open" : ""}><summary>${label}<span class="case__card-icon"></span></summary><div class="case__card-body">${content}</div></details>`;
 
+    const caseIntro = pr.summary
+      ? `<p class="case__intro"><span class="case__name">${esc(pr.title)}.</span> ${esc(pr.summary)}</p>`
+      : `<p class="case__intro"><span class="case__name">${esc(pr.title)}</span></p>`;
+
     $("#caseScroll").innerHTML = `
       <div class="case__hero">${heroInner}</div>
       <div class="case__head">
-        <h1 class="case__title">${esc(pr.title)}</h1>
-        <span class="case__discipline">${esc(disciplineLine)}</span>
-        ${pr.summary ? `<p class="case__lead">${esc(pr.summary)}</p>` : ""}
+        ${caseIntro}
+        ${disciplineLine ? `<span class="case__discipline">${esc(disciplineLine)}</span>` : ""}
       </div>
       <div class="case__body">
         <div class="case__main">
@@ -331,7 +334,8 @@
       const card = e.target.closest(".card");
       if (!card) { pv.classList.remove("show"); active = null; return; }
       if (card !== active) { active = card; const m = card.querySelector(".card__media"); pv.innerHTML = m ? m.innerHTML : ""; }
-      pv.style.left = e.clientX + "px"; pv.style.top = e.clientY + "px"; pv.classList.add("show");
+      const rect = card.getBoundingClientRect();
+      pv.style.left = e.clientX + "px"; pv.style.top = rect.top + "px"; pv.classList.add("show");
     });
     g.addEventListener("mouseleave", () => { pv.classList.remove("show"); active = null; });
   }

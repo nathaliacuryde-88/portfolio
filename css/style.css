@@ -281,8 +281,8 @@ em { font-style: normal; color: var(--ink-2); }
 .grid[data-view="list"] .card__summary { display: inline; padding: 0; max-width: none; font-size: clamp(1.3rem, 2.4vw, 1.85rem); color: var(--ink-2); }
 .grid[data-view="list"] .card:hover .card__title { color: var(--accent); }
 /* floating image preview that follows the cursor */
-.list-preview { position: fixed; z-index: 40; width: clamp(220px, 22vw, 340px); aspect-ratio: 4/3; border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: var(--shadow); pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% - 20px)) scale(0.96); transition: opacity 0.25s var(--ease), transform 0.25s var(--ease); }
-.list-preview.show { opacity: 1; transform: translate(-50%, calc(-100% - 20px)) scale(1); }
+.list-preview { position: fixed; z-index: 40; width: clamp(220px, 22vw, 340px); aspect-ratio: 4/3; border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: var(--shadow); pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% - 8px)) scale(0.96); transition: opacity 0.25s var(--ease), transform 0.25s var(--ease); }
+.list-preview.show { opacity: 1; transform: translate(-50%, calc(-100% - 8px)) scale(1); }
 .list-preview img, .list-preview video, .list-preview canvas { width: 100%; height: 100%; object-fit: cover; }
 .list-preview .card__bar { display: none; }
 @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
@@ -390,11 +390,11 @@ em { font-style: normal; color: var(--ink-2); }
 .case__close:hover { transform: rotate(90deg); }
 .case__hero { width: 100%; height: clamp(60vh, 76vh, 90vh); overflow: hidden; background: var(--card); }
 .case__hero img, .case__hero video, .case__hero canvas { width: 100%; height: 100%; object-fit: cover; }
-/* Case head: big title + discipline label */
+/* Case head: work-intro style */
 .case__head { padding: clamp(32px, 6vh, 70px) var(--pad) clamp(20px, 3vh, 36px); border-bottom: 1px solid var(--line); }
-.case__title { font-weight: 700; font-size: clamp(3rem, 10vw, 9rem); line-height: 0.9; letter-spacing: -0.05em; color: var(--ink); }
+.case__intro { font-weight: 500; font-size: clamp(1.7rem, 4.2vw, 3.4rem); line-height: 1.12; letter-spacing: -0.03em; color: var(--ink-2); max-width: 28ch; }
+.case__name { color: var(--ink); }
 .case__discipline { display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-2); margin-top: 18px; }
-.case__lead { font-size: clamp(1.1rem, 1.5vw, 1.5rem); line-height: 1.45; color: var(--ink-2); margin-top: 12px; max-width: 60ch; }
 /* Two-column body: gallery | sidebar */
 .case__body { display: grid; grid-template-columns: 1fr 300px; align-items: start; padding: clamp(40px,6vh,80px) var(--pad); gap: clamp(30px,4vw,70px); }
 .case__main { display: flex; flex-direction: column; gap: var(--gap); }
@@ -403,7 +403,7 @@ em { font-style: normal; color: var(--ink-2); }
 .case__stat .l { font-size: 0.8rem; color: var(--ink-2); margin-top: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
 .case__gallery { display: flex; flex-direction: column; gap: var(--gap); }
 /* Sticky sidebar — rounded glass-style cards (menu-bar feel, image-card rounding) */
-.case__side { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 12px; }
+.case__side { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 5px; }
 .case__card { border-radius: var(--radius); background: var(--bg-2); overflow: hidden; padding: 0 clamp(16px, 1.4vw, 22px); transition: background 0.3s; }
 .case__card[open] { background: var(--card); }
 .case__card summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 17px 0; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.11em; color: var(--ink); }
