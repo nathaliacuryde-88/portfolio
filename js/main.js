@@ -73,14 +73,13 @@
       const aw = $(".about__wrap"), pimg = $("#portraitImg");
       if (pimg) {
         const por = data.about && data.about.portrait;
-        const src = por && (typeof por === "object" ? por.src : por);
-        if (isMedia(por) && !/\.(mp4|webm|mov|m4v)$/i.test(src)) {
-          const fx = typeof por === "object" ? por.focalX : null, fy = typeof por === "object" ? por.focalY : null;
-          const posStyle = (fx != null && fy != null) ? ` style="object-position:${+fx}% ${+fy}%"` : "";
-          pimg.innerHTML = `<div class="ptx" id="ptx"><img class="ptx__base" src="${esc(src)}" alt=""${posStyle}><div class="ptx__tint"></div><img class="ptx__reveal" src="${esc(src)}" alt="${esc(data.profile.name)}"${posStyle}><div class="ptx__grid"></div><div class="ptx__scan"></div><span class="ptx__hint">${isTouch ? "scanning" : "hover to reveal"}</span></div>`;
-          if (aw) aw.classList.add("has-portrait"); bindPortrait();
-        } else if (isMedia(por)) { pimg.innerHTML = media(por, { alt: data.profile.name }); if (aw) aw.classList.add("has-portrait"); }
-        else { pimg.innerHTML = ""; if (aw) aw.classList.remove("has-portrait"); }
+        if (isMedia(por)) {
+          pimg.innerHTML = media(por, { alt: data.profile.name });
+          if (aw) aw.classList.add("has-portrait");
+        } else {
+          pimg.innerHTML = "";
+          if (aw) aw.classList.remove("has-portrait");
+        }
       }
 
       renderCV();
@@ -126,8 +125,10 @@
       const inner = m ? media(m, { alt: pr.title }) : `<canvas data-cover='${attr(JSON.stringify(pr.cover || { colors: [pr.bg, pr.accent], kind: "abstract" }))}' data-seed="${esc(pr.id)}" data-label="${esc(pr.title)}"></canvas>`;
       return `<article class="card ${hide}" data-id="${esc(pr.id)}" data-cat="${esc(pr.category)}" data-cursor="view" style="--accent:${esc(pr.accent)}">
         <div class="card__media" style="background:${esc(pr.bg)}">${inner}<span class="card__bar"></span></div>
-        <div class="card__meta"><h3 class="card__title">${esc(pr.title)}</h3><span class="card__tag"><i></i>${esc(pr.category)} · ${esc(pr.year)}</span></div>
-        <p class="card__summary">${esc(pr.summary)}</p></article>`;
+        <div class="card__body">
+          <div class="card__meta"><h3 class="card__title">${esc(pr.title)}</h3><span class="card__tag"><i></i>${esc(pr.category)} · ${esc(pr.year)}</span></div>
+          <p class="card__summary">${esc(pr.summary)}</p>
+        </div></article>`;
     }).join("");
     if ($("#workCount")) $("#workCount").textContent = list.length + (list.length === 1 ? " project" : " projects");
     paintCanvases(g);
@@ -196,8 +197,8 @@
 
     const heroM = heroOf(pr);
     const heroInner = heroM ? media(heroM, { eager: true, alt: pr.title }) : `<canvas data-cover='${attr(JSON.stringify(pr.cover || { colors: [pr.bg, pr.accent] }))}' data-seed="${esc(pr.id)}-h" data-label="${esc(pr.title)}"></canvas>`;
-    const metaRows = [["Year", pr.year], ["Discipline", pr.category], ["Role", pr.role]].filter(([, v]) => v).map(([k, v]) => `<div class="m"><span>${esc(k)}</span><span>${esc(v)}</span></div>`).join("");
-    const stats = (pr.stats || []).map((s) => `<div class="case__stat" data-fx><div class="v">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join("");
+    const statsHTML = (pr.stats || []).map((s) => `<div class="case__stat" data-fx><div class="v">${esc(s.value)}</div><div class="l">${esc(s.label)}</div></div>`).join("");
+    const disciplineLine = [pr.category, pr.role, pr.year].filter(Boolean).join(" · ");
 
     let gal = "";
     if (pr.blocks && pr.blocks.length) {
@@ -215,13 +216,27 @@
     const next = list[(idx + 1) % list.length], nextM = coverOf(next);
     const nextImg = nextM ? media(nextM, { alt: next.title }) : `<canvas data-cover='${attr(JSON.stringify(next.cover || { colors: [next.bg, next.accent] }))}' data-seed="${esc(next.id)}-n" data-label="${esc(next.title)}"></canvas>`;
 
+    const sideCard = (label, content, open = false) => `<details class="case__card"${open ? " open" : ""}><summary>${label}<span class="case__card-icon"></span></summary><div class="case__card-body">${content}</div></details>`;
+
     $("#caseScroll").innerHTML = `
       <div class="case__hero">${heroInner}</div>
-      <div class="case__intro"><div><h1 class="case__title">${esc(pr.title)}</h1><p class="case__lead">${esc(pr.summary)}</p></div><div class="case__meta">${metaRows}</div></div>
-      ${stats ? `<div class="case__stats">${stats}</div>` : ""}
-      <div class="case__desc"><p>${esc(pr.description)}</p></div>
-      ${gal ? `<div class="case__gallery">${gal}</div>` : ""}
-      ${credits ? `<div class="case__credits"><h4>Credits</h4><ul>${credits}</ul></div>` : ""}
+      <div class="case__head">
+        <h1 class="case__title">${esc(pr.title)}</h1>
+        <span class="case__discipline">${esc(disciplineLine)}</span>
+        ${pr.summary ? `<p class="case__lead">${esc(pr.summary)}</p>` : ""}
+      </div>
+      <div class="case__body">
+        <div class="case__main">
+          ${statsHTML ? `<div class="case__stats">${statsHTML}</div>` : ""}
+          ${gal ? `<div class="case__gallery">${gal}</div>` : ""}
+        </div>
+        <aside class="case__side">
+          ${pr.description ? sideCard("Starting Point", `<p>${esc(pr.description)}</p>`, true) : ""}
+          ${pr.outcome ? sideCard("Outcome", `<p>${esc(pr.outcome)}</p>`) : ""}
+          ${credits ? sideCard("Credits", `<ul>${credits}</ul>`) : ""}
+          ${pr.link ? `<a href="${esc(pr.link)}" class="case__link-btn" target="_blank" rel="noopener">View Project ↗</a>` : ""}
+        </aside>
+      </div>
       <div class="case__next" data-id="${esc(next.id)}" data-cursor="view"><span class="k">Next project</span><span class="t">${esc(next.title)} <span class="arrow">→</span></span><div class="case__nextimg">${nextImg}</div></div>`;
 
     paintCanvases($("#caseScroll"));
@@ -284,6 +299,12 @@
   function bindFilters() {
     const f = $("#filters"); if (!f) return;
     f.addEventListener("click", (e) => { const b = e.target.closest("button[data-cat]"); if (!b) return; $$("#filters button").forEach((x) => x.classList.remove("active")); b.classList.add("active"); renderGrid(b.dataset.cat); bindTiles(); observe($("#grid")); });
+    const vt = $("#viewToggle"); if (!vt) return;
+    vt.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-view]"); if (!b) return;
+      $$("button[data-view]", vt).forEach((x) => x.classList.remove("active")); b.classList.add("active");
+      const g = $("#grid"); if (g) g.setAttribute("data-view", b.dataset.view);
+    });
   }
 
   const cursor = $("#cursor"), cLabel = cursor ? $(".cursor__label", cursor) : null;

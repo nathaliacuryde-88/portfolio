@@ -49,7 +49,17 @@
       <h1 class="workhead__title">Selected<br/>Work</h1>
       <div class="workhead__bar">
         <div class="filters" id="filters" role="tablist" aria-label="Filter work"></div>
-        <span class="workhead__count" id="workCount"></span>
+        <div class="workhead__right">
+          <span class="workhead__count" id="workCount"></span>
+          <div class="view-toggle" id="viewToggle" aria-label="Switch view">
+            <button data-view="grid" class="active" aria-label="Grid view" title="Grid view">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+            </button>
+            <button data-view="list" aria-label="List view" title="List view">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><rect x="1" y="2" width="4" height="4" rx="0.5"/><rect x="7" y="3" width="8" height="1.5" rx="0.5"/><rect x="7" y="5" width="5" height="1" rx="0.5" opacity=".5"/><rect x="1" y="9" width="4" height="4" rx="0.5"/><rect x="7" y="10" width="8" height="1.5" rx="0.5"/><rect x="7" y="12" width="5" height="1" rx="0.5" opacity=".5"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
