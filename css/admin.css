@@ -39,6 +39,11 @@ label{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.06
 .section{margin:22px 0}
 .section>h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink2);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
 .stack{display:flex;flex-direction:column;gap:14px}
+.storycards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.storycards>h2{grid-column:1/-1}
+.storycard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.storycard textarea{min-height:120px}
+@media(max-width:720px){.storycards{grid-template-columns:1fr}}
 
 .item{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
 .item .head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}

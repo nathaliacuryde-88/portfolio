@@ -199,8 +199,7 @@
           <div><label>Accent colour</label><input type="color" data-bind="data.accent" value="${esc(d.accent || "#8d8a84")}"/></div>
           <div><label>Card background</label><input type="color" data-bind="data.bg" value="${esc(d.bg || "#111111")}"/></div>
         </div>
-        <div style="margin-top:14px"><label>Summary (one line, shown on cards & case intro)</label><input data-bind="data.summary" value="${esc(d.summary)}"/></div>
-        <div style="margin-top:14px"><label>Description (full case intro paragraph)</label><textarea data-bind="data.description">${esc(d.description)}</textarea></div>
+        <div style="margin-top:14px"><label>Summary (one line, shown on cards, list & case lead)</label><input data-bind="data.summary" value="${esc(d.summary)}"/></div>
       </div>
 
       <div class="section"><h2>Card cover — shown in the grid &amp; featured (4:3)</h2>${mediaSlot("data.cover", d.cover, "4/3")}</div>
@@ -210,8 +209,24 @@
         <div class="stack" id="stats">${statRows}</div>
         <button class="addbtn" id="addstat" style="margin-top:10px">+ Add stat</button></div>
 
-      <div class="section"><h2>Credits (one per line)</h2>
-        <textarea data-bind-lines="data.team" placeholder="Creative Direction — Nathalia Cury">${esc((d.team || []).join("\n"))}</textarea></div>
+      <div class="section storycards"><h2>Case story — the collapsible side cards on the project page</h2>
+        <div class="storycard">
+          <label>Starting point</label>
+          <textarea data-bind="data.description" placeholder="What was the brief, the challenge, the context…">${esc(d.description || "")}</textarea>
+        </div>
+        <div class="storycard">
+          <label>Outcome</label>
+          <textarea data-bind="data.outcome" placeholder="What was delivered, the impact, the result…">${esc(d.outcome || "")}</textarea>
+        </div>
+        <div class="storycard">
+          <label>Credits (one per line)</label>
+          <textarea data-bind-lines="data.team" placeholder="Creative Direction — Nathalia Cury">${esc((d.team || []).join("\n"))}</textarea>
+        </div>
+        <div class="storycard">
+          <label>Link button URL (optional — shows a “View Project ↗” button)</label>
+          <input data-bind="data.link" value="${esc(d.link || "")}" placeholder="https://…"/>
+        </div>
+      </div>
 
       <div class="section"><h2>Case modules — stack images, video, 2-up, text, quotes</h2>
         <div class="stack" id="blocks">${blocks || '<p class="muted">No modules yet.</p>'}</div>
@@ -336,6 +351,15 @@
   function renderSite() {
     const p = site.profile || (site.profile = {});
     const ab = site.about || (site.about = {});
+    const wk = site.work || (site.work = {});
+    const BASEcv = (window.PORTFOLIO && window.PORTFOLIO.cv) || {};
+    const cv = site.cv || (site.cv = JSON.parse(JSON.stringify(BASEcv)));
+    // about stats + capabilities (repeatable)
+    const aStatRows = (ab.stats || []).map((s, i) => `<div class="kv"><input data-sbind="about.stats.${i}.value" value="${esc(s.value || "")}" placeholder="15+"/><input data-sbind="about.stats.${i}.label" value="${esc(s.label || "")}" placeholder="Years in design"/><button class="btn ghost sm danger" data-del-astat="${i}">✕</button></div>`).join("");
+    const capRows = (ab.capabilities || []).map((c, i) => `<div class="item"><div class="head"><span class="t">Capability ${i + 1}</span><button class="btn ghost sm danger" data-del-cap="${i}">✕</button></div><label>Title</label><input data-sbind="about.capabilities.${i}.title" value="${esc(c.title || "")}"/><div style="margin-top:10px"><label>Items (one per line)</label><textarea data-sbind-lines="about.capabilities.${i}.items">${esc((c.items || []).join("\n"))}</textarea></div></div>`).join("");
+    // CV: one textarea per list, fields separated by " | "
+    const cvLines = (arr, fields) => (arr || []).map((o) => fields.map((f) => o[f] || "").join(" | ").replace(/(\s*\|\s*)+$/, "")).join("\n");
+    const softLines = (Array.isArray((cv.software || [])[0]) ? cv.software : [cv.software || []]).map((g) => (g || []).join(", ")).join("\n");
     const por = ab.portrait; const psrc = por && (typeof por === "object" ? por.src : por);
     const pfx = por && typeof por === "object" ? por.focalX : null, pfy = por && typeof por === "object" ? por.focalY : null;
     const pprev = psrc ? (isVid(psrc) ? `<video src="${esc(psrc)}" muted></video>` : `<img src="${esc(psrc)}"/>`) : "No media";
@@ -379,20 +403,45 @@
         </div>
       </div>
 
+      <div class="section"><h2>Work page intro (replaces the “Selected Work” headline)</h2>
+        <textarea data-sbind="work.intro" placeholder="My work. An overview of recent case studies…">${esc(wk.intro || "")}</textarea></div>
+
       <div class="section"><h2>About</h2>
-        <div><label>Headline</label><textarea data-sbind="about.headline">${esc((site.about && site.about.headline) || "")}</textarea></div>
-        <div style="margin-top:14px"><label>Paragraphs (one per line)</label><textarea data-sbind-lines="about.paragraphs" style="min-height:140px">${esc(((site.about && site.about.paragraphs) || []).join("\n"))}</textarea></div>
+        <div><label>Headline</label><textarea data-sbind="about.headline">${esc(ab.headline || "")}</textarea></div>
+        <div style="margin-top:14px"><label>Paragraphs (one per line)</label><textarea data-sbind-lines="about.paragraphs" style="min-height:140px">${esc((ab.paragraphs || []).join("\n"))}</textarea></div>
+      </div>
+
+      <div class="section"><h2>About — stats / highlights</h2>
+        <div class="stack" id="astats">${aStatRows}</div>
+        <button class="addbtn" id="addastat" style="margin-top:10px">+ Add stat</button></div>
+
+      <div class="section"><h2>About — capabilities</h2>
+        <div class="stack" id="caps">${capRows}</div>
+        <button class="addbtn" id="addcap" style="margin-top:10px">+ Add capability</button></div>
+
+      <div class="section"><h2>CV — one entry per line, fields separated by “ | ”</h2>
+        <div><label>Professional Experience — period | role | place | emoji</label><textarea data-sbind-cv="experience" data-fields="period|role|place|emoji" style="min-height:150px">${esc(cvLines(cv.experience, ["period", "role", "place", "emoji"]))}</textarea></div>
+        <div style="margin-top:14px"><label>International Experience — period | role | place | emoji</label><textarea data-sbind-cv="international" data-fields="period|role|place|emoji" style="min-height:150px">${esc(cvLines(cv.international, ["period", "role", "place", "emoji"]))}</textarea></div>
+        <div style="margin-top:14px"><label>Awards & Nominations — year | title | emoji</label><textarea data-sbind-cv="awards" data-fields="year|title|emoji" style="min-height:150px">${esc(cvLines(cv.awards, ["year", "title", "emoji"]))}</textarea></div>
+        <div style="margin-top:14px"><label>Lectures, Workshops & Exhibitions — year | title | kind | emoji</label><textarea data-sbind-cv="lectures" data-fields="year|title|kind|emoji" style="min-height:150px">${esc(cvLines(cv.lectures, ["year", "title", "kind", "emoji"]))}</textarea></div>
+        <div style="margin-top:14px"><label>Education — period | title | place | emoji</label><textarea data-sbind-cv="education" data-fields="period|title|place|emoji" style="min-height:110px">${esc(cvLines(cv.education, ["period", "title", "place", "emoji"]))}</textarea></div>
+        <div style="margin-top:14px"><label>Languages — name | level | emoji</label><textarea data-sbind-cv="languages" data-fields="name|level|emoji" style="min-height:90px">${esc(cvLines(cv.languages, ["name", "level", "emoji"]))}</textarea></div>
+        <div style="margin-top:14px"><label>Software & Tools — one cluster per line, tools separated by commas</label><textarea data-sbind-soft="1" style="min-height:90px">${esc(softLines)}</textarea></div>
       </div>
 
       <div class="section"><h2>About portrait (square 1:1)</h2>
         <div style="max-width:340px">
           <div class="media ${psrc ? "pickable" : "empty"}" data-pfocal>${pprev}${pmarker}</div>
-          <div class="kv" style="margin-top:8px"><input type="file" accept="image/*" id="pupload"/>${psrc ? '<button class="btn ghost sm" id="pcrop">Adjust crop</button>' : ""}${psrc ? '<button class="btn ghost sm" id="pclear">Remove</button>' : ""}</div>
-          <div class="hint">${psrc ? "Click preview to set focal point." : "Upload a square portrait — it gets a techy reveal effect on the site."}</div>
+          <div class="kv" style="margin-top:8px"><input type="file" accept="image/*,video/*" id="pupload"/>${psrc && !isVid(psrc) ? '<button class="btn ghost sm" id="pcrop">Adjust crop</button>' : ""}${psrc ? '<button class="btn ghost sm" id="pclear">Remove</button>' : ""}</div>
+          <div class="hint">${psrc ? "Click preview to set focal point." : "Upload a square portrait (image or video) for the About section."}</div>
         </div>
       </div>`);
 
     document.getElementById("savesite").onclick = saveSite;
+    document.getElementById("addastat").onclick = () => { harvestSite(); (ab.stats = ab.stats || []).push({ value: "", label: "" }); renderSite(); };
+    app.querySelectorAll("[data-del-astat]").forEach((b) => b.onclick = () => { harvestSite(); ab.stats.splice(+b.dataset.delAstat, 1); renderSite(); });
+    document.getElementById("addcap").onclick = () => { harvestSite(); (ab.capabilities = ab.capabilities || []).push({ title: "", items: [] }); renderSite(); };
+    app.querySelectorAll("[data-del-cap]").forEach((b) => b.onclick = () => { harvestSite(); ab.capabilities.splice(+b.dataset.delCap, 1); renderSite(); });
     document.getElementById("addslide").onclick = () => document.getElementById("slidefile").click();
     document.getElementById("slidefile").onchange = async (e) => {
       const f = e.target.files[0]; if (!f) return; harvestSite();
@@ -429,6 +478,16 @@
   function harvestSite() {
     app.querySelectorAll("[data-sbind]").forEach((el) => setPath(site, el.dataset.sbind, el.value));
     app.querySelectorAll("[data-sbind-lines]").forEach((el) => setPath(site, el.dataset.sbindLines, el.value.split("\n").map((s) => s.trim()).filter(Boolean)));
+    app.querySelectorAll("[data-sbind-cv]").forEach((el) => {
+      const fields = (el.dataset.fields || "").split("|");
+      const arr = el.value.split("\n").map((s) => s.trim()).filter(Boolean).map((line) => {
+        const parts = line.split("|").map((x) => x.trim());
+        const o = {}; fields.forEach((f, i) => { if (parts[i]) o[f] = parts[i]; }); return o;
+      });
+      setPath(site, "cv." + el.dataset.sbindCv, arr);
+    });
+    const soft = app.querySelector("[data-sbind-soft]");
+    if (soft) setPath(site, "cv.software", soft.value.split("\n").map((s) => s.trim()).filter(Boolean).map((line) => line.split(",").map((x) => x.trim()).filter(Boolean)));
   }
   async function saveSite() {
     harvestSite();
@@ -533,7 +592,7 @@
   async function seedFromBuiltIn() {
     if (!confirm("Import your built-in content.js into the database? This overwrites existing rows with the same ids.")) return;
     const P = JSON.parse(JSON.stringify(window.PORTFOLIO));
-    const siteData = { profile: P.profile, about: P.about, categories: P.categories, cv: P.cv, clients: P.clients };
+    const siteData = { profile: P.profile, about: P.about, categories: P.categories, cv: P.cv, clients: P.clients, work: P.work };
     const feat = (P.profile.featured || []);
     const rows = P.projects.map((pr, i) => {
       const { id, category } = pr; const d = Object.assign({}, pr); delete d.id; delete d.category;

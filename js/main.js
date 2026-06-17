@@ -93,6 +93,11 @@
     }
 
     if ($("#grid")) {  /* ---- WORK ---- */
+      if ($("#workIntro")) {
+        const wi = (data.work && data.work.intro) || "";
+        const m = wi.match(/^(.*?[.!?])\s+([\s\S]*)$/);
+        $("#workIntro").innerHTML = m ? `<span class="lead">${esc(m[1])}</span> ${esc(m[2])}` : esc(wi);
+      }
       $("#filters").innerHTML = data.categories.map((cat, i) => `<button role="tab" data-cat="${esc(cat)}" class="${i ? "" : "active"}">${esc(cat)}</button>`).join("");
       renderGrid("All");
     }
@@ -151,7 +156,16 @@
       blk("Languages", cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${esc(l.name)}${pop(l.emoji)}</span></div>`),
       `<div class="cv-block"><h3>Software &amp; Tools</h3>${(Array.isArray(cv.software[0]) ? cv.software : [cv.software]).map((g) => `<div class="cv-tags">${g.map((s) => `<span>${esc(s)}</span>`).join("")}</div>`).join("")}</div>`,
     ].join("");
+    syncCVOpen();
   }
+  /* Desktop: keep every CV section expanded (details content-visibility can't be
+     forced open via CSS in newer browsers, so set the open attribute directly). */
+  function syncCVOpen() {
+    const grid = $("#cvGrid"); if (!grid) return;
+    const desk = window.matchMedia("(min-width: 821px)").matches;
+    $$(".cv-collapse", grid).forEach((d) => { d.open = desk; });
+  }
+  window.addEventListener("resize", () => { clearTimeout(syncCVOpen._t); syncCVOpen._t = setTimeout(syncCVOpen, 200); });
 
   /* playful emoji burst for Say Hello */
   function flyEmojis(x, y) {
@@ -307,6 +321,21 @@
     });
   }
 
+  /* list-view: floating image preview that follows the cursor */
+  function bindListPreview() {
+    const g = $("#grid"), pv = $("#listPreview"); if (!g || !pv || isTouch) return;
+    let active = null;
+    const isList = () => g.getAttribute("data-view") === "list";
+    g.addEventListener("mousemove", (e) => {
+      if (!isList()) { pv.classList.remove("show"); active = null; return; }
+      const card = e.target.closest(".card");
+      if (!card) { pv.classList.remove("show"); active = null; return; }
+      if (card !== active) { active = card; const m = card.querySelector(".card__media"); pv.innerHTML = m ? m.innerHTML : ""; }
+      pv.style.left = e.clientX + "px"; pv.style.top = e.clientY + "px"; pv.classList.add("show");
+    });
+    g.addEventListener("mouseleave", () => { pv.classList.remove("show"); active = null; });
+  }
+
   const cursor = $("#cursor"), cLabel = cursor ? $(".cursor__label", cursor) : null;
   let cx = 0, cy = 0, tx = 0, ty = 0;
   function cloop() { cx += (tx - cx) * 0.18; cy += (ty - cy) * 0.18; cursor.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`; requestAnimationFrame(cloop); }
@@ -410,7 +439,7 @@
   let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => paintCanvases(document), 250); });
 
   function init() {
-    render(); bindFilters(); bindMenu(); bindAnchors(); bindTheme(); bindCase(); bindPrint(); bindEditUI();
+    render(); bindFilters(); bindListPreview(); bindMenu(); bindAnchors(); bindTheme(); bindCase(); bindPrint(); bindEditUI();
     onScroll(); loader(); startCarousel();
     const h = location.hash.slice(1); if (h && data.projects.some((p) => p.id === h)) setTimeout(() => openCase(h, true), 400);
   }
@@ -422,8 +451,10 @@
         if (remote && Object.keys(remote).length) data = merge(clone(BASE), remote);
       } catch (e) { console.warn("Supabase load failed — using built-in content.", e); }
     }
-    // CV isn't edited in the admin — keep it sourced from content.js so updates show immediately.
-    data.cv = clone(BASE).cv;
+    // CV: use the edited CV from the store when present; otherwise built-in content.js.
+    if (!data.cv || !data.cv.experience || !data.cv.experience.length) data.cv = clone(BASE).cv;
+    // work intro fallback
+    if (!data.work || !data.work.intro) data.work = clone(BASE).work || data.work;
     // never let the grid end up empty — fall back to built-in projects
     if (!data.projects || !data.projects.length) data.projects = clone(BASE).projects;
     if (!data.categories || !data.categories.length) data.categories = clone(BASE).categories;

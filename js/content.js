@@ -64,6 +64,11 @@ window.PORTFOLIO = {
 
   categories: ["All", "Branding", "Editorial", "AI"],
 
+  // Work page intro (replaces the big "Selected Work" headline)
+  work: {
+    intro: "My work. An overview of recent case studies, as well as a selection of my self-initiated projects.",
+  },
+
   projects: [
     {
       id: "x1f", title: "x1F", client: "x1F (with GMK · Strichpunkt)", year: "2025",

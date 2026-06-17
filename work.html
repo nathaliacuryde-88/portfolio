@@ -46,7 +46,7 @@
   <main id="top">
     <!-- WORK PAGE HEADER + FILTER (Koto-style) -->
     <header class="workhead">
-      <h1 class="workhead__title">Selected<br/>Work</h1>
+      <p class="workhead__intro" id="workIntro" data-edit="work.intro"></p>
       <div class="workhead__bar">
         <div class="filters" id="filters" role="tablist" aria-label="Filter work"></div>
         <div class="workhead__right">
@@ -64,6 +64,7 @@
     </header>
 
     <div class="grid" id="grid"></div>
+    <div class="list-preview" id="listPreview" aria-hidden="true"></div>
   </main>
 
   <footer class="footer">
