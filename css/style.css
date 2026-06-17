@@ -256,7 +256,7 @@ em { font-style: normal; color: var(--ink-2); }
 .view-toggle { display: flex; gap: 4px; }
 .view-toggle button { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--line); color: var(--ink-2); transition: 0.3s; }
 .view-toggle button.active, .view-toggle button:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-.grid { padding: clamp(30px, 5vh, 60px) var(--pad) clamp(50px, 8vh, 110px); display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(26px, 3vw, 48px) var(--gap); }
+.grid { padding: clamp(30px, 5vh, 60px) var(--pad) clamp(50px, 8vh, 110px); display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(39px, 4.5vw, 72px) var(--gap); }
 .card { cursor: pointer; }
 .card.is-hidden { display: none; }
 .card__media { position: relative; overflow: hidden; border-radius: var(--radius); aspect-ratio: 4/3; background: var(--card); box-shadow: var(--card-edge); }
@@ -281,8 +281,8 @@ em { font-style: normal; color: var(--ink-2); }
 .grid[data-view="list"] .card__summary { display: inline; padding: 0; max-width: none; font-size: clamp(1.3rem, 2.4vw, 1.85rem); color: var(--ink-2); }
 .grid[data-view="list"] .card:hover .card__title { color: var(--accent); }
 /* floating image preview that follows the cursor */
-.list-preview { position: fixed; z-index: 40; width: clamp(220px, 22vw, 340px); aspect-ratio: 4/3; border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: var(--shadow); pointer-events: none; opacity: 0; transform: translate(-50%, -118%) scale(0.96); transition: opacity 0.25s var(--ease), transform 0.25s var(--ease); }
-.list-preview.show { opacity: 1; transform: translate(-50%, -110%) scale(1); }
+.list-preview { position: fixed; z-index: 40; width: clamp(220px, 22vw, 340px); aspect-ratio: 4/3; border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: var(--shadow); pointer-events: none; opacity: 0; transform: translate(-50%, calc(-100% - 20px)) scale(0.96); transition: opacity 0.25s var(--ease), transform 0.25s var(--ease); }
+.list-preview.show { opacity: 1; transform: translate(-50%, calc(-100% - 20px)) scale(1); }
 .list-preview img, .list-preview video, .list-preview canvas { width: 100%; height: 100%; object-fit: cover; }
 .list-preview .card__bar { display: none; }
 @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
@@ -392,7 +392,7 @@ em { font-style: normal; color: var(--ink-2); }
 .case__hero img, .case__hero video, .case__hero canvas { width: 100%; height: 100%; object-fit: cover; }
 /* Case head: big title + discipline label */
 .case__head { padding: clamp(32px, 6vh, 70px) var(--pad) clamp(20px, 3vh, 36px); border-bottom: 1px solid var(--line); }
-.case__title { font-weight: 700; font-size: clamp(3rem, 10vw, 9rem); line-height: 0.9; letter-spacing: -0.05em; }
+.case__title { font-weight: 700; font-size: clamp(3rem, 10vw, 9rem); line-height: 0.9; letter-spacing: -0.05em; color: var(--ink); }
 .case__discipline { display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-2); margin-top: 18px; }
 .case__lead { font-size: clamp(1.1rem, 1.5vw, 1.5rem); line-height: 1.45; color: var(--ink-2); margin-top: 12px; max-width: 60ch; }
 /* Two-column body: gallery | sidebar */
@@ -404,7 +404,7 @@ em { font-style: normal; color: var(--ink-2); }
 .case__gallery { display: flex; flex-direction: column; gap: var(--gap); }
 /* Sticky sidebar — rounded glass-style cards (menu-bar feel, image-card rounding) */
 .case__side { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 12px; }
-.case__card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-2); box-shadow: var(--card-edge); overflow: hidden; padding: 0 clamp(16px, 1.4vw, 22px); transition: background 0.3s; }
+.case__card { border-radius: var(--radius); background: var(--bg-2); overflow: hidden; padding: 0 clamp(16px, 1.4vw, 22px); transition: background 0.3s; }
 .case__card[open] { background: var(--card); }
 .case__card summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 17px 0; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.11em; color: var(--ink); }
 .case__card summary::-webkit-details-marker { display: none; }
