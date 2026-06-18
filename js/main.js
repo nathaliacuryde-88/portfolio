@@ -157,6 +157,21 @@
       `<div class="cv-block"><h3>Software &amp; Tools</h3>${(Array.isArray(cv.software[0]) ? cv.software : [cv.software]).map((g) => `<div class="cv-tags">${g.map((s) => `<span>${esc(s)}</span>`).join("")}</div>`).join("")}</div>`,
     ].join("");
     syncCVOpen();
+    bindCVToggle();
+  }
+  /* Mobile: open/close ONLY via the +/× icon. The native <summary> toggles on any
+     tap inside it, so fingers scrolling over the row would close it — prevent that
+     and toggle manually only when the icon itself is tapped. */
+  function bindCVToggle() {
+    const grid = $("#cvGrid"); if (!grid) return;
+    $$(".cv-collapse > summary", grid).forEach((s) => {
+      s.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (window.matchMedia("(min-width: 821px)").matches) return;
+        if (!e.target.closest(".cv-x")) return;
+        const d = s.parentElement; d.open = !d.open;
+      });
+    });
   }
   /* Desktop: keep every CV section expanded (details content-visibility can't be
      forced open via CSS in newer browsers, so set the open attribute directly). */
