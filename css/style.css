@@ -304,7 +304,7 @@ em { font-style: normal; color: var(--ink-2); }
    ================================================================= */
 .about__wrap { padding: 0 var(--pad); display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(30px, 5vw, 90px); align-items: start; }
 .about__wrap.has-portrait { grid-template-columns: minmax(150px, 0.65fr) 1fr 1.25fr; gap: clamp(22px, 3.4vw, 64px); }
-.about__portrait { position: relative; aspect-ratio: 1/1; border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: var(--card-edge); }
+.about__portrait { position: relative; aspect-ratio: 9/16; border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: var(--card-edge); }
 .about__headline { font-weight: 500; font-size: clamp(1.6rem, 3.2vw, 3rem); line-height: 1.1; letter-spacing: -0.03em; }
 .about__body { display: flex; flex-direction: column; gap: 18px; }
 .about__body p { color: var(--ink-2); font-size: clamp(1rem, 1.1vw, 1.1rem); line-height: 1.6; max-width: 58ch; }

@@ -429,11 +429,11 @@
         <div style="margin-top:14px"><label>Software & Tools — one cluster per line, tools separated by commas</label><textarea data-sbind-soft="1" style="min-height:90px">${esc(softLines)}</textarea></div>
       </div>
 
-      <div class="section"><h2>About portrait (square 1:1)</h2>
-        <div style="max-width:340px">
+      <div class="section"><h2>About portrait (vertical 9:16)</h2>
+        <div style="max-width:280px">
           <div class="media ${psrc ? "pickable" : "empty"}" data-pfocal>${pprev}${pmarker}</div>
-          <div class="kv" style="margin-top:8px"><input type="file" accept="image/*,video/*" id="pupload"/>${psrc && !isVid(psrc) ? '<button class="btn ghost sm" id="pcrop">Adjust crop</button>' : ""}${psrc ? '<button class="btn ghost sm" id="pclear">Remove</button>' : ""}</div>
-          <div class="hint">${psrc ? "Click preview to set focal point." : "Upload a square portrait (image or video) for the About section."}</div>
+          <div class="kv" style="margin-top:8px"><input type="file" accept="image/*,video/*" id="pupload"/>${psrc ? '<button class="btn ghost sm" id="pcrop">Adjust crop</button>' : ""}${psrc ? '<button class="btn ghost sm" id="pclear">Remove</button>' : ""}</div>
+          <div class="hint">${psrc ? "Click preview to set focal point." : "Upload a vertical portrait (image or video) for the About section."}</div>
         </div>
       </div>`);
 
@@ -467,9 +467,9 @@
     });
     // portrait handlers
     const pin = document.getElementById("pupload");
-    if (pin) pin.onchange = async (e) => { const f = e.target.files[0]; if (!f) return; harvestSite(); try { const url = await processUpload(f, "1/1"); if (!url) return; ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Portrait added ✓"); } catch (err) { toast(err.message, true); } };
+    if (pin) pin.onchange = async (e) => { const f = e.target.files[0]; if (!f) return; harvestSite(); try { const url = await processUpload(f, "9/16"); if (!url) return; ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Portrait added ✓"); } catch (err) { toast(err.message, true); } };
     const pcr = document.getElementById("pcrop");
-    if (pcr) pcr.onclick = async () => { harvestSite(); const src = typeof ab.portrait === "object" ? ab.portrait.src : ab.portrait; if (!src) return; try { const blob = await openCropper(src, "1/1"); if (!blob) return; toast("Uploading…"); const url = await uploadBlob(blob); ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Re-cropped ✓"); } catch (err) { toast(err.message, true); } };
+    if (pcr) pcr.onclick = async () => { harvestSite(); const src = typeof ab.portrait === "object" ? ab.portrait.src : ab.portrait; if (!src) return; try { const blob = await openCropper(src, "9/16"); if (!blob) return; toast("Uploading…"); const url = await uploadBlob(blob); ab.portrait = { src: url, focalX: 50, focalY: 50 }; renderSite(); toast("Re-cropped ✓"); } catch (err) { toast(err.message, true); } };
     const pcl = document.getElementById("pclear");
     if (pcl) pcl.onclick = () => { harvestSite(); ab.portrait = null; renderSite(); };
     const pf = app.querySelector(".media.pickable[data-pfocal]");
