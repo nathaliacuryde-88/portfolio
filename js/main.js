@@ -413,7 +413,16 @@
     btn.addEventListener("click", () => toggle(!menu.classList.contains("open")));
     $$("#menu a").forEach((a) => a.addEventListener("click", () => toggle(false)));
   }
-  function bindAnchors() { $$('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => { const id = a.getAttribute("href"); if (id.length < 2) return; const t = document.querySelector(id); if (t) { e.preventDefault(); t.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); } })); }
+  function bindAnchors() {
+    $$('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href"); if (id.length < 2) return;
+      const t = document.querySelector(id); if (!t) return;
+      e.preventDefault();
+      t.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+      /* content above can still be loading; re-align once layout settles */
+      setTimeout(() => t.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }), 450);
+    }));
+  }
   function bindTheme() { const b = $("#themeToggle"); if (b) b.addEventListener("click", () => setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark")); }
   function bindCase() {
     if (!$("#case")) return;
@@ -445,7 +454,19 @@
   function init() {
     render(); bindFilters(); bindListPreview(); bindMenu(); bindAnchors(); bindTheme(); bindCase(); bindPrint(); bindEditUI();
     onScroll(); loader(); startCarousel();
-    const h = location.hash.slice(1); if (h && data.projects.some((p) => p.id === h)) setTimeout(() => openCase(h, true), 400);
+    const h = location.hash.slice(1);
+    if (h && data.projects.some((p) => p.id === h)) {
+      setTimeout(() => openCase(h, true), 400);
+    } else if (h) {
+      /* section hash (e.g. #contact) — DOM is now populated, but the browser's
+         initial jump happened before render; re-scroll, then again once images load */
+      const t = document.getElementById(h);
+      if (t) {
+        const go = () => t.scrollIntoView({ behavior: "auto" });
+        requestAnimationFrame(() => setTimeout(go, 60));
+        window.addEventListener("load", () => setTimeout(go, 60), { once: true });
+      }
+    }
   }
 
   async function boot() {
