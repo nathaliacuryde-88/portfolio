@@ -257,7 +257,10 @@ window.PORTFOLIO = {
           "value": "Air",
           "label": "Urban mobility"
         },
-        { "value": "3", "label": "Web · App · Social" }
+        {
+          "value": "3",
+          "label": "Web · App · Social"
+        }
       ],
       "images": [
         "assets/work/volocopter-01.jpg",
@@ -532,6 +535,68 @@ window.PORTFOLIO = {
       ]
     },
     {
+      "id": "bolovo",
+      "filters": [
+        "Culture"
+      ],
+      "title": "Bolovo 10 Years",
+      "client": "Bolovo",
+      "year": "2016",
+      "category": "Editorial",
+      "accent": "#c9a24a",
+      "bg": "#111111",
+      "summary": "A 10-year commemorative book for a sports & lifestyle brand — 800+ photos, gold hotstamping.",
+      "description": "10 years commemorative book of the sports and lifestyle brand Bolovo. The book has more than 800 photos and texts about the history of the producer, going from the group’s travels, sports and clothing collections.",
+      "outcome": "The cover has a folded poster jacket and is finished in gold hotstamping.",
+      "role": "",
+      "team": [],
+      "stats": [
+        {
+          "value": "800+",
+          "label": "Photos & texts"
+        },
+        {
+          "value": "Gold",
+          "label": "Hotstamped cover"
+        }
+      ],
+      "images": [
+        "assets/work/bolovo-01.jpg",
+        "assets/work/bolovo-02.jpg",
+        "assets/work/bolovo-03.jpg",
+        "assets/work/bolovo-04.jpg",
+        "assets/work/bolovo-05.jpg"
+      ]
+    },
+    {
+      "id": "corpo-presente",
+      "filters": [
+        "Culture"
+      ],
+      "title": "Corpo Presente",
+      "client": "Independent publication",
+      "year": "",
+      "category": "Editorial",
+      "accent": "#9fb4c7",
+      "bg": "#0d0d0d",
+      "summary": "Photographs of São Paulo’s street movements — an independently funded authorial publication.",
+      "description": "Corpo presente (Body Present) is an independently funded authorial publication that presents photographs of social movements struggling in the streets of São Paulo and the expression and presence of marginalized bodies in public space. The author discusses the biopolitical tension between the resistant bodies and the reactionary politics that dispute the city.",
+      "outcome": "The publication cover and the poster were printed on mirrored paper, reflecting the surroundings.",
+      "role": "",
+      "team": [],
+      "stats": [
+        {
+          "value": "Mirror",
+          "label": "Printed on mirrored paper"
+        }
+      ],
+      "images": [
+        "assets/work/corpo-presente-01.jpg",
+        "assets/work/corpo-presente-02.jpg",
+        "assets/work/corpo-presente-03.jpg"
+      ]
+    },
+    {
       "id": "bw-2021",
       "title": "BW Stiftung ’21",
       "client": "Baden-Württemberg Stiftung",
@@ -564,7 +629,9 @@ window.PORTFOLIO = {
         "assets/work/bw-2021-02.jpg",
         "assets/work/bw-2021-03.jpg",
         "assets/work/bw-2021-04.jpg",
-        "assets/work/bw-2021-05.jpg"
+        "assets/work/bw-2021-05.jpg",
+        "assets/work/bw-2021-06.jpg",
+        "assets/work/bw-2021-07.jpg"
       ]
     },
     {
@@ -723,7 +790,14 @@ window.PORTFOLIO = {
         "Self-initiated"
       ],
       "stats": [
-        { "value": "Riso", "label": "Primary tool" }, { "value": "Zines", "label": "& small books" }
+        {
+          "value": "Riso",
+          "label": "Primary tool"
+        },
+        {
+          "value": "Zines",
+          "label": "& small books"
+        }
       ],
       "images": [
         "assets/work/zine-01.jpg",
