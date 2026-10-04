@@ -123,9 +123,10 @@
 
   function renderGrid(filter) {
     const g = $("#grid");
-    const list = data.projects.filter((pr) => filter === "All" || pr.category === filter);
+    const inFilter = (pr) => filter === "All" || pr.category === filter || (pr.filters || []).includes(filter);
+    const list = data.projects.filter(inFilter);
     g.innerHTML = data.projects.map((pr) => {
-      const hide = filter !== "All" && pr.category !== filter ? "is-hidden" : "";
+      const hide = inFilter(pr) ? "" : "is-hidden";
       const m = coverOf(pr);
       const inner = m ? media(m, { alt: pr.title }) : `<canvas data-cover='${attr(JSON.stringify(pr.cover || { colors: [pr.bg, pr.accent], kind: "abstract" }))}' data-seed="${esc(pr.id)}" data-label="${esc(pr.title)}"></canvas>`;
       return `<article class="card ${hide}" data-id="${esc(pr.id)}" data-cat="${esc(pr.category)}" data-cursor="view" style="--accent:${esc(pr.accent)}">
@@ -497,7 +498,10 @@
     if (!data.work || !data.work.intro) data.work = clone(BASE).work || data.work;
     // never let the grid end up empty — fall back to built-in projects
     if (!data.projects || !data.projects.length) data.projects = clone(BASE).projects;
-    if (!data.categories || !data.categories.length) data.categories = clone(BASE).categories;
+    // filter pills are defined in code (a stale stored list would hide new filters)
+    data.categories = clone(BASE).categories;
+    // cross-cutting filters (e.g. Lifestyle): fall back to built-in tags until saved in the admin
+    data.projects.forEach((pr) => { if (!Array.isArray(pr.filters)) { const b = BASE.projects.find((x) => x.id === pr.id); if (b && b.filters) pr.filters = b.filters.slice(); } });
     if (!data.profile.featured || !data.profile.featured.length) data.profile.featured = clone(BASE).profile.featured;
     init();
   }

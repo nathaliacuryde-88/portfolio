@@ -62,7 +62,8 @@ window.PORTFOLIO = {
     ],
   },
 
-  categories: ["All", "Branding", "Editorial", "AI"],
+  // "Lifestyle" is a cross-cutting filter: projects opt in via  filters: ["Lifestyle"]
+  categories: ["All", "Branding", "Editorial", "AI", "Lifestyle"],
 
   // Work page intro (replaces the big "Selected Work" headline)
   work: {
@@ -81,7 +82,7 @@ window.PORTFOLIO = {
       images: ["assets/work/x1f-1.jpg", "assets/work/x1f-2.jpg", "assets/work/x1f-3.jpg", "assets/work/x1f-4.jpg"],
     },
     {
-      id: "ortlieb", title: "Ortlieb", client: "Ortlieb", year: "2024",
+      id: "ortlieb", filters: ["Lifestyle"], title: "Ortlieb", client: "Ortlieb", year: "2024",
       category: "Branding", accent: "#c46a3c", bg: "#3a241a",
       summary: "Toughness and sentiment — memories that last a lifetime.",
       description:
@@ -91,7 +92,7 @@ window.PORTFOLIO = {
       images: ["assets/work/ortlieb-1.jpg", "assets/work/ortlieb-2.jpg", "assets/work/ortlieb-3.jpg", "assets/work/ortlieb-4.jpg"],
     },
     {
-      id: "amg", title: "AMG 55 Years", client: "Mercedes-AMG", year: "2022",
+      id: "amg", filters: ["Lifestyle"], title: "AMG 55 Years", client: "Mercedes-AMG", year: "2022",
       category: "Branding", accent: "#e0301e", bg: "#0c0c0c",
       summary: "The essence of speed — a campaign for 55 years of performance.",
       description:
@@ -141,7 +142,7 @@ window.PORTFOLIO = {
       images: ["assets/work/endava-1.jpg", "assets/work/endava-2.jpg", "assets/work/endava-3.jpg", "assets/work/endava-4.jpg"],
     },
     {
-      id: "ifood", title: "iFood", client: "iFood (Estudio Margem)", year: "2019",
+      id: "ifood", filters: ["Lifestyle"], title: "iFood", client: "iFood (Estudio Margem)", year: "2019",
       category: "Branding", accent: "#ea1d2c", bg: "#fff1f0",
       summary: "Humanising Latin America’s leading food-delivery brand.",
       description:
@@ -201,7 +202,7 @@ window.PORTFOLIO = {
       images: ["assets/work/bw-2021-1.jpg", "assets/work/bw-2021-2.jpg", "assets/work/bw-2021-3.jpg", "assets/work/bw-2021-4.jpg"],
     },
     {
-      id: "sao-paulo-bienal", title: "São Paulo Bienal", client: "12th São Paulo Architecture Bienal", year: "2019",
+      id: "sao-paulo-bienal", filters: ["Lifestyle"], title: "São Paulo Bienal", client: "12th São Paulo Architecture Bienal", year: "2019",
       category: "Editorial", accent: "#ef7a3c", bg: "#241019",
       summary: "“Todo Dia / Everyday” — elevating the ordinary.",
       description:
@@ -211,7 +212,7 @@ window.PORTFOLIO = {
       images: ["assets/work/sao-paulo-bienal-1.jpg", "assets/work/sao-paulo-bienal-2.jpg", "assets/work/sao-paulo-bienal-3.jpg"],
     },
     {
-      id: "yaga", title: "YAGA Festival", client: "YAGA (with Porto Rocha)", year: "2018",
+      id: "yaga", filters: ["Lifestyle"], title: "YAGA Festival", client: "YAGA (with Porto Rocha)", year: "2018",
       category: "Editorial", accent: "#ff2a1f", bg: "#1a0807",
       summary: "A fearless, collective identity — community over hierarchy.",
       description:
@@ -233,7 +234,7 @@ window.PORTFOLIO = {
 
     /* ---- AI: self-initiated explorations (generated covers) ---- */
     {
-      id: "synthetic-editorial", title: "Synthetic Editorial", client: "Self-initiated", year: "2025",
+      id: "synthetic-editorial", filters: ["Lifestyle"], title: "Synthetic Editorial", client: "Self-initiated", year: "2025",
       category: "AI", accent: "#ff3da6", bg: "#190420",
       summary: "Editorial worlds generated, then art-directed.",
       description:
