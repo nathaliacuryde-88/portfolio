@@ -57,6 +57,8 @@ label{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.06
 .proj .meta{flex:1;min-width:0}
 .proj .meta .t{font-weight:600}
 .proj .meta .s{font-size:.78rem;color:var(--ink2)}
+.proj.is-hidden{opacity:.55}
+.proj .hid{font-size:.7rem;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--line);border-radius:100px;padding:1px 8px}
 .proj .feat{font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
 
 .media{position:relative;border:1px dashed var(--line);border-radius:8px;overflow:hidden;background:var(--panel2);aspect-ratio:16/9}

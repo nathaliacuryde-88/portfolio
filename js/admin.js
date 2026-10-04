@@ -117,18 +117,20 @@
       const d = r.data || {};
       const src = projThumb(d);
       const thumb = src ? (isVid(src) ? `<video src="${esc(src)}" muted></video>` : `<img src="${esc(src)}" />`) : "";
-      return `<div class="proj" data-id="${esc(r.id)}">
+      const hidden = r.published === false;
+      return `<div class="proj${hidden ? " is-hidden" : ""}" data-id="${esc(r.id)}">
         <div class="thumb">${thumb}</div>
-        <div class="meta"><div class="t">${esc(d.title || r.id)}</div><div class="s">${esc(r.category)} · ${esc(d.year || "")} ${r.featured_position != null ? '· <span class="feat">Featured</span>' : ""}</div></div>
+        <div class="meta"><div class="t">${esc(d.title || r.id)}</div><div class="s">${esc(r.category)} · ${esc(d.year || "")} ${r.featured_position != null ? '· <span class="feat">Featured</span>' : ""}${hidden ? ' · <span class="hid">Hidden</span>' : ""}</div></div>
         <div class="actions">
           <button class="btn ghost sm" data-act="up">↑</button>
           <button class="btn ghost sm" data-act="down">↓</button>
           <button class="btn ghost sm" data-act="feat">${r.featured_position != null ? "★" : "☆"}</button>
+          <button class="btn ghost sm" data-act="vis" title="${hidden ? "Show on the site" : "Hide from the site"}">${hidden ? "Show" : "Hide"}</button>
           <button class="btn ghost sm" data-act="edit">Edit</button>
           <button class="btn ghost sm danger" data-act="del">Delete</button>
         </div></div>`;
     }).join("");
-    shell(`<div class="section"><h2>Projects — drag order with ↑ ↓, ★ toggles Featured</h2>
+    shell(`<div class="section"><h2>Projects — order with ↑ ↓, ★ toggles Featured, Hide keeps a project saved but off the site</h2>
       <div class="proj-list">${rows || '<p class="muted">No projects yet. Click “Seed from built-in” to import your current work.</p>'}</div>
       <button class="addbtn" id="newproj" style="margin-top:14px">+ New project</button></div>`);
     document.getElementById("newproj").onclick = newProject;
@@ -139,6 +141,7 @@
       el.querySelector('[data-act="up"]').onclick = () => moveProject(id, -1);
       el.querySelector('[data-act="down"]').onclick = () => moveProject(id, 1);
       el.querySelector('[data-act="feat"]').onclick = () => toggleFeatured(id);
+      el.querySelector('[data-act="vis"]').onclick = () => toggleVisible(id);
     });
   }
 
@@ -161,6 +164,13 @@
     if (r.featured_position == null) { const max = Math.max(-1, ...projects.filter((p) => p.featured_position != null).map((p) => p.featured_position)); fp = max + 1; }
     await sb.from("projects").update({ featured_position: fp }).eq("id", id);
     r.featured_position = fp; renderProjectList(); toast(fp == null ? "Removed from featured" : "Added to featured");
+  }
+  async function toggleVisible(id) {
+    const r = projects.find((p) => p.id === id); if (!r) return;
+    const next = r.published === false;
+    const { error } = await sb.from("projects").update({ published: next }).eq("id", id);
+    if (error) return toast(error.message, true);
+    r.published = next; renderProjectList(); toast(next ? "Visible on the site" : "Hidden from the site");
   }
   async function delProject(id) {
     if (!confirm("Delete this project permanently?")) return;
@@ -195,7 +205,8 @@
           <div><label>Category</label><select data-bind="category">${CATS.map((c) => `<option ${c === editing.category ? "selected" : ""}>${esc(c)}</option>`).join("")}</select></div>
           <div><label>Role</label><input data-bind="data.role" value="${esc(d.role)}"/></div>
         </div>
-        <label style="display:flex;align-items:center;gap:10px;margin-top:14px;text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--ink)"><input type="checkbox" style="width:auto" data-bind-filter="Culture" ${(d.filters || []).includes("Culture") ? "checked" : ""}/> Also show under the “Culture” filter</label>
+        <label style="display:flex;align-items:center;gap:10px;margin-top:14px;text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--ink)"><input type="checkbox" style="width:auto" data-bind-published ${editing.published === false ? "" : "checked"}/> Visible on the site (untick to hide it but keep it saved)</label>
+        <label style="display:flex;align-items:center;gap:10px;margin-top:10px;text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--ink)"><input type="checkbox" style="width:auto" data-bind-filter="Culture" ${(d.filters || []).includes("Culture") ? "checked" : ""}/> Also show under the “Culture” filter</label>
         <div class="row cols-2" style="margin-top:14px">
           <div><label>Accent colour</label><input type="color" data-bind="data.accent" value="${esc(d.accent || "#8d8a84")}"/></div>
           <div><label>Card background</label><input type="color" data-bind="data.bg" value="${esc(d.bg || "#111111")}"/></div>
@@ -281,6 +292,7 @@
   /* read all bound inputs into editing */
   function harvest() {
     app.querySelectorAll("[data-bind]").forEach((el) => { setPath(editing, el.dataset.bind, el.value); });
+    const vis = app.querySelector("[data-bind-published]"); if (vis) editing.published = vis.checked;
     editing.data.filters = [...app.querySelectorAll("[data-bind-filter]")].filter((el) => el.checked).map((el) => el.dataset.bindFilter);
     app.querySelectorAll("[data-bind-lines]").forEach((el) => { setPath(editing, el.dataset.bindLines, el.value.split("\n").map((s) => s.trim()).filter(Boolean)); });
   }
@@ -290,7 +302,7 @@
     const d = editing.data;
     d.stats = (d.stats || []).filter((s) => s.value || s.label);
     d.blocks = (d.blocks || []).filter((b) => b && b.type);
-    const row = { id: editing.id, position: editing.position, featured_position: editing.featured_position, category: editing.category, published: true, data: d };
+    const row = { id: editing.id, position: editing.position, featured_position: editing.featured_position, category: editing.category, published: editing.published !== false, data: d };
     const { error } = await sb.from("projects").upsert(row, { onConflict: "id" });
     if (error) return toast(error.message, true);
     const idx = projects.findIndex((p) => p.id === editing.id);
@@ -599,7 +611,8 @@
     const rows = P.projects.map((pr, i) => {
       const { id, category } = pr; const d = Object.assign({}, pr); delete d.id; delete d.category;
       if (!d.hero && d.images && d.images[0]) d.hero = d.images[0];   // show in editor
-      return { id, position: i, featured_position: feat.indexOf(id) >= 0 ? feat.indexOf(id) : null, category, published: true, data: d };
+      const ex = projects.find((p) => p.id === id);
+      return { id, position: i, featured_position: feat.indexOf(id) >= 0 ? feat.indexOf(id) : null, category, published: ex ? ex.published !== false : true, data: d };
     });
     toast("Seeding…");
     const e1 = (await sb.from("site").upsert({ id: 1, data: siteData }, { onConflict: "id" })).error;
