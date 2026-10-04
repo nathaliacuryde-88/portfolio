@@ -60,7 +60,7 @@
         const m = coverOf(pr);
         const inner = m ? media(m, { alt: pr.title }) : `<canvas data-cover='${attr(JSON.stringify(pr.cover || { colors: [pr.bg, pr.accent] }))}' data-seed="${esc(pr.id)}-f" data-label="${esc(pr.title)}"></canvas>`;
         return `<div class="ftile" data-id="${esc(pr.id)}" data-cursor="view"><div class="ftile__media">${inner}<span class="ftile__bar"></span></div>
-          <div class="ftile__meta"><h3>${esc(pr.title)}</h3><span>${esc(pr.category)} · ${esc(pr.year)}</span></div></div>`;
+          <div class="ftile__meta"><h3>${esc(pr.title)}</h3><span>${esc([pr.category, pr.year].filter(Boolean).join(" · "))}</span></div></div>`;
       }).join("");
 
       $("#aboutHeadline").textContent = data.about.headline;
@@ -132,7 +132,7 @@
       return `<article class="card ${hide}" data-id="${esc(pr.id)}" data-cat="${esc(pr.category)}" data-cursor="view" style="--accent:${esc(pr.accent)}">
         <div class="card__media" style="background:${esc(pr.bg)}">${inner}<span class="card__bar"></span></div>
         <div class="card__body">
-          <div class="card__meta"><h3 class="card__title">${esc(pr.title)}</h3><span class="card__tag"><i></i>${esc(pr.category)} · ${esc(pr.year)}</span></div>
+          <div class="card__meta"><h3 class="card__title">${esc(pr.title)}</h3><span class="card__tag"><i></i>${esc([pr.category, pr.year].filter(Boolean).join(" · "))}</span></div>
           <p class="card__summary">${esc(pr.summary)}</p>
         </div></article>`;
     }).join("");
@@ -501,7 +501,8 @@
     // filter pills are defined in code (a stale stored list would hide new filters)
     data.categories = clone(BASE).categories;
     // cross-cutting filters (e.g. Lifestyle): fall back to built-in tags until saved in the admin
-    data.projects.forEach((pr) => { if (!Array.isArray(pr.filters)) { const b = BASE.projects.find((x) => x.id === pr.id); if (b && b.filters) pr.filters = b.filters.slice(); } });
+    const norm = (t) => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+    data.projects.forEach((pr) => { if (!Array.isArray(pr.filters)) { const b = BASE.projects.find((x) => x.id === pr.id || norm(x.title) === norm(pr.title)); if (b && b.filters) pr.filters = b.filters.slice(); } });
     if (!data.profile.featured || !data.profile.featured.length) data.profile.featured = clone(BASE).profile.featured;
     init();
   }
