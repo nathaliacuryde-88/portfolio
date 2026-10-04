@@ -323,7 +323,7 @@ window.PORTFOLIO = {
       "category": "Branding",
       "accent": "#e0492f",
       "bg": "#16181c",
-      "summary": "“It’s all about the people.” A people-centred tech brand.",
+      "summary": "“It’s all about the people.” An employer brand and identity built around people.",
       "description": "The approach began with an in-depth exploration of Endava’s personality through executive interviews, employee insights and focus groups. A tonalities workshop defined the brand’s voice and look, and the insights were distilled into a collaborative design sprint that let Endava’s team actively shape the corporate identity. In a competitive market where talent is key, Endava needed to move beyond short-term campaigns — so we created an Employer Value Proposition and a strategic messaging framework around its core principle: “It’s all about the people.”",
       "outcome": "A trustworthy, differentiated brand that resonates with employees, talent and customers alike: from the logo redesign to a communication concept covering internal and external formats, merchandise and events — from recruiter messages to onboarding strategies — reflecting a people-centred image that motivates employees, attracts talent and builds trust.",
       "role": "Lead Design",
