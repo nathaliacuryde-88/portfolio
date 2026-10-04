@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   const cfg = window.SUPABASE_CONFIG || {};
-  const CATS = (window.PORTFOLIO && window.PORTFOLIO.categories ? window.PORTFOLIO.categories : ["All", "Branding", "Editorial", "AI"]).filter((c) => c !== "All" && c !== "Lifestyle");
+  const CATS = (window.PORTFOLIO && window.PORTFOLIO.categories ? window.PORTFOLIO.categories : ["All", "Branding", "Editorial", "AI"]).filter((c) => c !== "All" && c !== "Culture");
   const app = document.getElementById("app");
   const toastEl = document.getElementById("toast");
   let sb = null, session = null, site = {}, projects = [], tab = "projects", editing = null;
@@ -195,7 +195,7 @@
           <div><label>Category</label><select data-bind="category">${CATS.map((c) => `<option ${c === editing.category ? "selected" : ""}>${esc(c)}</option>`).join("")}</select></div>
           <div><label>Role</label><input data-bind="data.role" value="${esc(d.role)}"/></div>
         </div>
-        <label style="display:flex;align-items:center;gap:10px;margin-top:14px;text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--ink)"><input type="checkbox" style="width:auto" data-bind-filter="Lifestyle" ${(d.filters || []).includes("Lifestyle") ? "checked" : ""}/> Also show under the “Lifestyle” filter</label>
+        <label style="display:flex;align-items:center;gap:10px;margin-top:14px;text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--ink)"><input type="checkbox" style="width:auto" data-bind-filter="Culture" ${(d.filters || []).includes("Culture") ? "checked" : ""}/> Also show under the “Culture” filter</label>
         <div class="row cols-2" style="margin-top:14px">
           <div><label>Accent colour</label><input type="color" data-bind="data.accent" value="${esc(d.accent || "#8d8a84")}"/></div>
           <div><label>Card background</label><input type="color" data-bind="data.bg" value="${esc(d.bg || "#111111")}"/></div>

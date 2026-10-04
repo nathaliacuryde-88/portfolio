@@ -500,7 +500,7 @@
     if (!data.projects || !data.projects.length) data.projects = clone(BASE).projects;
     // filter pills are defined in code (a stale stored list would hide new filters)
     data.categories = clone(BASE).categories;
-    // cross-cutting filters (e.g. Lifestyle): fall back to built-in tags until saved in the admin
+    // cross-cutting filters (e.g. Culture): fall back to built-in tags until saved in the admin
     const norm = (t) => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
     data.projects.forEach((pr) => { if (!Array.isArray(pr.filters)) { const b = BASE.projects.find((x) => x.id === pr.id || norm(x.title) === norm(pr.title)); if (b && b.filters) pr.filters = b.filters.slice(); } });
     if (!data.profile.featured || !data.profile.featured.length) data.profile.featured = clone(BASE).profile.featured;

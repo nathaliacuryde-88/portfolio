@@ -62,8 +62,8 @@ window.PORTFOLIO = {
     ],
   },
 
-  // "Lifestyle" is a cross-cutting filter: projects opt in via  filters: ["Lifestyle"]
-  categories: ["All", "Branding", "Editorial", "AI", "Lifestyle"],
+  // "Culture" is a cross-cutting filter: projects opt in via  filters: ["Culture"]
+  categories: ["All", "Branding", "Editorial", "AI", "Culture"],
 
   // Work page intro (replaces the big "Selected Work" headline)
   work: {
@@ -116,7 +116,7 @@ window.PORTFOLIO = {
     {
       "id": "ortlieb",
       "filters": [
-        "Lifestyle"
+        "Culture"
       ],
       "title": "Ortlieb",
       "client": "Ortlieb",
@@ -158,7 +158,7 @@ window.PORTFOLIO = {
     {
       "id": "amg",
       "filters": [
-        "Lifestyle"
+        "Culture"
       ],
       "title": "AMG 55 Years",
       "client": "Mercedes-AMG",
@@ -354,7 +354,7 @@ window.PORTFOLIO = {
     {
       "id": "ifood",
       "filters": [
-        "Lifestyle"
+        "Culture"
       ],
       "title": "iFood",
       "client": "iFood (Estudio Margem)",
@@ -570,7 +570,7 @@ window.PORTFOLIO = {
     {
       "id": "sao-paulo-bienal",
       "filters": [
-        "Lifestyle"
+        "Culture"
       ],
       "title": "São Paulo Bienal",
       "client": "12th São Paulo Architecture Bienal",
@@ -605,7 +605,7 @@ window.PORTFOLIO = {
     {
       "id": "other-transatlantic",
       "filters": [
-        "Lifestyle"
+        "Culture"
       ],
       "title": "The Other Trans-Atlantic",
       "client": "Exhibition identity (Estudio Margem)",
@@ -638,7 +638,7 @@ window.PORTFOLIO = {
     {
       "id": "yaga",
       "filters": [
-        "Lifestyle"
+        "Culture"
       ],
       "title": "YAGA Festival",
       "client": "YAGA (with Porto Rocha)",
@@ -677,7 +677,7 @@ window.PORTFOLIO = {
     {
       "id": "vj",
       "filters": [
-        "Lifestyle"
+        "Culture"
       ],
       "title": "VJ Programm",
       "client": "Self-initiated",
