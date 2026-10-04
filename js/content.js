@@ -125,11 +125,11 @@ window.PORTFOLIO = {
       "accent": "#c46a3c",
       "bg": "#3a241a",
       "summary": "Toughness and sentiment — memories that last a lifetime.",
-      "description": "For Ortlieb, a trusted brand known for its durable bags, the challenge was to create a brand expression that communicates both toughness and emotional value. The design concept balances durability and sentiment, captured through a striking mix of typography that pairs robustness with sensitivity. At the core of the idea lies the thought of collecting memories that last a lifetime — just like Ortlieb products, which become companions through countless journeys and adventures. Textures from nature were integrated into the design to emphasise resilience and to mirror the diverse environments the bags are made for: from city streets and rain-soaked commutes to rugged outdoor expeditions.",
-      "outcome": "A visual language that underscores how Ortlieb is not only a brand of high-performance gear, but also of enduring stories and personal experiences. Developed in a small, dedicated team, working closely with the marketing department and the founders, the design stays true to Ortlieb’s DNA while evolving it into a more emotionally engaging narrative.",
+      "description": "For Ortlieb, a trusted brand known for its durable bags, the challenge was to create a brand expression that communicates both toughness and emotional value. The design concept balances durability and sentiment, captured through a striking mix of typography that pairs robustness with sensitivity. At the core of the idea lies the thought of collecting memories that last a lifetime – just like Ortlieb products, which become companions through countless journeys and adventures. Textures from nature were integrated into the design to emphasize resilience and to mirror the diverse environments the bags are made for: from city streets and rain-soaked commutes to rugged outdoor expeditions. This tactile and visual language underscores how Ortlieb is not only a brand of high-performance gear, but also of enduring stories and personal experiences.",
+      "outcome": "The project was developed in a small, dedicated team, working closely with the marketing department and the founders of the brand. This close collaboration allowed the design to stay true to Ortlieb’s DNA while evolving it into a more emotionally engaging narrative.",
       "role": "Senior Design",
       "team": [
-        "Creative Direction — Mathias Weissenböck",
+        "Creative Direction — Mathias Weissenbock",
         "Senior Design — Nathalia Cury"
       ],
       "stats": [
@@ -142,17 +142,18 @@ window.PORTFOLIO = {
           "label": "Texture system"
         }
       ],
+      "hero": "assets/work/ortlieb-01.jpg",
       "images": [
-        "assets/work/ortlieb-01.jpg",
-        "assets/work/ortlieb-02.jpg",
-        "assets/work/ortlieb-03.jpg",
-        "assets/work/ortlieb-04.jpg",
-        "assets/work/ortlieb-05.jpg",
-        "assets/work/ortlieb-06.jpg",
-        "assets/work/ortlieb-07.jpg",
-        "assets/work/ortlieb-08.jpg",
-        "assets/work/ortlieb-09.jpg",
-        "assets/work/ortlieb-10.jpg"
+        "assets/work/ortlieb-g01.jpg",
+        "assets/work/ortlieb-g02.jpg",
+        "assets/work/ortlieb-g03.jpg",
+        "assets/work/ortlieb-g04.jpg",
+        "assets/work/ortlieb-g05.jpg",
+        "assets/work/ortlieb-g06.jpg",
+        "assets/work/ortlieb-g07.jpg",
+        "assets/work/ortlieb-g08.jpg",
+        "assets/work/ortlieb-g09.jpg",
+        "assets/work/ortlieb-g10.jpg"
       ]
     },
     {
@@ -243,14 +244,14 @@ window.PORTFOLIO = {
       "accent": "#5fd0e0",
       "bg": "#0a1b32",
       "summary": "Connecting Perspectives — identity for urban air mobility.",
-      "description": "For Volocopter, the creative strategy centred on bridging the gap between cutting-edge technology and a seamless user experience in urban air mobility. The overarching concept, Connecting Perspectives, reflects the fusion of technology and aesthetics, safety and innovation, convenience and excitement — expressed through the interplay of bold and light fonts, bright and dark colours and the movement of elements from down to up. The design system was developed to be as dynamic and multifaceted as the brand itself, merging functional elements with emotional appeal.",
-      "outcome": "An identity tied to the idea of connection — digitally and in the travel experience — positioning Volocopter as accessible, futuristic and trustworthy. Every touchpoint, from website to app to social media, reflects one unified vision.",
+      "description": "For Volocopter, the creative strategy centered on bridging the gap between cutting-edge technology and a seamless user experience in urban air mobility. The overarching concept, Connecting Perspectives, reflects the fusion of elements: technology and aesthetics, safety and innovation, convenience and excitement. This is visually expressed through the interplay of bold and light fonts, bright and dark colors and the movement from down to up of the elements.",
+      "outcome": "Approaching this challenge involved crafting a brand identity that could communicate Volocopter’s unique role in the future of transportation. The design system was developed to be as dynamic and multifaceted as the brand itself, merging functional elements with emotional appeal. By tying the visual identity to the concept of connection—both digitally and in the travel experience—our goal was to position Volocopter as accessible, futuristic, and trustworthy. We worked closely with the Volocopter team to ensure every touchpoint, from their website to the app and even their social media, reflected this unified vision, helping bring the brand’s promise to life.",
       "role": "Art Direction & Design",
       "team": [
         "Creative Direction — Tanja Freudenthaler",
-        "Art Direction & Design — Nathalia Cury",
-        "Design — Marcel Zigler",
-        "Design — Stephanie Teuber"
+        "Art Direction · Design — Nathalia Cury",
+        "Designer — Marcel Zigler",
+        "Designer — Stephanie Teuber"
       ],
       "stats": [
         {
@@ -262,17 +263,18 @@ window.PORTFOLIO = {
           "label": "Web · App · Social"
         }
       ],
+      "hero": "assets/work/volocopter-01.jpg",
       "images": [
-        "assets/work/volocopter-01.jpg",
-        "assets/work/volocopter-02.jpg",
-        "assets/work/volocopter-03.jpg",
-        "assets/work/volocopter-04.jpg",
-        "assets/work/volocopter-05.jpg",
-        "assets/work/volocopter-06.jpg",
-        "assets/work/volocopter-07.jpg",
-        "assets/work/volocopter-08.jpg",
-        "assets/work/volocopter-09.jpg",
-        "assets/work/volocopter-10.jpg"
+        "assets/work/volocopter-g01.jpg",
+        "assets/work/volocopter-g02.jpg",
+        "assets/work/volocopter-g03.jpg",
+        "assets/work/volocopter-g04.jpg",
+        "assets/work/volocopter-g05.jpg",
+        "assets/work/volocopter-g06.jpg",
+        "assets/work/volocopter-g07.jpg",
+        "assets/work/volocopter-g08.jpg",
+        "assets/work/volocopter-g09.jpg",
+        "assets/work/volocopter-g10.jpg"
       ]
     },
     {
@@ -284,12 +286,12 @@ window.PORTFOLIO = {
       "accent": "#27c06a",
       "bg": "#0c2419",
       "summary": "Solar for every household — a logo that carries an energy impulse.",
-      "description": "Solar for every household: Wattando connects the sun with your home. With balcony power plants and a faster, simpler installation than conventional systems, Wattando aims to democratise the electricity market — a “plug-and-play solution for professionals” that feeds green electricity into the grid via a power socket. Collaborating closely with the founders, we developed a branding solution tailored to their needs. The logo visualises energy impulses while resembling a power cable essential to the product; the distinctive “W” extends the impulse across the branding, with a colour scheme that balances innovative green technology with solid implementation.",
-      "outcome": "With a small budget and tight timeline we took an agile approach — weekly Figma meetings, Slack updates and open discussions instead of lengthy processes. The result is a lean branding with essential elements and easy use, ready to expand as Wattando grows.",
+      "description": "Solar for every household: Wattando connects the sun with your home. With balcony power plants and a faster, simpler installation than conventional systems, Wattando aims to democratize the electricity market. Their “plug-and-play solution for professionals” removes barriers, enabling green electricity to be fed into the grid via a power socket—whether in apartments, homes, or commercial spaces. Collaborating closely with the founders, we developed a branding solution tailored to their needs. The highlight is the logo, which visualizes energy impulses while resembling a power cable essential to the product. The distinctive “W” in the typogram extends the impulse across the branding, supported by a color scheme that balances innovative green technology with solid implementation.",
+      "outcome": "With a small budget and tight timeline, we took an agile approach. Weekly Figma meetings, Slack updates, and open discussions replaced lengthy processes, ensuring efficiency without compromising quality. The result was a lean branding that provided essential elements and easy use, ready to expand as Wattando grows.",
       "role": "Art Direction & Design",
       "team": [
         "Creative Direction — Tanja Freudenthaler",
-        "Art Direction & Design — Nathalia Cury",
+        "Art Direction · Design — Nathalia Cury",
         "Junior Designer — Natascha Jokic"
       ],
       "stats": [
@@ -302,15 +304,15 @@ window.PORTFOLIO = {
           "label": "Lean build"
         }
       ],
+      "hero": "assets/work/wattando-01.jpg",
       "images": [
-        "assets/work/wattando-01.jpg",
-        "assets/work/wattando-02.jpg",
-        "assets/work/wattando-03.jpg",
-        "assets/work/wattando-04.jpg",
-        "assets/work/wattando-05.jpg",
-        "assets/work/wattando-06.jpg",
-        "assets/work/wattando-07.jpg",
-        "assets/work/wattando-08.jpg"
+        "assets/work/wattando-g01.jpg",
+        "assets/work/wattando-g02.jpg",
+        "assets/work/wattando-g03.jpg",
+        "assets/work/wattando-g04.jpg",
+        "assets/work/wattando-g05.jpg",
+        "assets/work/wattando-g06.jpg",
+        "assets/work/wattando-g07.jpg"
       ]
     },
     {
@@ -366,8 +368,8 @@ window.PORTFOLIO = {
       "accent": "#ea1d2c",
       "bg": "#fff1f0",
       "summary": "Humanising Latin America’s leading food-delivery brand.",
-      "description": "The strategy was to reposition the brand as approachable and friendly, while maintaining its leadership in the Latin American food-delivery market. The challenge: evolve the logo to convey a more emotional connection with users — relatable and endearing. Working closely with iFood’s strategy team we redesigned the logo around facial expression to show different moods and emotions, humanising the brand, and expanded the colour palette to hues found in food. Our scope also covered a distinct photo style showcasing vibrant, mouth-watering dishes, motion interactions and app design.",
-      "outcome": "A holistic visual language that resonates with users, making iFood a more personal and engaging companion in their daily food-delivery experience.",
+      "description": "The strategy behind the creative was to reposition the brand as approachable and friendly, while maintaining its leadership in the Latin American food delivery market. This links to the challenge of evolving the logo to convey a more emotional connection with users, making it relatable and endearing. We approached this challenge by collaborating closely with Ifood’s strategy team to redesign the logo, focusing on the facial expression to showcase different moods and emotions, thereby humanizing the brand. The expansion of the color palette was carefully considered to only include hues found in food, adding warmth and appetizing visuals to the brand identity.",
+      "outcome": "Additionally, our scope involved the curation and development of a distinct photo style, showcasing vibrant and mouth-watering dishes, as well as crafting engaging motion interactions that bring the brand to life. We also worked on app development, ensuring a seamless user experience that integrates our design elements cohesively. By doing so, we created a holistic visual language that resonates with users, making Ifood a more personal and engaging companion in their daily food delivery experiences.",
       "role": "Creative Direction (Estudio Margem)",
       "team": [
         "Creative Direction — Alexandre Lindenberg",
@@ -384,13 +386,14 @@ window.PORTFOLIO = {
           "label": "Expressive logo"
         }
       ],
+      "hero": "assets/work/ifood-01.jpg",
       "images": [
-        "assets/work/ifood-01.jpg",
-        "assets/work/ifood-02.jpg",
-        "assets/work/ifood-03.jpg",
-        "assets/work/ifood-04.jpg",
-        "assets/work/ifood-05.jpg",
-        "assets/work/ifood-06.jpg"
+        "assets/work/ifood-g01.jpg",
+        "assets/work/ifood-g02.jpg",
+        "assets/work/ifood-g03.jpg",
+        "assets/work/ifood-g04.jpg",
+        "assets/work/ifood-g05.jpg",
+        "assets/work/ifood-g06.jpg"
       ]
     },
     {
@@ -639,19 +642,19 @@ window.PORTFOLIO = {
       "filters": [
         "Culture"
       ],
-      "title": "São Paulo Bienal",
+      "title": "São Paulo Bienal – Todo Dia",
       "client": "12th São Paulo Architecture Bienal",
       "year": "2019",
       "category": "Editorial",
       "accent": "#ef7a3c",
       "bg": "#241019",
       "summary": "“Todo Dia / Everyday” — elevating the ordinary.",
-      "description": "The visual identity for the 12th São Paulo Architecture Bienal, themed “Todo Dia — Everyday”, was conceived to elevate the ordinary and celebrate the overlooked elements of daily life. It centred on two things: a colour palette drawn from the vibrant, transitional colours of the sunset — the cyclical nature of “every day” — and a selection of common materials woven into our routines and urban landscape: curtains, newspapers and the large inflatable advertisements typical of gas stations.",
-      "outcome": "An identity both universally accessible and deeply resonant, bridging the abstract concepts of architecture with the reality of daily urban existence — and framing the Bienal’s core mandate: to find meaning and design in the everyday.",
+      "description": "The visual identity for the 12th São Paulo Architecture Bienal, themed “Todo Dia - Everyday,” was conceived to elevate the ordinary and celebrate the overlooked elements of daily life. The design centered on two core areas: a specific color palette and a selection of common, everyday materials. The palette drew direct inspiration from the vibrant, transitional colors of the sunset, symbolizing the cyclical nature of “every day” and lending a sense of warmth and familiarity to the visual system.",
+      "outcome": "Crucially, the identity incorporated materials and objects deeply ingrained in our daily routines and urban landscape. This included textiles like curtains, readily available resources like newspapers, and ubiquitous advertising forms such as the large inflatable advertisements typically seen at gas stations. By integrating these commonplace, tangible objects, the project sought to bridge the abstract concepts of architecture with the reality of daily urban existence. The result was an identity that was both universally accessible and deeply resonant, formally framing the Bienal’s core mandate: to find meaning and design in the “everyday”.",
       "role": "Design & Art Direction (Estudio Margem)",
       "team": [
         "Concept — Ciro Miguel",
-        "Design & Art Direction — Nathalia Cury / Estudio Margem"
+        "Design · Art Direction — Nathalia Cury / Estudio Margem"
       ],
       "stats": [
         {
@@ -663,10 +666,11 @@ window.PORTFOLIO = {
           "label": "Everyday palette"
         }
       ],
+      "hero": "assets/work/sao-paulo-bienal-01.jpg",
       "images": [
-        "assets/work/sao-paulo-bienal-01.jpg",
-        "assets/work/sao-paulo-bienal-02.jpg",
-        "assets/work/sao-paulo-bienal-03.jpg"
+        "assets/work/sao-paulo-bienal-g01.jpg",
+        "assets/work/sao-paulo-bienal-g02.jpg",
+        "assets/work/sao-paulo-bienal-g03.jpg"
       ]
     },
     {
