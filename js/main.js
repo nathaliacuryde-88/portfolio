@@ -234,13 +234,7 @@
     if (pr.blocks && pr.blocks.length) {
       gal = pr.blocks.map((b) => blockHTML(b)).join("");
     } else {
-      const rest = (pr.images || []).slice(1);
-      let i = 0;
-      while (i < rest.length) {
-        gal += `<div class="case__shot case__shot--wide" data-fx>${media(rest[i], { alt: "" })}</div>`; i++;
-        if (i + 1 < rest.length) { gal += `<div class="case__row"><div class="case__shot" data-fx>${media(rest[i], { alt: "" })}</div><div class="case__shot" data-fx>${media(rest[i + 1], { alt: "" })}</div></div>`; i += 2; }
-        else if (i < rest.length) { gal += `<div class="case__shot case__shot--wide" data-fx>${media(rest[i], { alt: "" })}</div>`; i++; }
-      }
+      (pr.images || []).forEach((src) => { gal += `<div class="case__shot case__shot--wide" data-fx>${media(src, { alt: "" })}</div>`; });
     }
     const credits = (pr.team || []).map((t) => `<li>${esc(t)}</li>`).join("");
     const next = list[(idx + 1) % list.length], nextM = coverOf(next);
