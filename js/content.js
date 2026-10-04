@@ -715,7 +715,7 @@ window.PORTFOLIO = {
       "category": "Editorial",
       "accent": "#ff4da6",
       "bg": "#15101a",
-      "summary": "Cyanotype, silkscreen and letterpress — hands-on type & print.",
+      "summary": "Risograph zines and small books — colour, registration and layering.",
       "description": "My deep-rooted interest in printing techniques and material quality, originating in university, led me to extensive experimentation within my own studio practice. Central to it was the Risograph, a duplicator that became the primary tool for a collection of zines and small books. Working with it let me push the boundaries of colour separation, registration and layering — turning production constraints into unique design opportunities.",
       "outcome": "A body of personal, conceptual projects and rich collaborations with other artists.",
       "role": "Self-initiated",
