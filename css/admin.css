@@ -101,3 +101,12 @@ label{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.06
 
 .variantcards{border:1px solid var(--accent);border-radius:var(--radius);padding:16px;background:rgba(232,69,42,.06)}
 .variantcards .storycard textarea{min-height:110px}
+.cmp{display:grid;gap:8px 14px;align-items:start}
+.cmp-h{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink);font-weight:700;padding:8px 12px;border-radius:8px;background:var(--panel2);position:sticky;top:64px;z-index:2}
+.cmp-h.on{background:rgba(232,69,42,.18);color:#fff}
+.cmp-l{grid-column:1/-1;margin-top:14px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);border-top:1px solid var(--line);padding-top:12px}
+.cmp-l span{text-transform:none;letter-spacing:0;margin-left:8px;opacity:.75}
+.cmp-c.on input,.cmp-c.on textarea{border-color:rgba(232,69,42,.55)}
+.cmp textarea{min-height:110px}
+.cmp-shared{font-size:.82rem;color:var(--ink2);border:1px dashed var(--line);border-radius:8px;padding:10px 12px}
+@media(max-width:720px){.cmp{grid-template-columns:1fr!important}.cmp-h{position:static}}

@@ -242,10 +242,9 @@
           <div class="actions"><button class="btn ghost" id="cancel">← Back</button><button class="btn" id="save">Save</button></div>
         </div>
         <div style="margin-top:10px"><label>Title (use the client / project name)</label><input data-bind="data.title" value="${esc(d.title)}"/></div>
-        <div class="row cols-3" style="margin-top:14px">
+        <div class="row cols-2" style="margin-top:14px">
           <div><label>Year</label><input data-bind="data.year" value="${esc(d.year)}"/></div>
           <div><label>Category</label><select data-bind="category">${CATS.map((c) => `<option ${c === editing.category ? "selected" : ""}>${esc(c)}</option>`).join("")}</select></div>
-          <div><label>Role</label><input data-bind="data.role" value="${esc(d.role)}"/></div>
         </div>
         <label style="display:flex;align-items:center;gap:10px;margin-top:14px;text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--ink)"><input type="checkbox" style="width:auto" data-bind-published ${editing.published === false ? "" : "checked"}/> Visible on the site (untick to hide it but keep it saved)</label>
         <label style="display:flex;align-items:center;gap:10px;margin-top:10px;text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--ink)"><input type="checkbox" style="width:auto" data-bind-filter="Lifestyle" ${(d.filters || []).includes("Lifestyle") ? "checked" : ""}/> Also show under the “Lifestyle” filter</label>
@@ -253,19 +252,8 @@
           <div><label>Accent colour</label><input type="color" data-bind="data.accent" value="${esc(d.accent || "#8d8a84")}"/></div>
           <div><label>Card background</label><input type="color" data-bind="data.bg" value="${esc(d.bg || "#111111")}"/></div>
         </div>
-        <div style="margin-top:14px"><label>Summary (one line, shown on cards, list & case lead)</label><input data-bind="data.summary" value="${esc(d.summary)}"/></div>
       </div>
 
-      ${VARIANTS.map((vr) => { const v = (d.variants && d.variants[vr.key]) || {}; const b = `data.variants.${vr.key}`; return `
-      <div class="section storycards variantcards"><h2>Alternative texts — “${esc(vr.label)}” (shown only when this version is live; empty fields fall back to the default texts)</h2>
-        <div class="storycard"><label>Summary (one line)</label><input data-bind="${b}.summary" value="${esc(v.summary || "")}"/></div>
-        <div class="storycard"><label>Role</label><input data-bind="${b}.role" value="${esc(v.role || "")}" placeholder="Leave empty to keep the default role"/></div>
-        <div class="storycard"><label>The idea</label><textarea data-bind="${b}.idea">${esc(v.idea || "")}</textarea></div>
-        <div class="storycard"><label>Starting point</label><textarea data-bind="${b}.description">${esc(v.description || "")}</textarea></div>
-        <div class="storycard"><label>Outcome</label><textarea data-bind="${b}.outcome">${esc(v.outcome || "")}</textarea></div>
-        <div class="storycard"><label>Channels (one per line)</label><textarea data-bind="${b}.channels">${esc(v.channels || "")}</textarea></div>
-        <div class="storycard"><label>Impact</label><textarea data-bind="${b}.impact">${esc(v.impact || "")}</textarea></div>
-      </div>`; }).join("")}
       <div class="section"><h2>Card cover — shown in the grid &amp; featured (4:3)</h2>${mediaSlot("data.cover", d.cover, "4/3")}</div>
       <div class="section"><h2>Case hero — big image at the top of the project page (16:9)</h2>${mediaSlot("data.hero", d.hero, "16/9")}</div>
 
@@ -273,23 +261,26 @@
         <div class="stack" id="stats">${statRows}</div>
         <button class="addbtn" id="addstat" style="margin-top:10px">+ Add stat</button></div>
 
-      <div class="section storycards"><h2>Case story — the collapsible side cards on the project page</h2>
-        <div class="storycard">
-          <label>Starting point</label>
-          <textarea data-bind="data.description" placeholder="What was the brief, the challenge, the context…">${esc(d.description || "")}</textarea>
-        </div>
-        <div class="storycard">
-          <label>Outcome</label>
-          <textarea data-bind="data.outcome" placeholder="What was delivered, the impact, the result…">${esc(d.outcome || "")}</textarea>
-        </div>
-        <div class="storycard">
-          <label>Credits (one per line)</label>
-          <textarea data-bind-lines="data.team" placeholder="Creative Direction — Nathalia Cury">${esc((d.team || []).join("\n"))}</textarea>
-        </div>
-        <div class="storycard">
-          <label>Link button URL (optional — shows a “View Project ↗” button)</label>
-          <input data-bind="data.link" value="${esc(d.link || "")}" placeholder="https://…"/>
-        </div>
+      <div class="section"><h2>Texts — default (branding) and alternative versions, side by side</h2>
+        <div class="hint" style="margin:-4px 0 12px">The default texts are what the site shows normally. An alternative version is only shown when it is live (Site &amp; Hero tab, or a <b>?v=${VARIANTS[0].key}</b> link) — any field left empty there uses the default text.</div>
+        ${(() => {
+          const vs = VARIANTS.map((vr) => ({ vr, v: (d.variants && d.variants[vr.key]) || {}, b: `data.variants.${vr.key}` }));
+          const head = `<div class="cmp-h">Default — branding</div>` + vs.map((x) => `<div class="cmp-h on">${esc(x.vr.label)}</div>`).join("");
+          const row = (label, def, alt, hint) => `<div class="cmp-l">${label}${hint ? `<span>${hint}</span>` : ""}</div><div class="cmp-c">${def}</div>` + vs.map((x) => `<div class="cmp-c on">${alt(x)}</div>`).join("");
+          const ta = (path, val, ph) => `<textarea data-bind="${path}" placeholder="${esc(ph || "")}">${esc(val || "")}</textarea>`;
+          const shared = `<div class="cmp-shared">Shared — uses the default</div>`;
+          return `<div class="cmp" style="grid-template-columns:repeat(${1 + vs.length},minmax(0,1fr))">${head}
+            ${row("Summary", `<input data-bind="data.summary" value="${esc(d.summary || "")}"/>`, (x) => `<input data-bind="${x.b}.summary" value="${esc(x.v.summary || "")}" placeholder="Empty — uses the default"/>`, "one line — cards, list &amp; case lead")}
+            ${row("Role", `<input data-bind="data.role" value="${esc(d.role || "")}"/>`, (x) => `<input data-bind="${x.b}.role" value="${esc(x.v.role || "")}" placeholder="Empty — uses the default"/>`)}
+            ${row("The idea", ta("data.idea", d.idea, "Optional"), (x) => ta(`${x.b}.idea`, x.v.idea, "Empty — uses the default"))}
+            ${row("Starting point", ta("data.description", d.description, "What was the brief, the challenge, the context…"), (x) => ta(`${x.b}.description`, x.v.description, "Empty — uses the default"))}
+            ${row("Outcome", ta("data.outcome", d.outcome, "What was delivered, the impact, the result…"), (x) => ta(`${x.b}.outcome`, x.v.outcome, "Empty — uses the default"))}
+            ${row("Channels", ta("data.channels", d.channels, "Optional — one per line"), (x) => ta(`${x.b}.channels`, x.v.channels, "Empty — uses the default"), "one per line")}
+            ${row("Impact", ta("data.impact", d.impact, "Optional"), (x) => ta(`${x.b}.impact`, x.v.impact, "Empty — uses the default"))}
+            ${row("Credits", `<textarea data-bind-lines="data.team" placeholder="Creative Direction — Nathalia Cury">${esc((d.team || []).join("\n"))}</textarea>`, () => shared, "one per line")}
+            ${row("Link button URL", `<input data-bind="data.link" value="${esc(d.link || "")}" placeholder="https://…"/>`, () => shared, "optional — “View Project ↗”")}
+          </div>`;
+        })()}
       </div>
 
       <div class="section"><h2>Case modules — stack images, video, 2-up, text, quotes</h2>
