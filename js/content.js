@@ -63,7 +63,7 @@ window.PORTFOLIO = {
   },
 
   // "Lifestyle" is a cross-cutting filter: projects opt in via  filters: ["Lifestyle"]
-  categories: ["All", "Branding", "Editorial", "AI", "Lifestyle"],
+  categories: ["All", "Branding", "Lifestyle", "Editorial", "AI"],
 
   // Work page intro (replaces the big "Selected Work" headline)
   work: {
