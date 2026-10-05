@@ -25,10 +25,14 @@
   /* media: image / GIF / video by extension (or object {src,poster,focalX,focalY}) */
   function media(item, opts = {}) {
     if (!item) return "";
-    let src = item, poster = "", fx = null, fy = null;
-    if (typeof item === "object") { src = item.src; poster = item.poster || ""; fx = item.focalX; fy = item.focalY; }
+    let src = item, poster = "", fx = null, fy = null, zm = 1, asp = null;
+    if (typeof item === "object") { src = item.src; poster = item.poster || ""; fx = item.focalX; fy = item.focalY; zm = +item.zoom || 1; asp = +item.aspect || null; }
     if (!src) return "";
-    const pos = (fx != null && fy != null) ? ` style="object-position:${+fx}% ${+fy}%"` : "";
+    const st = [];
+    if (fx != null && fy != null) st.push(`object-position:${+fx}% ${+fy}%`);
+    if (zm > 1) st.push(`transform:scale(${zm})`, `transform-origin:${fx != null ? +fx : 50}% ${fy != null ? +fy : 50}%`);
+    if (asp) st.push(`aspect-ratio:${asp}`, "object-fit:cover");
+    const pos = st.length ? ` style="${st.join(";")}"` : "";
     if (/\.(mp4|webm|mov|m4v)$/i.test(src)) return `<video src="${esc(src)}" autoplay muted loop playsinline ${poster ? `poster="${esc(poster)}"` : ""}${pos}></video>`;
     return `<img src="${esc(src)}" alt="${esc(opts.alt || "")}" loading="${opts.eager ? "eager" : "lazy"}"${pos} />`;
   }
