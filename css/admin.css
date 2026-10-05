@@ -98,3 +98,6 @@ label{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.06
 .crop-controls select{width:auto}
 .crop-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
 
+
+.variantcards{border:1px solid var(--accent);border-radius:var(--radius);padding:16px;background:rgba(232,69,42,.06)}
+.variantcards .storycard textarea{min-height:110px}

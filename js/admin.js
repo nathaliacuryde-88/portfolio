@@ -11,6 +11,8 @@
   let sb = null, session = null, site = {}, projects = [], tab = "projects", editing = null;
 
   const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  // Alternative text versions (e.g. for a specific application). Default texts are never touched.
+  const VARIANTS = [{ key: "on", label: "On application" }];
   const isVid = (s) => /\.(mp4|webm|mov|m4v)$/i.test(s || "");
   function toast(msg, err) { toastEl.textContent = msg; toastEl.classList.toggle("err", !!err); toastEl.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => toastEl.classList.remove("show"), 2600); }
 
@@ -254,6 +256,16 @@
         <div style="margin-top:14px"><label>Summary (one line, shown on cards, list & case lead)</label><input data-bind="data.summary" value="${esc(d.summary)}"/></div>
       </div>
 
+      ${VARIANTS.map((vr) => { const v = (d.variants && d.variants[vr.key]) || {}; const b = `data.variants.${vr.key}`; return `
+      <div class="section storycards variantcards"><h2>Alternative texts — “${esc(vr.label)}” (shown only when this version is live; empty fields fall back to the default texts)</h2>
+        <div class="storycard"><label>Summary (one line)</label><input data-bind="${b}.summary" value="${esc(v.summary || "")}"/></div>
+        <div class="storycard"><label>Role</label><input data-bind="${b}.role" value="${esc(v.role || "")}" placeholder="Leave empty to keep the default role"/></div>
+        <div class="storycard"><label>The idea</label><textarea data-bind="${b}.idea">${esc(v.idea || "")}</textarea></div>
+        <div class="storycard"><label>Starting point</label><textarea data-bind="${b}.description">${esc(v.description || "")}</textarea></div>
+        <div class="storycard"><label>Outcome</label><textarea data-bind="${b}.outcome">${esc(v.outcome || "")}</textarea></div>
+        <div class="storycard"><label>Channels (one per line)</label><textarea data-bind="${b}.channels">${esc(v.channels || "")}</textarea></div>
+        <div class="storycard"><label>Impact</label><textarea data-bind="${b}.impact">${esc(v.impact || "")}</textarea></div>
+      </div>`; }).join("")}
       <div class="section"><h2>Card cover — shown in the grid &amp; featured (4:3)</h2>${mediaSlot("data.cover", d.cover, "4/3")}</div>
       <div class="section"><h2>Case hero — big image at the top of the project page (16:9)</h2>${mediaSlot("data.hero", d.hero, "16/9")}</div>
 
@@ -429,7 +441,24 @@
         <div class="hint">Click preview to set the focal point.</div></div>`;
     }).join("");
 
+    const sv = (k) => (site.variants && site.variants[k]) || {};
+    const live = site.activeVariant || "";
     shell(`
+      <div class="section variantcards">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h2 style="border:none;margin:0">Text version live on the site</h2><button class="btn" id="savesite2">Save site</button></div>
+        <div class="row cols-2" style="margin-top:12px">
+          <div><label>Live version</label><select data-sbind="activeVariant"><option value="" ${live ? "" : "selected"}>Default texts</option>${VARIANTS.map((vr) => `<option value="${vr.key}" ${live === vr.key ? "selected" : ""}>${esc(vr.label)}</option>`).join("")}</select></div>
+          <div class="hint" style="align-self:end">Any version can also be opened directly with a link: add <b>?v=${VARIANTS[0].key}</b> or <b>?v=default</b> to the site address. Default texts are never overwritten.</div>
+        </div>
+        ${VARIANTS.map((vr) => { const v = sv(vr.key), b = `variants.${vr.key}`; return `
+        <h2 style="margin-top:22px">“${esc(vr.label)}” — site texts (empty fields fall back to the default)</h2>
+        <div><label>Statement (wrap words in *asterisks* for the grey accent)</label><textarea data-sbind="${b}.profile.statement">${esc((v.profile || {}).statement || "")}</textarea></div>
+        <div style="margin-top:14px"><label>Hero intro line</label><input data-sbind="${b}.profile.heroIntro" value="${esc((v.profile || {}).heroIntro || "")}"/></div>
+        <div style="margin-top:14px"><label>Availability line</label><input data-sbind="${b}.profile.available" value="${esc((v.profile || {}).available || "")}"/></div>
+        <div style="margin-top:14px"><label>Work page intro</label><textarea data-sbind="${b}.work.intro">${esc((v.work || {}).intro || "")}</textarea></div>
+        <div style="margin-top:14px"><label>About headline</label><textarea data-sbind="${b}.about.headline">${esc((v.about || {}).headline || "")}</textarea></div>
+        <div style="margin-top:14px"><label>About paragraphs (one per line)</label><textarea data-sbind-lines="${b}.about.paragraphs" style="min-height:160px">${esc(((v.about || {}).paragraphs || []).join("\n"))}</textarea></div>`; }).join("")}
+      </div>
       <div class="section">
         <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="border:none;margin:0">Profile & statement</h2><button class="btn" id="savesite">Save site</button></div>
         <div style="margin-top:12px"><label>Statement (wrap words in *asterisks* for the grey accent)</label><textarea data-sbind="profile.statement">${esc(p.statement || "")}</textarea></div>
@@ -492,6 +521,7 @@
       </div>`);
 
     document.getElementById("savesite").onclick = saveSite;
+    document.getElementById("savesite2").onclick = saveSite;
     document.getElementById("addastat").onclick = () => { harvestSite(); (ab.stats = ab.stats || []).push({ value: "", label: "" }); renderSite(); };
     app.querySelectorAll("[data-del-astat]").forEach((b) => b.onclick = () => { harvestSite(); ab.stats.splice(+b.dataset.delAstat, 1); renderSite(); });
     document.getElementById("addcap").onclick = () => { harvestSite(); (ab.capabilities = ab.capabilities || []).push({ title: "", items: [] }); renderSite(); };

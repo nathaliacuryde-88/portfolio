@@ -262,8 +262,11 @@
           ${gal ? `<div class="case__gallery">${gal}</div>` : ""}
         </div>
         <aside class="case__side">
-          ${pr.description ? sideCard("Starting Point", `<p>${esc(pr.description)}</p>`, true) : ""}
+          ${pr.idea ? sideCard("The Idea", `<p>${esc(pr.idea)}</p>`, true) : ""}
+          ${pr.description ? sideCard("Starting Point", `<p>${esc(pr.description)}</p>`, !pr.idea) : ""}
           ${pr.outcome ? sideCard("Outcome", `<p>${esc(pr.outcome)}</p>`) : ""}
+          ${pr.channels ? sideCard("Channels", `<ul>${String(pr.channels).split(/\n+/).map((c) => c.trim()).filter(Boolean).map((c) => `<li>${esc(c)}</li>`).join("")}</ul>`) : ""}
+          ${pr.impact ? sideCard("Impact", `<p>${esc(pr.impact)}</p>`) : ""}
           ${credits ? sideCard("Credits", `<ul>${credits}</ul>`) : ""}
           ${pr.link ? `<a href="${esc(pr.link)}" class="case__link-btn" target="_blank" rel="noopener">View Project ↗</a>` : ""}
         </aside>
@@ -483,6 +486,25 @@
     }
   }
 
+  /* Text versions: an alternative set of texts (e.g. for one application) overlays the defaults.
+     Choose it in the admin, or force it with ?v=<key> / ?v=default (kept for the browser session). */
+  function applyVariant() {
+    let key = data.activeVariant || "";
+    try {
+      const q = new URLSearchParams(location.search).get("v");
+      if (q != null) sessionStorage.setItem("nc-variant", q);
+      const s = sessionStorage.getItem("nc-variant");
+      if (s != null) key = s;
+    } catch (e) {}
+    if (key === "default") key = "";
+    data.variant = key;
+    if (!key) return;
+    const filled = (v) => (Array.isArray(v) ? v.length > 0 : v != null && String(v).trim() !== "");
+    const sv = data.variants && data.variants[key];
+    if (sv) ["profile", "about", "work"].forEach((sec) => { const o = sv[sec]; if (!o) return; data[sec] = data[sec] || {}; for (const k in o) if (filled(o[k])) data[sec][k] = o[k]; });
+    data.projects.forEach((pr) => { const v = pr.variants && pr.variants[key]; if (!v) return; for (const k in v) if (filled(v[k])) pr[k] = v[k]; });
+  }
+
   async function boot() {
     if (window.NCStore && window.NCStore.enabled) {
       try {
@@ -502,6 +524,7 @@
     const norm = (t) => String(t || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
     data.projects.forEach((pr) => { if (!Array.isArray(pr.filters)) { const b = BASE.projects.find((x) => x.id === pr.id || norm(x.title) === norm(pr.title)); if (b && b.filters) pr.filters = b.filters.slice(); } });
     if (!data.profile.featured || !data.profile.featured.length) data.profile.featured = clone(BASE).profile.featured;
+    applyVariant();
     init();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
