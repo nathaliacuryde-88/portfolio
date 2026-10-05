@@ -133,7 +133,7 @@
           <button class="btn ghost sm danger" data-act="del">Delete</button>
         </div></div>`;
     }).join("");
-    shell(`<div class="section"><h2>Projects — drag ⋮⋮ to reorder, ★ toggles Featured, Hide keeps a project saved but off the site</h2>
+    shell(`<div class="section"><h2>Projects — drag ⋮⋮ to reorder, ★ shows it on the home page (in this same order), Hide keeps a project saved but off the site</h2>
       <div class="proj-list">${rows || '<p class="muted">No projects yet. Click “Seed from built-in” to import your current work.</p>'}</div>
       <button class="addbtn" id="newproj" style="margin-top:14px">+ New project</button></div>`);
     document.getElementById("newproj").onclick = newProject;

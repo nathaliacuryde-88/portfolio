@@ -28,10 +28,8 @@
     const rows = projRes.data || [];
     if (rows.length) {
       content.projects = rows.map((r) => Object.assign({ id: r.id, category: r.category }, r.data || {}));
-      const feat = rows
-        .filter((r) => r.featured_position != null)
-        .sort((a, b) => a.featured_position - b.featured_position)
-        .map((r) => r.id);
+      // featured projects appear in the same order as the project list (★ is just on/off)
+      const feat = rows.filter((r) => r.featured_position != null).map((r) => r.id);
       content.profile = content.profile || {};
       if (feat.length) content.profile.featured = feat;
     }
