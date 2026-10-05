@@ -136,7 +136,7 @@
       return `<article class="card ${hide}" data-id="${esc(pr.id)}" data-cat="${esc(pr.category)}" data-cursor="view" style="--accent:${esc(pr.accent)}">
         <div class="card__media" style="background:${esc(pr.bg)}">${inner}<span class="card__bar"></span></div>
         <div class="card__body">
-          <div class="card__meta"><h3 class="card__title">${esc(pr.title)}</h3><span class="card__tag"><i></i>${esc([pr.category, pr.year].filter(Boolean).join(" · "))}</span></div>
+          <div class="card__meta"><h3 class="card__title">${esc(pr.title)}</h3><span class="card__tag"><i></i>${(pr.filters || []).includes("Lifestyle") && pr.category !== "Lifestyle" ? '<i class="ls" title="Lifestyle"></i>' : ""}${esc([pr.category, pr.year].filter(Boolean).join(" · "))}</span></div>
           <p class="card__summary">${esc(pr.summary)}</p>
         </div></article>`;
     }).join("");
