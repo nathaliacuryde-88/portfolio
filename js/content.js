@@ -52,12 +52,13 @@ window.PORTFOLIO = {
     capabilities: [
       { title: "Brand & campaigns", items: ["Campaign concepts & lines", "Brand platforms & positioning", "Identity systems", "Launches & live experiences", "Rollout across touchpoints"] },
       { title: "Art direction & craft", items: ["Typography & type direction", "Image & photo style", "Motion", "Editorial & book design", "Print production & finishing"] },
-      { title: "Leadership & AI", items: ["Creative direction & team lead", "Client workshops & presentations", "AI-assisted concepting", "Prototyping with code & AI", "Live visuals & creative tools"] },
+      { title: "Leadership", items: ["Creative direction & team lead", "Client workshops & presentations", "Co-creation & design sprints", "Studio founder — Margem, 2015–2020", "Jury, lectures & workshops"] },
+      { title: "AI", items: ["AI-assisted concepting", "Generative imagery — Midjourney, Gemini, GPT", "Prototyping & building — Claude Code, Lovable, Figma Make", "Apps & tools — I am in, True Characters", "Live visuals — gesture-controlled VJ tool"] },
     ],
     stats: [
       { value: "15+", label: "Years in design" },
       { value: "6", label: "Years at Strichpunkt" },
-      { value: "4×", label: "ADC awards (team)" },
+      { value: "10", label: "Awards & nominations" },
       { value: "TDC", label: "Ascender, New York 2018" },
     ],
   },
