@@ -50,15 +50,15 @@ window.PORTFOLIO = {
       "Today I'm a Senior Art Director at Strichpunkt Design, leading branding for IT, local and global brands — overseeing projects from concept to delivery while guiding the team.",
     ],
     capabilities: [
-      { title: "Branding", items: ["Brand strategy & positioning", "Identity systems", "Art direction", "Naming & messaging", "Launch & rollout"] },
-      { title: "Editorial", items: ["Book & report design", "Typography & type direction", "Print production", "Exhibition graphics", "Self-publishing"] },
-      { title: "AI", items: ["Generative art direction", "Midjourney · Gemini · GPT", "Prompt & guardrail systems", "Synthetic imagery", "On-brand workflows"] },
+      { title: "Brand & campaigns", items: ["Campaign concepts & lines", "Brand platforms & positioning", "Identity systems", "Launches & live experiences", "Rollout across touchpoints"] },
+      { title: "Art direction & craft", items: ["Typography & type direction", "Image & photo style", "Motion", "Editorial & book design", "Print production & finishing"] },
+      { title: "Leadership & AI", items: ["Creative direction & team lead", "Client workshops & presentations", "AI-assisted concepting", "Prototyping with code & AI", "Live visuals & creative tools"] },
     ],
     stats: [
       { value: "15+", label: "Years in design" },
-      { value: "10", label: "Awards & nominations" },
-      { value: "TDC", label: "Ascender, NY 2018" },
-      { value: "3", label: "Countries lived & worked" },
+      { value: "6", label: "Years at Strichpunkt" },
+      { value: "4×", label: "ADC awards (team)" },
+      { value: "TDC", label: "Ascender, New York 2018" },
     ],
   },
 
