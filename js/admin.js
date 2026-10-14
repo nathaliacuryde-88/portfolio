@@ -494,7 +494,7 @@
         <button class="addbtn" id="addcap" style="margin-top:10px">+ Add capability</button></div>
 
       <div class="section"><h2>CV — one entry per line, fields separated by “ | ”</h2>
-        <div><label>Professional Experience — period | role | place | emoji</label><textarea data-sbind-cv="experience" data-fields="period|role|place|emoji" style="min-height:150px">${esc(cvLines(cv.experience, ["period", "role", "place", "emoji"]))}</textarea></div>
+        <div><label>Professional Experience — period | role | place | emoji | link (optional)</label><textarea data-sbind-cv="experience" data-fields="period|role|place|emoji|url" style="min-height:150px">${esc(cvLines(cv.experience, ["period", "role", "place", "emoji", "url"]))}</textarea></div>
         <div style="margin-top:14px"><label>International Experience — period | role | place | emoji</label><textarea data-sbind-cv="international" data-fields="period|role|place|emoji" style="min-height:150px">${esc(cvLines(cv.international, ["period", "role", "place", "emoji"]))}</textarea></div>
         <div style="margin-top:14px"><label>Awards & Nominations — year | title | emoji</label><textarea data-sbind-cv="awards" data-fields="year|title|emoji" style="min-height:150px">${esc(cvLines(cv.awards, ["year", "title", "emoji"]))}</textarea></div>
         <div style="margin-top:14px"><label>Lectures, Workshops & Exhibitions — year | title | kind | emoji</label><textarea data-sbind-cv="lectures" data-fields="year|title|kind|emoji" style="min-height:150px">${esc(cvLines(cv.lectures, ["year", "title", "kind", "emoji"]))}</textarea></div>
