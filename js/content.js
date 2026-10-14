@@ -747,6 +747,102 @@ window.PORTFOLIO = {
       ]
     },
     {
+      "id": "db-signature-graphics",
+      "title": "DB Signature Graphics Drafter",
+      "client": "Deutsche Bahn (with Strichpunkt)",
+      "year": "2026",
+      "category": "AI",
+      "accent": "#ff002b",
+      "bg": "#090f1b",
+      "hero": {
+        "src": "assets/work/db-sg-hero.mp4",
+        "poster": "assets/work/db-sg-hero-poster.jpg"
+      },
+      "cover": {
+        "src": "assets/work/db-sg-hero.mp4",
+        "poster": "assets/work/db-sg-hero-poster.jpg"
+      },
+      "summary": "An AI drafting tool that turns a photo of a landmark into a DB Signature Graphic — planned by Claude, built bar by bar by the brand rules.",
+      "idea": "Split the work the way a designer thinks. Claude does what needs judgement: it reads the photos, understands the architecture and decides what makes a landmark recognisable. Code does what needs precision: it turns that plan into 2 dp bars on the DB grid and checks every rule. The designer stays in charge of the final call.",
+      "description": "DB Signature Graphics are drawn by hand, bar by bar: vertical 2 dp strokes on a 4 dp grid, rows offset by 2 dp, minimum lengths, a 3 dp safe area. Every new city and landmark takes a designer hours. The question: can AI give designers a head start — a draft that already follows every construction rule — without taking the craft away?",
+      "outcome": "A web tool and a Figma plugin the Strichpunkt team uses today. Designers add up to four photos, outline the landmark and press Draft. Claude writes a construction plan with three levels of detail, and the rule engine draws it in under a minute. Sliders for detail, openings, rows and row gaps adjust the result instantly, without a new AI call, and the graphic goes straight into Figma as editable vector bars.",
+      "impact": "Built in a few weeks, in short loops with designers: every round compared the AI drafts with hand-drawn graphics and fed the difference back into the tool — richer detail, corner-meeting rows, precise photo tools, one shared team account and a fully DB-branded interface.",
+      "role": "Concept, Design & Code",
+      "team": [
+        "Concept, Design & Code — Nathalia Cury",
+        "Built with Claude Code · Claude API",
+        "Brand — DB Neo design system"
+      ],
+      "stats": [
+        {
+          "value": "< 1 min",
+          "label": "Photo to first draft"
+        },
+        {
+          "value": "3",
+          "label": "Detail levels per plan"
+        },
+        {
+          "value": "Web + Figma",
+          "label": "Two ways in"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "video",
+          "media": {
+            "src": "assets/work/db-sg-process.mp4",
+            "poster": "assets/work/db-sg-process-poster.jpg"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Photo in, Claude plans, code draws. Claude reads the photos and writes a plan of masses, roofs, towers, windows and rows; a deterministic renderer turns it into bars and validates every rule — so a draft can never break the brand."
+        },
+        {
+          "type": "image",
+          "media": {
+            "src": "assets/work/db-sg-compare.jpg"
+          },
+          "caption": "St. Petri Dom, Bremen — hand-drawn by a designer, the first AI draft, and the result after iterating."
+        },
+        {
+          "type": "video",
+          "media": {
+            "src": "assets/work/db-sg-detail.mp4",
+            "poster": "assets/work/db-sg-detail-poster.jpg"
+          }
+        },
+        {
+          "type": "text",
+          "text": "One plan, three levels of detail. Claude tags every part as essential, standard or rich, and designers switch between them with a single slider — instantly and at no extra cost."
+        },
+        {
+          "type": "image",
+          "media": {
+            "src": "assets/work/db-sg-iterations.jpg"
+          },
+          "caption": "Six iterations — from a first prototype to the final, DB-branded tool."
+        },
+        {
+          "type": "two-up",
+          "a": "assets/work/db-sg-webtool.jpg",
+          "b": "assets/work/db-sg-plugin.jpg"
+        },
+        {
+          "type": "image",
+          "media": {
+            "src": "assets/work/db-sg-signin.jpg"
+          },
+          "caption": "Sign-in with the Schwelle and a skyline of Signature Graphics."
+        },
+        {
+          "type": "quote",
+          "text": "The value isn’t the model. It’s knowing where AI helps — and where craft and rules stay in charge."
+        }
+      ]
+    },
+    {
       "id": "vj",
       "filters": [
         "Lifestyle"
