@@ -557,7 +557,7 @@
       const fields = (el.dataset.fields || "").split("|");
       const arr = el.value.split("\n").map((s) => s.trim()).filter(Boolean).map((line) => {
         const parts = line.split("|").map((x) => x.trim());
-        const o = {}; fields.forEach((f, i) => { if (parts[i]) o[f] = parts[i]; }); return o;
+        const o = {}; fields.forEach((f, i) => { if (parts[i]) o[f] = parts[i]; }); if (/^https?:\/\//i.test(o.emoji || "")) { if (!o.url) o.url = o.emoji; delete o.emoji; } return o;
       });
       setPath(site, "cv." + el.dataset.sbindCv, arr);
     });

@@ -147,8 +147,9 @@
   function renderCV() {
     if (!$("#cvGrid")) return;
     const cv = data.cv, rows = (a, f) => a.map(f).join("");
-    const pop = (em) => (em ? ` <span class="cv-pop" style="animation-delay:${(Math.random() * 7).toFixed(1)}s">${em}</span>` : "");
-    const place = (e) => (e.url && /^https?:\/\//i.test(e.url) ? `<a href="${esc(e.url)}" target="_blank" rel="noopener" data-cursor="">${esc(e.place)} ↗</a>` : esc(e.place));
+    const isUrl = (v) => /^https?:\/\//i.test(v || "");
+    const pop = (em) => (em && !isUrl(em) ? ` <span class="cv-pop" style="animation-delay:${(Math.random() * 7).toFixed(1)}s">${esc(em)}</span>` : "");
+    const place = (e) => { const u = isUrl(e.url) ? e.url : isUrl(e.emoji) ? e.emoji : ""; return u ? `<a href="${esc(u)}" target="_blank" rel="noopener" data-cursor="">${esc(e.place)} ↗</a>` : esc(e.place); };
     const expRow = (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.role)}${pop(e.emoji)}<small>${place(e)}</small></span></div>`;
     const blk = (t, items, f) => `<div class="cv-block"><h3>${t}</h3>${rows(items, f)}</div>`;
     // collapsible block — closed by default; large + that becomes × when open
