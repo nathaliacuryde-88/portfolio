@@ -434,23 +434,25 @@
       const cand = [pr.cover, pr.hero, ...(pr.images || []), ...(pr.blocks || []).map((b) => b && (b.media || b.a))].map(srcOf).find(isImg);
       if (cand) pics.push({ src: cand, title: pr.title || "", bg: pr.bg || "" });
     });
-    const cols = window.innerWidth < 700 ? 3 : 4, n = Math.min(pics.length, cols * 3);
-    const STEP = 120, FLY = 950, total = Math.max(FLY + (n - 1) * STEP, 1500);
+    const n = Math.min(pics.length, 12);
+    const STEP = 130, FLY = 900, total = Math.max(FLY + (n - 1) * STEP, 1500);
     if (stage && n) {
-      stage.style.setProperty("--cols", cols);
       pics.slice(0, n).forEach((pic, i) => {
         const c = document.createElement("div"); c.className = "loader__card"; if (pic.bg) c.style.background = pic.bg;
         const im = new Image(); im.alt = ""; im.decoding = "async"; im.onload = () => im.classList.add("ok"); im.src = pic.src; c.appendChild(im);
+        c.style.zIndex = i + 1;
         stage.appendChild(c);
-        const ang = Math.random() * Math.PI * 2, dist = Math.max(window.innerWidth, window.innerHeight) * (0.55 + Math.random() * 0.25);
-        const dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist, rot = (Math.random() * 50 - 25).toFixed(1);
-        const anim = c.animate([
-          { transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(.6)`, opacity: 0 },
-          { opacity: 1, offset: 0.35 },
-          { transform: "none", opacity: 1 },
+        // lands on the pile with its own angle and a small offset, so the stack reads as a loose deck
+        const rot = ((i % 2 ? 1 : -1) * (4 + Math.random() * 16)).toFixed(1);
+        const ox = (Math.random() * 28 - 14).toFixed(1), oy = (Math.random() * 20 - 10).toFixed(1);
+        const ang = -Math.PI / 2 + (Math.random() * 1.6 - 0.8), dist = Math.max(window.innerWidth, window.innerHeight) * (0.6 + Math.random() * 0.3);
+        const dx = Math.cos(ang) * dist + window.innerWidth * 0.3, dy = Math.sin(ang) * dist;
+        c.animate([
+          { transform: `translate(${dx}px, ${dy}px) rotate(${rot * 3}deg) scale(.85)`, opacity: 0 },
+          { opacity: 1, offset: 0.3 },
+          { transform: `translate(${ox}px, ${oy}px) rotate(${rot}deg) scale(1)`, opacity: 1 },
         ], { duration: FLY, delay: i * STEP, easing: "cubic-bezier(.16,1,.3,1)", fill: "both" });
         if (now) setTimeout(() => { now.textContent = pic.title; }, i * STEP + FLY * 0.6);
-        void anim;
       });
     }
     const t0 = performance.now();
@@ -458,7 +460,7 @@
       const k = Math.min(1, (t - t0) / total);
       if (cnt) cnt.textContent = Math.round(100 * (1 - Math.pow(1 - k, 2)));
       if (k < 1) return requestAnimationFrame(tick);
-      if (stage) stage.animate([{ transform: "translate(-50%, -50%) scale(1)" }, { transform: "translate(-50%, -50%) scale(1.04)" }], { duration: 500, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" });
+      if (stage) stage.animate([{ transform: "translateY(-50%) scale(1)" }, { transform: "translateY(-50%) scale(1.05)" }], { duration: 500, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" });
       setTimeout(finish, 380);
     };
     requestAnimationFrame(tick);
