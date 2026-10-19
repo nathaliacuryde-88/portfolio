@@ -19,6 +19,12 @@
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function applyOverrides() { try { const o = JSON.parse(localStorage.getItem(STORE) || "null"); if (o) data = merge(clone(BASE), o); } catch (e) {} }
   function merge(t, s) { for (const k in s) { if (s[k] && typeof s[k] === "object" && !Array.isArray(s[k])) t[k] = merge(t[k] || {}, s[k]); else t[k] = s[k]; } return t; }
+  /* Instagram link: the saved URL, or one built from the handle when the URL field is empty */
+  function igUrl(p) {
+    if (p.instagram && /^https?:\/\//i.test(p.instagram)) return p.instagram;
+    const h = String(p.instagramHandle || "").replace(/^@/, "").trim();
+    return h ? `https://www.instagram.com/${h}/` : "#";
+  }
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
   function attr(s) { return String(s).replace(/'/g, "&#39;").replace(/"/g, "&quot;"); }
 
@@ -93,7 +99,7 @@
       hello.setAttribute("data-cursor", "Click to copy");
       hello.innerHTML = 'Say hell<span class="o-wrap">o<span class="wave">👋</span></span>';
       hello.onclick = (e) => { e.preventDefault(); copyEmail(p.email || "", e.clientX || innerWidth / 2, e.clientY || innerHeight / 2); };
-      $("#contactRow").innerHTML = `<a href="${esc(p.instagram)}" target="_blank" rel="noopener" data-cursor="">Instagram ${esc(p.instagramHandle)}</a><a href="${esc(p.linkedin)}" target="_blank" rel="noopener" data-cursor="">LinkedIn ↗</a><a href="tel:${esc(p.phone.replace(/\s/g, ""))}">${esc(p.phone)}</a><span>${esc(p.location)}</span>`;
+      $("#contactRow").innerHTML = `<a href="${esc(igUrl(p))}" target="_blank" rel="noopener" data-cursor="">Instagram ${esc(p.instagramHandle)}</a><a href="${esc(p.linkedin)}" target="_blank" rel="noopener" data-cursor="">LinkedIn ↗</a>${p.phone ? `<a href="tel:${esc(String(p.phone).replace(/\s/g, ""))}">${esc(p.phone)}</a>` : ""}<span>${esc(p.location)}</span>`;
     }
 
     if ($("#grid")) {  /* ---- WORK ---- */
@@ -109,7 +115,7 @@
     /* footer (both) */
     if ($("#footerName")) $("#footerName").textContent = "© " + p.name + " — Stuttgart";
     if ($("#year")) $("#year").textContent = new Date().getFullYear();
-    if ($("#menuFoot")) $("#menuFoot").innerHTML = `<a href="${esc(p.instagram)}" target="_blank" rel="noopener">Instagram ${esc(p.instagramHandle)}</a><a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn ↗</a><span>${esc(p.location)}</span>`;
+    if ($("#menuFoot")) $("#menuFoot").innerHTML = `<a href="${esc(igUrl(p))}" target="_blank" rel="noopener">Instagram ${esc(p.instagramHandle)}</a><a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn ↗</a><span>${esc(p.location)}</span>`;
 
     bindAll();
   }
