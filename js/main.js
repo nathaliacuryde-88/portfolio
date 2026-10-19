@@ -150,7 +150,6 @@
     const isUrl = (v) => /^https?:\/\//i.test(v || "");
     const SHOW_CV_EMOJI = false; // emojis are kept in the CV data; flip to bring them back
     const hl = (o, html) => (o && o.hl ? `<span class="hl">${html}</span>` : html);
-    const AI_TOOL = /claude|gpt|gemini|midjourney|lovable|figma make|stitch|jitter/i;
     const pop = (em) => (SHOW_CV_EMOJI && em && !isUrl(em) ? ` <span class="cv-pop" style="animation-delay:${(Math.random() * 7).toFixed(1)}s">${esc(em)}</span>` : "");
     const place = (e) => { const u = isUrl(e.url) ? e.url : isUrl(e.emoji) ? e.emoji : ""; return u ? `<a href="${esc(u)}" target="_blank" rel="noopener" data-cursor="">${esc(e.place)} ↗</a>` : esc(e.place); };
     const expRow = (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${hl(e, esc(e.role))}${pop(e.emoji)}<small>${place(e)}</small></span></div>`;
@@ -164,7 +163,7 @@
       col("Lectures, Workshops & Exhibitions", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${hl(l, esc(l.title))}${pop(l.emoji)}<small>${esc(l.kind)}</small></span></div>`),
       col("Education", cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${hl(e, esc(e.title))}${pop(e.emoji)}<small>${esc(e.place)}</small></span></div>`),
       blk("Languages", cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${hl(l, esc(l.name))}${pop(l.emoji)}</span></div>`),
-      `<div class="cv-block"><h3>Software &amp; Tools</h3>${(Array.isArray(cv.software[0]) ? cv.software : [cv.software]).map((g) => `<div class="cv-tags">${g.map((s) => `<span${AI_TOOL.test(s) ? ' class="hl-tag"' : ""}>${esc(s)}</span>`).join("")}</div>`).join("")}</div>`,
+      `<div class="cv-block"><h3>Software &amp; Tools</h3>${(Array.isArray(cv.software[0]) ? cv.software : [cv.software]).map((g) => `<div class="cv-tags">${g.map((s) => `<span>${esc(s)}</span>`).join("")}</div>`).join("")}</div>`,
     ].join("");
     syncCVOpen();
     bindCVToggle();
