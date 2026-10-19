@@ -415,7 +415,7 @@
     const aStatRows = (ab.stats || []).map((s, i) => `<div class="kv"><input data-sbind="about.stats.${i}.value" value="${esc(s.value || "")}" placeholder="15+"/><input data-sbind="about.stats.${i}.label" value="${esc(s.label || "")}" placeholder="Years in design"/><button class="btn ghost sm danger" data-del-astat="${i}">✕</button></div>`).join("");
     const capRows = (ab.capabilities || []).map((c, i) => `<div class="item"><div class="head"><span class="t">Capability ${i + 1}</span><button class="btn ghost sm danger" data-del-cap="${i}">✕</button></div><label>Title</label><input data-sbind="about.capabilities.${i}.title" value="${esc(c.title || "")}"/><div style="margin-top:10px"><label>Items (one per line)</label><textarea data-sbind-lines="about.capabilities.${i}.items">${esc((c.items || []).join("\n"))}</textarea></div></div>`).join("");
     // CV: one textarea per list, fields separated by " | "
-    const cvLines = (arr, fields) => (arr || []).map((o) => fields.map((f) => o[f] || "").join(" | ").replace(/(\s*\|\s*)+$/, "")).join("\n");
+    const cvLines = (arr, fields) => (arr || []).map((o) => fields.map((f) => (o[f] === true ? "x" : o[f] || "")).join(" | ").replace(/(\s*\|\s*)+$/, "")).join("\n");
     const softLines = (Array.isArray((cv.software || [])[0]) ? cv.software : [cv.software || []]).map((g) => (g || []).join(", ")).join("\n");
     const por = ab.portrait; const psrc = por && (typeof por === "object" ? por.src : por);
     const pfx = por && typeof por === "object" ? por.focalX : null, pfy = por && typeof por === "object" ? por.focalY : null;
@@ -494,12 +494,12 @@
         <button class="addbtn" id="addcap" style="margin-top:10px">+ Add capability</button></div>
 
       <div class="section"><h2>CV — one entry per line, fields separated by “ | ”</h2>
-        <div><label>Professional Experience — period | role | place | emoji | link (optional)</label><textarea data-sbind-cv="experience" data-fields="period|role|place|emoji|url" style="min-height:150px">${esc(cvLines(cv.experience, ["period", "role", "place", "emoji", "url"]))}</textarea></div>
-        <div style="margin-top:14px"><label>International Experience — period | role | place | emoji</label><textarea data-sbind-cv="international" data-fields="period|role|place|emoji" style="min-height:150px">${esc(cvLines(cv.international, ["period", "role", "place", "emoji"]))}</textarea></div>
-        <div style="margin-top:14px"><label>Awards & Nominations — year | title | emoji</label><textarea data-sbind-cv="awards" data-fields="year|title|emoji" style="min-height:150px">${esc(cvLines(cv.awards, ["year", "title", "emoji"]))}</textarea></div>
-        <div style="margin-top:14px"><label>Lectures, Workshops & Exhibitions — year | title | kind | emoji</label><textarea data-sbind-cv="lectures" data-fields="year|title|kind|emoji" style="min-height:150px">${esc(cvLines(cv.lectures, ["year", "title", "kind", "emoji"]))}</textarea></div>
-        <div style="margin-top:14px"><label>Education — period | title | place | emoji</label><textarea data-sbind-cv="education" data-fields="period|title|place|emoji" style="min-height:110px">${esc(cvLines(cv.education, ["period", "title", "place", "emoji"]))}</textarea></div>
-        <div style="margin-top:14px"><label>Languages — name | level | emoji</label><textarea data-sbind-cv="languages" data-fields="name|level|emoji" style="min-height:90px">${esc(cvLines(cv.languages, ["name", "level", "emoji"]))}</textarea></div>
+        <div><label>Professional Experience — period | role | place | emoji | link | highlight (x)</label><textarea data-sbind-cv="experience" data-fields="period|role|place|emoji|url|hl" style="min-height:150px">${esc(cvLines(cv.experience, ["period", "role", "place", "emoji", "url", "hl"]))}</textarea></div>
+        <div style="margin-top:14px"><label>International Experience — period | role | place | emoji | highlight (x)</label><textarea data-sbind-cv="international" data-fields="period|role|place|emoji|hl" style="min-height:150px">${esc(cvLines(cv.international, ["period", "role", "place", "emoji", "hl"]))}</textarea></div>
+        <div style="margin-top:14px"><label>Awards & Nominations — year | title | emoji | highlight (x)</label><textarea data-sbind-cv="awards" data-fields="year|title|emoji|hl" style="min-height:150px">${esc(cvLines(cv.awards, ["year", "title", "emoji", "hl"]))}</textarea></div>
+        <div style="margin-top:14px"><label>Lectures, Workshops & Exhibitions — year | title | kind | emoji | highlight (x)</label><textarea data-sbind-cv="lectures" data-fields="year|title|kind|emoji|hl" style="min-height:150px">${esc(cvLines(cv.lectures, ["year", "title", "kind", "emoji", "hl"]))}</textarea></div>
+        <div style="margin-top:14px"><label>Education — period | title | place | emoji | highlight (x)</label><textarea data-sbind-cv="education" data-fields="period|title|place|emoji|hl" style="min-height:110px">${esc(cvLines(cv.education, ["period", "title", "place", "emoji", "hl"]))}</textarea></div>
+        <div style="margin-top:14px"><label>Languages — name | level | emoji | highlight (x)</label><textarea data-sbind-cv="languages" data-fields="name|level|emoji|hl" style="min-height:90px">${esc(cvLines(cv.languages, ["name", "level", "emoji", "hl"]))}</textarea></div>
         <div style="margin-top:14px"><label>Software & Tools — one cluster per line, tools separated by commas</label><textarea data-sbind-soft="1" style="min-height:90px">${esc(softLines)}</textarea></div>
       </div>
 
@@ -557,7 +557,7 @@
       const fields = (el.dataset.fields || "").split("|");
       const arr = el.value.split("\n").map((s) => s.trim()).filter(Boolean).map((line) => {
         const parts = line.split("|").map((x) => x.trim());
-        const o = {}; fields.forEach((f, i) => { if (parts[i]) o[f] = parts[i]; }); if (/^https?:\/\//i.test(o.emoji || "")) { if (!o.url) o.url = o.emoji; delete o.emoji; } return o;
+        const o = {}; fields.forEach((f, i) => { if (parts[i]) o[f] = parts[i]; }); if (/^https?:\/\//i.test(o.emoji || "")) { if (!o.url) o.url = o.emoji; delete o.emoji; } if (o.hl) o.hl = true; return o;
       });
       setPath(site, "cv." + el.dataset.sbindCv, arr);
     });

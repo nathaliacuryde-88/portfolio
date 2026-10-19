@@ -148,23 +148,41 @@
     if (!$("#cvGrid")) return;
     const cv = data.cv, rows = (a, f) => a.map(f).join("");
     const isUrl = (v) => /^https?:\/\//i.test(v || "");
-    const pop = (em) => (em && !isUrl(em) ? ` <span class="cv-pop" style="animation-delay:${(Math.random() * 7).toFixed(1)}s">${esc(em)}</span>` : "");
+    const SHOW_CV_EMOJI = false; // emojis are kept in the CV data; flip to bring them back
+    const hl = (o, html) => (o && o.hl ? `<span class="hl">${html}</span>` : html);
+    const AI_TOOL = /claude|gpt|gemini|midjourney|lovable|figma make|stitch|jitter/i;
+    const pop = (em) => (SHOW_CV_EMOJI && em && !isUrl(em) ? ` <span class="cv-pop" style="animation-delay:${(Math.random() * 7).toFixed(1)}s">${esc(em)}</span>` : "");
     const place = (e) => { const u = isUrl(e.url) ? e.url : isUrl(e.emoji) ? e.emoji : ""; return u ? `<a href="${esc(u)}" target="_blank" rel="noopener" data-cursor="">${esc(e.place)} ↗</a>` : esc(e.place); };
-    const expRow = (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.role)}${pop(e.emoji)}<small>${place(e)}</small></span></div>`;
+    const expRow = (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${hl(e, esc(e.role))}${pop(e.emoji)}<small>${place(e)}</small></span></div>`;
     const blk = (t, items, f) => `<div class="cv-block"><h3>${t}</h3>${rows(items, f)}</div>`;
     // collapsible block — closed by default; large + that becomes × when open
     const col = (t, items, f) => `<details class="cv-block cv-collapse"><summary><h3>${t}</h3><span class="cv-x"></span></summary><div class="cv-body">${rows(items, f)}</div></details>`;
     $("#cvGrid").innerHTML = [
       blk("Professional Experience", cv.experience, expRow),
-      col("Awards & Nominations", cv.awards, (a) => `<div class="cv-row"><span class="p">${esc(a.year)}</span><span class="r">${esc(a.title)}${pop(a.emoji)}</span></div>`),
+      col("Awards & Nominations", cv.awards, (a) => `<div class="cv-row"><span class="p">${esc(a.year)}</span><span class="r">${hl(a, esc(a.title))}${pop(a.emoji)}</span></div>`),
       col("International Experience", cv.international, expRow),
-      col("Lectures, Workshops & Exhibitions", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${esc(l.title)}${pop(l.emoji)}<small>${esc(l.kind)}</small></span></div>`),
-      col("Education", cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${esc(e.title)}${pop(e.emoji)}<small>${esc(e.place)}</small></span></div>`),
-      blk("Languages", cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${esc(l.name)}${pop(l.emoji)}</span></div>`),
-      `<div class="cv-block"><h3>Software &amp; Tools</h3>${(Array.isArray(cv.software[0]) ? cv.software : [cv.software]).map((g) => `<div class="cv-tags">${g.map((s) => `<span>${esc(s)}</span>`).join("")}</div>`).join("")}</div>`,
+      col("Lectures, Workshops & Exhibitions", cv.lectures, (l) => `<div class="cv-row"><span class="p">${esc(l.year)}</span><span class="r">${hl(l, esc(l.title))}${pop(l.emoji)}<small>${esc(l.kind)}</small></span></div>`),
+      col("Education", cv.education, (e) => `<div class="cv-row"><span class="p">${esc(e.period)}</span><span class="r">${hl(e, esc(e.title))}${pop(e.emoji)}<small>${esc(e.place)}</small></span></div>`),
+      blk("Languages", cv.languages, (l) => `<div class="cv-row"><span class="p">${esc(l.level)}</span><span class="r">${hl(l, esc(l.name))}${pop(l.emoji)}</span></div>`),
+      `<div class="cv-block"><h3>Software &amp; Tools</h3>${(Array.isArray(cv.software[0]) ? cv.software : [cv.software]).map((g) => `<div class="cv-tags">${g.map((s) => `<span${AI_TOOL.test(s) ? ' class="hl-tag"' : ""}>${esc(s)}</span>`).join("")}</div>`).join("")}</div>`,
     ].join("");
     syncCVOpen();
     bindCVToggle();
+    bindHighlights($("#cvGrid"));
+  }
+  /* Neon marker sweeps over highlighted CV lines as they scroll into view */
+  function bindHighlights(root) {
+    const els = $$(".hl, .hl-tag", root); if (!els.length) return;
+    if (reduce || !("IntersectionObserver" in window)) { els.forEach((e) => e.classList.add("on")); return; }
+    let batch = 0;
+    const io = new IntersectionObserver((ents) => {
+      ents.filter((x) => x.isIntersecting).forEach((x) => {
+        x.target.style.transitionDelay = (batch++ % 4) * 0.12 + "s";
+        x.target.classList.add("on"); io.unobserve(x.target);
+      });
+      batch = 0;
+    }, { threshold: 0.9, rootMargin: "0px 0px -12% 0px" });
+    els.forEach((e) => io.observe(e));
   }
   /* Mobile: open/close ONLY via the +/× icon. The native <summary> toggles on any
      tap inside it, so fingers scrolling over the row would close it — prevent that
@@ -403,27 +421,47 @@
     reset();
   }
 
-  const LOAD_PHRASES = [
-    ["✺", "Booting up the studio…"],
-    ["🎨", "Mixing the palette…"],
-    ["✏️", "Kerning the universe…"],
-    ["📐", "Aligning the grid…"],
-    ["🅰️", "Setting the type…"],
-    ["✨", "Polishing the pixels…"],
-    ["🚀", "Almost there — say hello soon!"],
-  ];
+  /* Loader: real project thumbnails fly in and assemble into a grid while the count runs to 100 */
   function loader() {
     const l = $("#loader"); if (!l) { if ($("#hero")) $("#hero").classList.add("ready"); return; }
-    const cnt = $("#loaderCount"), ph = $("#loaderPhrase"), em = $("#loaderEmoji");
-    const setPhrase = (i) => { i = Math.max(0, Math.min(LOAD_PHRASES.length - 1, i)); if (ph) ph.textContent = LOAD_PHRASES[i][1]; if (em) em.textContent = LOAD_PHRASES[i][0]; };
-    if (reduce) { l.classList.add("done"); if ($("#hero")) $("#hero").classList.add("ready"); return; }
-    let n = 0;
-    const t = setInterval(() => {
-      n += (Math.random() * 15 + 5) | 0;
-      if (n >= 100) { n = 100; clearInterval(t); setPhrase(LOAD_PHRASES.length - 1); setTimeout(() => { l.classList.add("done"); if ($("#hero")) $("#hero").classList.add("ready"); }, 360); }
-      else setPhrase(Math.floor(n / (100 / LOAD_PHRASES.length)));
-      cnt.textContent = n;
-    }, 130);
+    const finish = () => { l.classList.add("done"); if ($("#hero")) $("#hero").classList.add("ready"); };
+    if (reduce) { finish(); return; }
+    const cnt = $("#loaderCount"), now = $("#loaderNow"), stage = $("#loaderStage");
+    const isImg = (u) => /\.(jpe?g|png|webp|gif)(\?|$)/i.test(u || "");
+    const srcOf = (m) => (!m ? "" : typeof m === "string" ? m : (m.poster || m.src || ""));
+    const pics = [];
+    (data.projects || []).forEach((pr) => {
+      const cand = [pr.cover, pr.hero, ...(pr.images || []), ...(pr.blocks || []).map((b) => b && (b.media || b.a))].map(srcOf).find(isImg);
+      if (cand) pics.push({ src: cand, title: pr.title || "", bg: pr.bg || "" });
+    });
+    const cols = window.innerWidth < 700 ? 3 : 4, n = Math.min(pics.length, cols * 3);
+    const STEP = 120, FLY = 950, total = Math.max(FLY + (n - 1) * STEP, 1500);
+    if (stage && n) {
+      stage.style.setProperty("--cols", cols);
+      pics.slice(0, n).forEach((pic, i) => {
+        const c = document.createElement("div"); c.className = "loader__card"; if (pic.bg) c.style.background = pic.bg;
+        const im = new Image(); im.alt = ""; im.decoding = "async"; im.onload = () => im.classList.add("ok"); im.src = pic.src; c.appendChild(im);
+        stage.appendChild(c);
+        const ang = Math.random() * Math.PI * 2, dist = Math.max(window.innerWidth, window.innerHeight) * (0.55 + Math.random() * 0.25);
+        const dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist, rot = (Math.random() * 50 - 25).toFixed(1);
+        const anim = c.animate([
+          { transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(.6)`, opacity: 0 },
+          { opacity: 1, offset: 0.35 },
+          { transform: "none", opacity: 1 },
+        ], { duration: FLY, delay: i * STEP, easing: "cubic-bezier(.16,1,.3,1)", fill: "both" });
+        if (now) setTimeout(() => { now.textContent = pic.title; }, i * STEP + FLY * 0.6);
+        void anim;
+      });
+    }
+    const t0 = performance.now();
+    const tick = (t) => {
+      const k = Math.min(1, (t - t0) / total);
+      if (cnt) cnt.textContent = Math.round(100 * (1 - Math.pow(1 - k, 2)));
+      if (k < 1) return requestAnimationFrame(tick);
+      if (stage) stage.animate([{ transform: "translate(-50%, -50%) scale(1)" }, { transform: "translate(-50%, -50%) scale(1.04)" }], { duration: 500, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" });
+      setTimeout(finish, 380);
+    };
+    requestAnimationFrame(tick);
   }
 
   function bindMenu() {
