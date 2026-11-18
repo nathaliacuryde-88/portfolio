@@ -83,6 +83,48 @@ window.PORTFOLIO = {
       "summary": "Sixteen specialists, one vision — a brand built on “Progress made possible.”",
       "description": "Transforming 16 specialists into a single company with a shared vision was the core challenge behind the x1F brand. The task was not only to bundle individual expertise into excellence from a single source, but also to preserve the company’s DNA: customer proximity, tailored solutions, trustful collaboration and a fair, non-hierarchical culture. To compete with the Big Four, x1F needed more than expertise — a professional presence, clear communication and efficient processes. Together with GMK, Strichpunkt guided the transformation with a holistic, agile approach, from positioning to identity and marketing strategy. In an intensive strategy phase, the guiding principle “Progress made possible” emerged, expressing the company’s commitment to constant development inside and out.",
       "outcome": "A dynamic, clear and distinctive design. The new brand launched in January 2025 with 1,200 employees: a large-scale event staged across 3,700m² with multimedia experiences, from banners to a digital fashion show, marking the beginning of a strong, unified brand presence.",
+      "role": "Creative Direction",
+      "team": [
+        "Creative Direction — Nathalia Cury",
+        "Design — Stephanie Teuber",
+        "Design — Marlene Kogel"
+      ],
+      "stats": [
+        {
+          "value": "16→1",
+          "label": "Specialists unified"
+        },
+        {
+          "value": "1,200",
+          "label": "Employees at launch"
+        },
+        {
+          "value": "3,700m²",
+          "label": "Launch event"
+        }
+      ],
+      "images": [
+        "assets/work/x1f-01.jpg",
+        "assets/work/x1f-02.jpg",
+        "assets/work/x1f-03.jpg",
+        "assets/work/x1f-04.jpg",
+        "assets/work/x1f-05.jpg",
+        "assets/work/x1f-06.jpg",
+        "assets/work/x1f-07.jpg",
+        "assets/work/x1f-08.jpg"
+      ]
+    },
+    {
+      "id": "x1f-story",
+      "title": "x1F · process",
+      "client": "x1F (with GMK · Strichpunkt)",
+      "year": "2025",
+      "category": "Branding",
+      "accent": "#c2f23f",
+      "bg": "#0e0e0c",
+      "summary": "Sixteen specialists, one vision — a brand built on “Progress made possible.”",
+      "description": "Transforming 16 specialists into a single company with a shared vision was the core challenge behind the x1F brand. The task was not only to bundle individual expertise into excellence from a single source, but also to preserve the company’s DNA: customer proximity, tailored solutions, trustful collaboration and a fair, non-hierarchical culture. To compete with the Big Four, x1F needed more than expertise — a professional presence, clear communication and efficient processes. Together with GMK, Strichpunkt guided the transformation with a holistic, agile approach, from positioning to identity and marketing strategy. In an intensive strategy phase, the guiding principle “Progress made possible” emerged, expressing the company’s commitment to constant development inside and out.",
+      "outcome": "A dynamic, clear and distinctive design. The new brand launched in January 2025 with 1,200 employees: a large-scale event staged across 3,700m² with multimedia experiences, from banners to a digital fashion show, marking the beginning of a strong, unified brand presence.",
       "role": "Design Lead",
       "story": true,
       "team": [

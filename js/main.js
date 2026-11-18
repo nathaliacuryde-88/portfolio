@@ -567,6 +567,7 @@
       } catch (e) { console.warn("Supabase load failed — using built-in content.", e); }
     }
     // Story cases (process told in chapters) are written in content.js and win over stored copies.
+    BASE.projects.forEach((b) => { if (!b.story || data.projects.some((x) => x.id === b.id)) return; const sib = data.projects.findIndex((x) => x.id === b.id.replace(/-story$/, "")); data.projects.splice(sib >= 0 ? sib + 1 : 0, 0, clone(b)); });
     BASE.projects.forEach((b) => { if (!b.story) return; const p = data.projects.find((x) => x.id === b.id); if (p) ["story", "blocks", "role", "team", "summary"].forEach((k) => { if (b[k] != null) p[k] = clone(b[k]); }); });
     // CV: use the edited CV from the store when present; otherwise built-in content.js.
     if (!data.cv || !data.cv.experience || !data.cv.experience.length) data.cv = clone(BASE).cv;
