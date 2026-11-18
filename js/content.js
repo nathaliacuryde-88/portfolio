@@ -116,6 +116,7 @@ window.PORTFOLIO = {
     },
     {
       "id": "x1f-story",
+      "hidden": true,
       "title": "x1F · process",
       "client": "x1F (with GMK · Strichpunkt)",
       "year": "2025",

@@ -13,6 +13,8 @@
   const PAGE = document.body.getAttribute("data-page");
 
   const BASE = window.PORTFOLIO;
+  const HIDDEN = []; // cases reachable only by direct link (#id), not listed in the grid
+  const known = (id) => data.projects.some((p) => p.id === id) || HIDDEN.some((p) => p.id === id);
   let data = clone(BASE);
   applyOverrides();
 
@@ -249,9 +251,10 @@
 
   /* =================== CASE STUDY =================== */
   function openCase(id, fromNav) {
-    const list = data.projects, idx = list.findIndex((x) => x.id === id);
-    if (idx < 0) return;
-    const pr = list[idx];
+    const list = data.projects; let idx = list.findIndex((x) => x.id === id);
+    let pr = idx >= 0 ? list[idx] : HIDDEN.find((x) => x.id === id);
+    if (!pr) return;
+    if (idx < 0) idx = list.findIndex((x) => x.id === id.replace(/-story$/, ""));
     document.documentElement.style.setProperty("--accent", pr.accent);
 
     const heroM = heroOf(pr);
@@ -499,7 +502,7 @@
     if (!$("#case")) return;
     $("#caseClose").addEventListener("click", closeCase);
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") { if ($("#case").classList.contains("open")) closeCase(); else if (editing) toggleEdit(false); } });
-    window.addEventListener("popstate", () => { const h = location.hash.slice(1); if (h && data.projects.some((p) => p.id === h)) openCase(h, true); else if ($("#case").classList.contains("open")) closeCase(); });
+    window.addEventListener("popstate", () => { const h = location.hash.slice(1); if (h && known(h)) openCase(h, true); else if ($("#case").classList.contains("open")) closeCase(); });
   }
   function bindPrint() { const b = $("#btnPrint"); if (b) b.addEventListener("click", () => window.print()); }
 
@@ -526,7 +529,7 @@
     render(); bindFilters(); bindListPreview(); bindMenu(); bindAnchors(); bindTheme(); bindCase(); bindPrint(); bindEditUI();
     onScroll(); loader(); startCarousel();
     const h = location.hash.slice(1);
-    if (h && data.projects.some((p) => p.id === h)) {
+    if (h && known(h)) {
       setTimeout(() => openCase(h, true), 400);
     } else if (h) {
       /* section hash (e.g. #contact) — DOM is now populated, but the browser's
@@ -567,7 +570,7 @@
       } catch (e) { console.warn("Supabase load failed — using built-in content.", e); }
     }
     // Story cases (process told in chapters) are written in content.js and win over stored copies.
-    BASE.projects.forEach((b) => { if (!b.story || data.projects.some((x) => x.id === b.id)) return; const sib = data.projects.findIndex((x) => x.id === b.id.replace(/-story$/, "")); data.projects.splice(sib >= 0 ? sib + 1 : 0, 0, clone(b)); });
+    BASE.projects.forEach((b) => { if (!b.story || data.projects.some((x) => x.id === b.id)) return; if (b.hidden) { HIDDEN.push(clone(b)); return; } const sib = data.projects.findIndex((x) => x.id === b.id.replace(/-story$/, "")); data.projects.splice(sib >= 0 ? sib + 1 : 0, 0, clone(b)); });
     BASE.projects.forEach((b) => { if (!b.story) return; const p = data.projects.find((x) => x.id === b.id); if (p) ["story", "blocks", "role", "team", "summary"].forEach((k) => { if (b[k] != null) p[k] = clone(b[k]); }); });
     // CV: use the edited CV from the store when present; otherwise built-in content.js.
     if (!data.cv || !data.cv.experience || !data.cv.experience.length) data.cv = clone(BASE).cv;
