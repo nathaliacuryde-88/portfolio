@@ -83,11 +83,201 @@ window.PORTFOLIO = {
       "summary": "Sixteen specialists, one vision — a brand built on “Progress made possible.”",
       "description": "Transforming 16 specialists into a single company with a shared vision was the core challenge behind the x1F brand. The task was not only to bundle individual expertise into excellence from a single source, but also to preserve the company’s DNA: customer proximity, tailored solutions, trustful collaboration and a fair, non-hierarchical culture. To compete with the Big Four, x1F needed more than expertise — a professional presence, clear communication and efficient processes. Together with GMK, Strichpunkt guided the transformation with a holistic, agile approach, from positioning to identity and marketing strategy. In an intensive strategy phase, the guiding principle “Progress made possible” emerged, expressing the company’s commitment to constant development inside and out.",
       "outcome": "A dynamic, clear and distinctive design. The new brand launched in January 2025 with 1,200 employees: a large-scale event staged across 3,700m² with multimedia experiences, from banners to a digital fashion show, marking the beginning of a strong, unified brand presence.",
-      "role": "Creative Direction",
+      "role": "Design Lead",
+      "story": true,
       "team": [
-        "Creative Direction — Nathalia Cury",
-        "Design — Stephanie Teuber",
-        "Design — Marlene Kogel"
+        "Design Lead — Nathalia Cury",
+        "Creative Direction — Tanja Freudenthaler",
+        "Design — Marlene Kogel, Stephanie Teuber",
+        "Strategy — GMK"
+      ],
+      "blocks": [
+        {
+          "type": "chapter",
+          "n": "01",
+          "label": "The question",
+          "title": "How do you turn 16 companies into more than the sum of their parts?",
+          "text": "x1F is a group of sixteen specialist companies working for the financial services industry, coming together under one new brand.\n\nThe work was about finding what they had in common, making them feel connected, and showing the people inside that the merger was not a threat but a chance to grow together, and to offer more to their clients. How employees would perceive the change mattered as much as what the market would see."
+        },
+        {
+          "type": "chapter",
+          "n": "02",
+          "label": "Strategy",
+          "title": "Finding an open space.",
+          "text": "I was part of the strategy phase from early on, working with the strategy agency GMK. Mapping the competitors showed that most of them sit on the technical, conservative side. The open space was a brand that felt more emotional and more progressive."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-positioning.jpg",
+          "caption": "Competitor landscape from the analysis phase: technical and conservative on one side, an open space for an emotional, progressive brand on the other."
+        },
+        {
+          "type": "pillars",
+          "lead": "In a tonality workshop with the client in Hamburg we agreed on how the brand should look and feel.",
+          "items": [
+            {
+              "t": "Unconventional.",
+              "d": "Different perspectives, combined. Not one method, but many."
+            },
+            {
+              "t": "Authentic.",
+              "d": "Individual needs and goals. Real closeness, to clients and to each other."
+            },
+            {
+              "t": "Driven.",
+              "d": "Focused on results. Pragmatic and always moving."
+            }
+          ],
+          "caption": "These three words became my test for every design decision: does it feel like this, or not?"
+        },
+        {
+          "type": "pillars",
+          "lead": "From the tonalities we developed a guiding idea. Not a claim or a slogan, but a sentence to give the visual story a thread: “Progress made possible.”",
+          "items": [
+            {
+              "t": "Progress",
+              "d": "The goal. Growth, for clients, for people and for the company itself."
+            },
+            {
+              "t": "made",
+              "d": "The way of working. Hands-on and pragmatic about getting things done."
+            },
+            {
+              "t": "possible.",
+              "d": "The enabler. Sixteen companies together can do what a single one can’t."
+            }
+          ]
+        },
+        {
+          "type": "chapter",
+          "n": "03",
+          "label": "Exploration",
+          "title": "Many ideas at once, then one question.",
+          "text": "I started by exploring many ideas at the same time, then focused the search on one question: what do progress and growth actually look like? Is it a sum, one step after the other? Or is it expansion, exponential growth?"
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-explorations.jpg",
+          "caption": "The exploration wall: early sketches, moods and type tests side by side."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-plus-times.jpg",
+          "caption": "Two ways to grow. Going up steps (+) or growing exponentially (×)."
+        },
+        {
+          "type": "statement",
+          "text": "Not adding. Multiplying.",
+          "sub": "Adding means steady, linear growth. Multiplying means going from very small to very big, at a much faster pace. Sixteen companies working together don’t just add up. They multiply."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-routes.jpg",
+          "caption": "Further explorations of the multiplication idea, until it held up across headlines, imagery and layouts."
+        },
+        {
+          "type": "chapter",
+          "n": "04",
+          "label": "Creative judgement",
+          "title": "Three directions. One idea that could scale.",
+          "text": "Three directions were presented to the client. I led the multiplication route and guided the team on the other two.\n\nMy criteria were simple. Is it clear as a concept, based on the strategy? Is it different from the competitors? Can people actually use it? The conventional route was easy to recognise but not distinctive enough. The connection route was relevant, but its layout system became too complex to use at scale. Only multiplication said yes to all three, and that is the one we defended."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-directions.jpg",
+          "caption": "The three directions presented, and the criteria behind the choice."
+        },
+        {
+          "type": "chapter",
+          "n": "05",
+          "label": "The system",
+          "title": "Built from a formula.",
+          "text": "The whole communication system grew out of one mathematical expression, which also fits the company’s pragmatism and the financial sector. Multiplication is not only a symbol, it became the language: headlines are written like formulas."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-keyvisual.jpg",
+          "caption": "Headlines as formulas, with an authentic, unstaged image style."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-system.jpg",
+          "caption": "The logo shows the growth progression. Headlines in a monospaced typeface, every character the same width, another mathematical rule. Black, white and a neon yellow, unseen in a category full of purple. A key visual of squares doubling at 45°, which shows movement even when static. Illustrations built from numbers and squares, to explain abstract topics without stock imagery."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-rules.jpg",
+          "caption": "After refining, the rules went into a guideline the team could work with."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-applications.jpg",
+          "caption": "None of these layouts is a template, but all of them follow the same principle. A system the team can use and still create something new every time."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-badge.jpg",
+          "caption": "From small to big: the same rule on the badges and in the space."
+        },
+        {
+          "type": "chapter",
+          "n": "06",
+          "label": "The launch",
+          "title": "One day to introduce the brand to everyone.",
+          "text": "In conversations with the client it became clear that the new brand needed one big moment: a day where people from all sixteen companies would see it, understand it and feel that it was theirs. It started with a countdown page.\n\nOn the day there were stages where each company showed what it can do, talks to bring people together, merch to take the brand home, a digital fashion show where people voted for the next merch, and a party at the end. We shaped it with the client and the event agency, from the first idea to every touchpoint."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-02.jpg",
+          "caption": "The countdown page before the launch."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-c-stage.jpg",
+          "caption": "Stages where each company showed what it can do."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-04.jpg",
+          "caption": "Talks, to bring people from all sixteen companies together."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-03.jpg",
+          "caption": "The brand on site, from flags to the team’s sweaters."
+        },
+        {
+          "type": "image",
+          "media": "assets/work/x1f-07.jpg",
+          "caption": "Merch, so people could take the brand home."
+        },
+        {
+          "type": "roles",
+          "me": {
+            "title": "Design Lead",
+            "items": [
+              "Part of the strategy phase with GMK, from the tonality workshops onwards.",
+              "Owned the chosen route, from the first idea to the final system and guidelines.",
+              "Guided the designers on the two other routes.",
+              "Developed and implemented the design through the roll-out and the launch."
+            ]
+          },
+          "we": {
+            "title": "Team and partners",
+            "items": [
+              "Tanja Freudenthaler, Creative Director: final creative say, key client relationships and the main presentations.",
+              "GMK: strategy, first workshops and the guiding idea.",
+              "Marlene Kogel and Stephanie Teuber: design.",
+              "An event agency: launch organisation, scenography and the fashion show."
+            ]
+          }
+        },
+        {
+          "type": "chapter",
+          "label": "Looking back",
+          "title": "Leading my route, and lifting the others.",
+          "text": "x1F was my first project as Design Lead. The concept, the system and the trainings already felt natural to me. What was new was leading people: being hands-on with my own route while giving feedback to the designers and helping to make their routes stronger too."
+        }
       ],
       "stats": [
         {

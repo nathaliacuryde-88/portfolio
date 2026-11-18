@@ -275,18 +275,7 @@
       ? `<p class="case__intro"><span class="case__name">${esc(pr.title)}.</span> ${esc(pr.summary)}</p>`
       : `<p class="case__intro"><span class="case__name">${esc(pr.title)}</span></p>`;
 
-    $("#caseScroll").innerHTML = `
-      <div class="case__hero">${heroInner}</div>
-      <div class="case__head">
-        ${caseIntro}
-        ${disciplineLine ? `<span class="case__discipline">${esc(disciplineLine)}</span>` : ""}
-      </div>
-      <div class="case__body">
-        <div class="case__main">
-          ${statsHTML ? `<div class="case__stats">${statsHTML}</div>` : ""}
-          ${gal ? `<div class="case__gallery">${gal}</div>` : ""}
-        </div>
-        <aside class="case__side">
+    const sideHTML = pr.story ? "" : `<aside class="case__side">
           ${pr.idea ? sideCard("The Idea", `<p>${esc(pr.idea)}</p>`, true) : ""}
           ${pr.description ? sideCard("Starting Point", `<p>${esc(pr.description)}</p>`, !pr.idea) : ""}
           ${pr.outcome ? sideCard("Outcome", `<p>${esc(pr.outcome)}</p>`) : ""}
@@ -294,7 +283,19 @@
           ${pr.impact ? sideCard("Impact", `<p>${esc(pr.impact)}</p>`) : ""}
           ${credits ? sideCard("Credits", `<ul>${credits}</ul>`) : ""}
           ${pr.link ? `<a href="${esc(pr.link)}" class="case__link-btn" target="_blank" rel="noopener">View Project ↗</a>` : ""}
-        </aside>
+        </aside>`;
+    $("#caseScroll").innerHTML = `
+      <div class="case__hero">${heroInner}</div>
+      <div class="case__head">
+        ${caseIntro}
+        ${disciplineLine ? `<span class="case__discipline">${esc(disciplineLine)}</span>` : ""}
+      </div>
+      <div class="case__body${pr.story ? " case__body--story" : ""}">
+        <div class="case__main">
+          ${statsHTML ? `<div class="case__stats">${statsHTML}</div>` : ""}
+          ${gal ? `<div class="case__gallery">${gal}</div>` : ""}
+        </div>
+        ${sideHTML}
       </div>
       <div class="case__next" data-id="${esc(next.id)}" data-cursor="view"><span class="k">Next project</span><span class="t">${esc(next.title)} <span class="arrow">→</span></span><div class="case__nextimg">${nextImg}</div></div>`;
 
@@ -309,6 +310,10 @@
   function blockHTML(b) {
     if (!b || !b.type) return "";
     switch (b.type) {
+      case "chapter": return `<section class="cs-ch" data-fx><div class="cs-ch__k">${b.n ? `<span>${esc(b.n)}</span>` : ""}${esc(b.label || "")}</div><div class="cs-ch__b">${b.title ? `<h3>${esc(b.title)}</h3>` : ""}${paras(b.text)}</div></section>`;
+      case "statement": return `<div class="cs-stmt" data-fx>${esc(b.text)}${b.sub ? `<span>${esc(b.sub)}</span>` : ""}</div>`;
+      case "pillars": return `<div class="cs-pil" data-fx>${b.lead ? `<p class="cs-pil__lead">${esc(b.lead)}</p>` : ""}<div class="cs-pil__row">${(b.items || []).map((it) => `<div class="cs-pil__i"><h4>${esc(it.t)}</h4><p>${esc(it.d)}</p></div>`).join("")}</div>${b.caption ? `<p class="cs-pil__cap">${esc(b.caption)}</p>` : ""}</div>`;
+      case "roles": return `<div class="cs-roles" data-fx>${[["Me", b.me], ["We", b.we]].filter((r) => r[1]).map(([k, r]) => `<div class="cs-role"><h4>${k}</h4>${r.title ? `<p class="cs-role__t">${esc(r.title)}</p>` : ""}<ul>${(r.items || []).map((i) => `<li>${esc(i)}</li>`).join("")}</ul></div>`).join("")}</div>`;
       case "image": return b.media ? `<div class="case__shot case__shot--wide" data-fx>${media(b.media, { alt: b.caption || "" })}</div>` + (b.caption ? `<div class="case__cap" data-fx>${esc(b.caption)}</div>` : "") : "";
       case "video": return b.media ? `<div class="case__shot case__shot--wide" data-fx>${media(b.media)}</div>` : "";
       case "two-up": return `<div class="case__row"><div class="case__shot" data-fx>${media(b.a, { alt: "" })}</div><div class="case__shot" data-fx>${media(b.b, { alt: "" })}</div></div>`;
@@ -317,6 +322,8 @@
       default: return "";
     }
   }
+
+  function paras(t) { return String(t || "").split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean).map((p) => `<p>${esc(p)}</p>`).join(""); }
 
   function closeCase() {
     $("#case").classList.remove("open"); $("#case").setAttribute("aria-hidden", "true");
@@ -553,12 +560,14 @@
   }
 
   async function boot() {
-    if (window.NCStore && window.NCStore.enabled) {
+    if (window.NCStore && window.NCStore.enabled && !/[?&]local\b/.test(location.search)) {
       try {
         const remote = await window.NCStore.load();
         if (remote && Object.keys(remote).length) data = merge(clone(BASE), remote);
       } catch (e) { console.warn("Supabase load failed — using built-in content.", e); }
     }
+    // Story cases (process told in chapters) are written in content.js and win over stored copies.
+    BASE.projects.forEach((b) => { if (!b.story) return; const p = data.projects.find((x) => x.id === b.id); if (p) ["story", "blocks", "role", "team", "summary"].forEach((k) => { if (b[k] != null) p[k] = clone(b[k]); }); });
     // CV: use the edited CV from the store when present; otherwise built-in content.js.
     if (!data.cv || !data.cv.experience || !data.cv.experience.length) data.cv = clone(BASE).cv;
     // work intro fallback
